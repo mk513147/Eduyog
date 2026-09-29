@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Eduyog — Education, Skills, Careers &amp; Fitness</title>
+    <meta
+      name="description"
+      content="Eduyog, by Eduyog Techno Solution Pvt. Ltd., brings education services, professional training, international student career support and fitness business services together in one digital ecosystem."
+    />
+    <meta name="theme-color" content="#ffffff" />
+    <!-- Base URL of the Eduyog backend API (no trailing slash). Change per environment. -->
+    <meta name="eduyog-api-base" content="http://localhost:5000/api" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230d9488'/%3E%3Cpath d='M10 9h12v3h-8.5v2.5H21v3h-7.5V20H22v3H10z' fill='%23ffffff'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <header class="site-header" id="top">
+      <div class="container header__inner">
+        <a class="logo" href="#home" aria-label="Eduyog home">
+          <span class="logo__mark" aria-hidden="true">E</span>
+          <span class="logo__text">Eduyog<span class="logo__accent">.</span></span>
+        </a>
+
+        <button
+          class="nav-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="site-nav"
+          aria-label="Open menu"
+        >
+          <span class="nav-toggle__bar" aria-hidden="true"></span>
+          <span class="nav-toggle__bar" aria-hidden="true"></span>
+          <span class="nav-toggle__bar" aria-hidden="true"></span>
+        </button>
+
+        <nav class="site-nav" id="site-nav" aria-label="Main">
+          <ul class="site-nav__list">
+            <li><a class="site-nav__link" href="#home">Home</a></li>
+            <li><a class="site-nav__link" href="#about">About</a></li>
+            <li><a class="site-nav__link" href="#education">Education</a></li>
+            <li><a class="site-nav__link" href="#fitness">Fitness</a></li>
+            <li><a class="site-nav__link" href="#eduyarp">Training</a></li>
+            <li><a class="site-nav__link" href="#studentaq">Career Support</a></li>
+            <li><a class="site-nav__link" href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" tabindex="-1">
+      <!-- Hero -->
+      <section class="hero" id="home" aria-labelledby="hero-title">
+        <div class="container hero__inner">
+          <div class="hero__content">
+            <p class="eyebrow">Eduyog Techno Solution Pvt. Ltd.</p>
+            <h1 class="hero__title" id="hero-title">
+              <span class="hero__brand">Eduyog</span>
+              Education, Skills, Careers &amp; Fitness –
+              <span class="text-gradient">One Integrated Platform</span>
+            </h1>
+            <p class="hero__lead">
+              Eduyog brings education services, professional training, international student
+              career support and fitness &amp; wellness business services together in one digital
+              ecosystem, with each service clearly defined so you can go straight to the one you
+              need.
+            </p>
+            <div class="hero__actions">
+              <a class="btn btn--primary" href="#education">Explore Education</a>
+              <a class="btn btn--ghost" href="#fitness">Explore Fitness</a>
+            </div>
+          </div>
+
+          <div class="hero__visual" aria-hidden="true">
+            <div class="orbit orbit--outer"></div>
+            <div class="orbit orbit--middle"></div>
+            <div class="orbit orbit--inner"></div>
+            <div class="core">
+              <span class="core__letter">E</span>
+            </div>
+            <span class="node node--1"></span>
+            <span class="node node--2"></span>
+            <span class="node node--3"></span>
+            <span class="node node--4"></span>
+            <div class="panel panel--a">
+              <span class="panel__line panel__line--long"></span>
+              <span class="panel__line"></span>
+              <span class="panel__line panel__line--short"></span>
+            </div>
+            <div class="panel panel--b">
+              <span class="panel__dot"></span>
+              <span class="panel__line"></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- About -->
+      <section class="section" id="about" aria-labelledby="about-title">
+        <div class="container about">
+          <div class="about__intro">
+            <p class="eyebrow">About Eduyog</p>
+            <h2 class="section__title" id="about-title">One brand, two focused verticals</h2>
+            <p>
+              Eduyog is the primary digital brand of Eduyog Techno Solution Pvt. Ltd. It is the
+              central entry point for the company's two business verticals, Education and
+              Fitness.
+            </p>
+            <p>
+              Each platform under Eduyog has its own clear purpose, audience and way of working,
+              so students and businesses always know which service they are using.
+            </p>
+          </div>
+
+          <ul class="vertical-grid">
+            <li class="vertical vertical--education">
+              <span class="vertical__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9l10-5 10 5-10 5z" /><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5" /></svg>
+              </span>
+              <h3 class="vertical__title">Education</h3>
+              <p class="vertical__text">
+                Three independent platforms: <strong>Saritex</strong> for academic support,
+                <strong>Eduyarp</strong> for professional training and technical classes, and
+                <strong>StudentAQ</strong> for international student career support.
+              </p>
+              <a class="vertical__link" href="#education">See Education</a>
+            </li>
+            <li class="vertical vertical--fitness">
+              <span class="vertical__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11" /></svg>
+              </span>
+              <h3 class="vertical__title">Fitness</h3>
+              <p class="vertical__text">
+                A B2B-focused platform offering marketing, promotional and digital support to
+                fitness and wellness businesses.
+              </p>
+              <a class="vertical__link" href="#fitness">See Fitness</a>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Education -->
+      <section class="section section--alt" id="education" aria-labelledby="education-title">
+        <div class="container">
+          <header class="section__header">
+            <p class="eyebrow">Education</p>
+            <h2 class="section__title" id="education-title">Three platforms, three clear purposes</h2>
+            <p class="section__lead">
+              Choose the platform that matches what you need: academic support, professional
+              training or international career support.
+            </p>
+          </header>
+
+          <!--
+            Platform websites. "Learn more" links come only from active platforms returned by
+            GET /api/platforms, matched by data-platform-slug (or, failing that, by
+            data-platform-name). Without an active record with a valid http(s) URL, the card
+            shows "Website coming soon". Edit the slugs here if the Admin uses different ones.
+          -->
+          <div class="edu-status" id="platforms-status" role="status" aria-live="polite">
+            <noscript>
+              <p class="notice notice--compact">
+                Enable JavaScript to see links to our platform websites.
+              </p>
+            </noscript>
+          </div>
+
+          <ul class="edu-grid">
+            <li class="edu-card edu-card--saritex" id="saritex" data-platform-slug="saritex" data-platform-name="Saritex">
+              <span class="edu-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" /><path d="M14 3v5h5M9 13h6M9 17h4" /></svg>
+              </span>
+              <h3 class="edu-card__title">Saritex</h3>
+              <p class="edu-card__subtitle">Academic Assignment, Essay &amp; Thesis Support</p>
+              <p class="edu-card__text">
+                Academic support for international students, covering assignments, essays,
+                theses, academic research and academic guidance across a wide range of
+                disciplines.
+              </p>
+              <div class="edu-card__action" data-platform-action>
+                <span class="edu-card__pending">Website coming soon</span>
+              </div>
+            </li>
+
+            <li class="edu-card edu-card--eduyarp" id="eduyarp" data-platform-slug="eduyarp" data-platform-name="Eduyarp">
+              <span class="edu-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2" /><path d="M8 20h8M12 16v4M9 9l-2 1.5L9 12M15 9l2 1.5-2 1.5" /></svg>
+              </span>
+              <h3 class="edu-card__title">Eduyarp</h3>
+              <p class="edu-card__subtitle">Professional Training &amp; Technical Classes</p>
+              <p class="edu-card__text">
+                Training, courses and classes for UG, PG and PhD students, focused on Data
+                Science, Artificial Intelligence, Prompt Engineering and Software Development.
+              </p>
+              <!-- Eduyarp may not have a platform record yet; the card stays in the
+                   "Website coming soon" state until an active record with a URL exists. -->
+              <div class="edu-card__action" data-platform-action>
+                <span class="edu-card__pending">Website coming soon</span>
+              </div>
+            </li>
+
+            <li class="edu-card edu-card--studentaq" id="studentaq" data-platform-slug="studentaq" data-platform-name="StudentAQ">
+              <span class="edu-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2" /><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18" /></svg>
+              </span>
+              <h3 class="edu-card__title">StudentAQ</h3>
+              <p class="edu-card__subtitle">International Student Career &amp; Interview Support</p>
+              <p class="edu-card__text">
+                Career guidance for international students, including job research, job
+                shortlisting, application support and interview coordination.
+              </p>
+              <div class="edu-card__action" data-platform-action>
+                <span class="edu-card__pending">Website coming soon</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Fitness -->
+      <section class="section section--fitness" id="fitness" aria-labelledby="fitness-title">
+        <div class="container">
+          <header class="section__header">
+            <p class="eyebrow">Fitness · For business</p>
+            <h2 class="section__title" id="fitness-title">
+              Marketing and digital support for fitness &amp; wellness businesses
+            </h2>
+            <p class="section__lead">
+              Eduyog Fitness is a B2B-focused platform. It offers marketing, promotional and
+              digital support to businesses and service providers in the fitness and wellness
+              space.
+            </p>
+          </header>
+
+          <div class="fitness">
+            <div class="fitness__block">
+              <h3 class="fitness__heading">Business areas</h3>
+              <ul class="chip-list">
+                <li class="chip">Yoga</li>
+                <li class="chip">Gym</li>
+                <li class="chip">Zumba/Jumba</li>
+                <li class="chip">Karate</li>
+                <li class="chip">Other Fitness &amp; Wellness Services</li>
+              </ul>
+            </div>
+
+            <div class="fitness__block">
+              <h3 class="fitness__heading">Services offered</h3>
+              <ul class="service-list">
+                <li class="service">
+                  <span class="service__title">Digital &amp; social media marketing</span>
+                  <span class="service__text">Planning and running digital and social media marketing.</span>
+                </li>
+                <li class="service">
+                  <span class="service__title">Promotional campaigns &amp; content</span>
+                  <span class="service__text">Promotional campaigns with supporting content.</span>
+                </li>
+                <li class="service">
+                  <span class="service__title">Lead generation &amp; brand promotion</span>
+                  <span class="service__text">Reaching new customers and building brand visibility.</span>
+                </li>
+                <li class="service">
+                  <span class="service__title">Website &amp; digital presence</span>
+                  <span class="service__text">Support for websites and online presence.</span>
+                </li>
+                <li class="service">
+                  <span class="service__title">Campaign &amp; client engagement</span>
+                  <span class="service__text">Campaign management and client-engagement support.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="partner-cta" id="fitness-partner">
+            <div>
+              <h3 class="partner-cta__title">For Business / Become a Partner</h3>
+              <p class="partner-cta__text">
+                Run a fitness or wellness business and want support with marketing and your
+                digital presence? Get in touch with Eduyog.
+              </p>
+            </div>
+            <a class="btn btn--primary" href="#contact">Become a Partner</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact -->
+      <section class="section section--alt" id="contact" aria-labelledby="contact-title">
+        <div class="container">
+          <div class="contact-card">
+            <div>
+              <p class="eyebrow">Contact</p>
+              <h2 class="section__title" id="contact-title">Get in touch</h2>
+              <p class="contact-card__intro">
+                For Education enquiries and Fitness business partnerships.
+              </p>
+              <!--
+                EDIT HERE: replace this placeholder with verified company contact
+                details (email, phone, address) once they are confirmed.
+              -->
+              <p class="contact-card__placeholder">Contact details coming soon.</p>
+            </div>
+            <a class="btn btn--ghost" href="#education">Explore Education</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer__inner">
+        <div class="footer__brand">
+          <a class="logo" href="#home" aria-label="Eduyog home">
+            <span class="logo__mark" aria-hidden="true">E</span>
+            <span class="logo__text">Eduyog<span class="logo__accent">.</span></span>
+          </a>
+          <p class="footer__tagline">Education, Skills, Careers &amp; Fitness – One Integrated Platform.</p>
+        </div>
+
+        <nav aria-label="Footer">
+          <ul class="footer__links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#education">Education</a></li>
+            <li><a href="#fitness">Fitness</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="container footer__bottom">
+        <p>
+          &copy; <span id="current-year">2026</span> Eduyog Techno Solution Pvt. Ltd. All rights
+          reserved.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
