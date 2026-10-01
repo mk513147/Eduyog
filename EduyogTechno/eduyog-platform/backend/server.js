@@ -6,6 +6,8 @@ const env = require('./config/env');
 const authRoutes = require('./routes/auth.routes');
 const adminRoutes = require('./routes/admin.routes');
 const platformsRoutes = require('./routes/platforms.routes');
+const fitnessLeadsRoutes = require('./routes/fitnessLeads.routes');
+const eduyarpRoutes = require('./routes/eduyarp.routes');
 const { notFound, errorHandler } = require('./middleware/errorHandler');
 
 const app = express();
@@ -30,7 +32,7 @@ app.use(
   '/api',
   rateLimit({
     windowMs: 15 * 60 * 1000,
-    limit: 100,
+    limit: 1000,
     standardHeaders: 'draft-8',
     legacyHeaders: false,
   })
@@ -43,6 +45,8 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/platforms', platformsRoutes);
+app.use('/api/fitness-leads', fitnessLeadsRoutes);
+app.use('/api/eduyarp', eduyarpRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

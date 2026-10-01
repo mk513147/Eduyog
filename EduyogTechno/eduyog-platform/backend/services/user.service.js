@@ -1,5 +1,6 @@
 const pool = require('../config/database');
 const HttpError = require('../utils/httpError');
+const { cancelActiveEnrolments } = require('./eduyarpEnrolment.service');
 
 // Never includes password_hash.
 const COLUMNS = 'id, full_name, email, role, created_at, updated_at';
@@ -55,6 +56,13 @@ async function changeUserRole(id, role) {
       `UPDATE users SET role = $1 WHERE id = $2 RETURNING ${COLUMNS}`,
       [role, id]
     );
+
+    // A Student who becomes a Trainer or Admin is no longer a Student, so
+    // their active Eduyarp enrolments are cancelled in the same transaction.
+    // Nothing is restored if they later become a Student again.
+    if (target.role === 'student') {
+      await cancelActiveEnrolments(id, client);
+    }
 
     await client.query('COMMIT');
     return toUser(rows[0]);

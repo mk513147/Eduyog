@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Page - Saritex</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* =========================================
+           1. CSS VARIABLES & GLOBAL RESET
+           ========================================= */
+        :root {
+            /* Colors */
+            --primary-color: #0056b3;
+            --secondary-color: #ff9900;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --bg-light: #f8f9fa;
+            --whatsapp-green: #25D366;
+            --primary-orange: #ff9a45;
+            --primary-orange-dark: #e68a3e;
+            --text-black: #333;
+            --text-white: #ffffff;
+            --icon-green: #28a745;
+            --tag-bg: #eef2ff;
+            --tag-text: #4a6cf7;
+            --white: #ffffff;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+        }
+
+        /* Utility Classes */
+        .bg-primary-color { background-color: var(--primary-color) !important; }
+        .bg-secondary-color { background-color: var(--secondary-color) !important; }
+        .text-primary-color { color: var(--primary-color) !important; }
+        .text-muted { color: var(--text-light) !important; }
+
+        /* =========================================
+           2. ANIMATION UTILITIES
+           ========================================= */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* =========================================
+           3. TOPBAR & NAVBAR
+           ========================================= */
+        
+        /* Top Bar Buttons */
+        .btn-top:hover {
+            background-color: white;
+            color: #070707 !important;
+            font-weight: bold;
+        }
+
+        /* Navbar */
+        .navbar {
+            padding: 15px 0;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-color) !important;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-link {
+            color: var(--text-dark);
+            font-weight: 500;
+            margin: 0 10px;
+            position: relative;
+        }
+
+        .nav-link:hover { color: var(--primary-color); }
+
+        /* Active Link Indicator */
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--secondary-color);
+            transition: width 0.3s;
+        }
+        .nav-link:hover::after { width: 100%; }
+
+                /* =========================================
+           CUSTOM FULL SCREEN HERO HEADER
+           ========================================= */
+        .hero-section {
+            padding-top: 100px; /* Space for sticky navbar */
+            min-height: 90vh; /* Takes up 90% of the viewport height */
+            background: linear-gradient(rgba(0, 86, 179, 0.85), rgba(109, 163, 220, 0.7)), url('https://picsum.photos/seed/library_saritex/1920/1080');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* Parallax effect */
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Text Animation */
+        .hero-content {
+            z-index: 2;
+        }
+        .hero-badge {
+            background-color: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--secondary-color);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-bottom: 20px;
+            animation: fadeInDown 1s ease forwards;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            animation: fadeInUp 1s ease 0.2s forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease 0.4s forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .hero-buttons {
+            animation: fadeInUp 1s ease 0.6s forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        /* Image Wrapper & Float Animation */
+        .hero-image-wrapper {
+            position: relative;
+            z-index: 2;
+            animation: floatImage 6s ease-in-out infinite;
+        }
+
+        .hero-main-img {
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            border: 5px solid rgba(255,255,255,0.1);
+        }
+
+        /* Floating Shapes (Education Themed) */
+        .floating-shape {
+            position: absolute;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .fs-1 { /* Shape 1 */
+            width: 80px; height: 80px;
+            top: -20px; left: -20px;
+            animation: float 7s ease-in-out infinite;
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+        }
+
+        .fs-2 { /* Shape 2 */
+            width: 60px; height: 60px;
+            bottom: 20px; right: -10px;
+            animation: float 5s ease-in-out infinite reverse;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+        
+        .fs-3 { /* Shape 3 */
+            width: 100px; height: 100px;
+            bottom: -30px; left: 50px;
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-orange-dark));
+            color: white;
+            font-size: 2rem;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        /* Keyframes */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes floatImage {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 991px) {
+            .hero-section { text-align: center; padding-top: 80px; }
+            .hero-title { font-size: 2.5rem; }
+            .hero-image-wrapper { margin-top: 50px; max-width: 80%; margin-left: auto; margin-right: auto; }
+            .floating-shape { display: none; } /* Hide shapes on mobile to save space */
+        }
+
+        /* =========================================
+           4. BLOG PAGE STYLES
+           ========================================= */
+        .page-header {
+            background: linear-gradient(rgba(0, 86, 179, 0.9), rgba(0, 86, 179, 0.85)), url('https://picsum.photos/seed/libraryblog/1920/600');
+            background-size: cover;
+            background-position: center;
+            padding: 120px 0 80px;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+
+        .blog-section { padding: 80px 0; }
+
+        /* Blog Card Design */
+        .blog-card {
+            background: white;
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: var(--transition);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .blog-img-wrapper {
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .blog-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .blog-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .blog-content {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .blog-tag {
+            background-color: var(--tag-bg);
+            color: var(--tag-text);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 50px;
+            text-transform: uppercase;
+            width: fit-content;
+            margin-bottom: 15px;
+        }
+
+        .blog-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            line-height: 1.4;
+            color: var(--text-dark);
+            transition: var(--transition);
+        }
+
+        .blog-card:hover .blog-title { color: var(--primary-color); }
+
+        .blog-excerpt {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .blog-footer {
+            margin-top: auto;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .read-more-btn {
+            color: var(--primary-color);
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .read-more-btn:hover { color: var(--secondary-color); }
+
+        /* Load More Button */
+        .load-more-container {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .btn-load-more {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 12px 30px;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: var(--transition);
+        }
+
+        .btn-load-more:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* =========================================
+           11. FOOTER & EXISTING STYLES
+           ========================================= */
+        /*CTA*/
+        .section-padding1 { padding: 80px 0; }
+        /*END CTA*/
+
+        footer {
+            background-color: #1a1a1a;
+            color: #ccc;
+            padding: 60px 0 20px;
+        }
+
+        footer h5 {
+            color: var(--white);
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        footer ul { list-style: none; padding: 0; }
+        footer ul li { margin-bottom: 12px; }
+        footer ul li a {
+            color: #ccc;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        footer ul li a:hover {
+            color: var(--secondary-color);
+            padding-left: 5px;
+        }
+
+        footer .social-icons a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            color: var(--white);
+            text-align: center;
+            line-height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        footer .social-icons a:hover { background: var(--secondary-color); }
+
+        .copyright {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 50px;
+            padding-top: 20px;
+            text-align: center;
+        }
+
+        /* =========================================
+           12. FLOATING ELEMENTS & TOAST
+           ========================================= */
+        /* Sticky WhatsApp */
+        .whatsapp-float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--whatsapp-green);
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .whatsapp-float:hover {
+            background-color: #1ebc57;
+            transform: scale(1.1);
+            color: #fff;
+        }
+
+        /* Toast Notification */
+        .custom-toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #333;
+            color: #fff;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            transform: translateY(150%);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .custom-toast.show { transform: translateY(0); }
+        .toast-icon { color: #4ade80; font-size: 1.2rem; }
+
+        /* =========================================
+           13. MEDIA QUERIES (RESPONSIVE)
+           ========================================= */
+        @media (max-width: 991px) {
+            .hero-section {
+                text-align: center;
+                padding-top: 40px;
+            }
+            .hero-title { font-size: 2.2rem; }
+            .trust-badges { justify-content: center; }
+            .consult-card { margin-top: 40px; }
+            .image-wrapper { min-height: 300px; margin-bottom: 40px; }
+            .featured-blog .card-img-top { height: 250px; }
+        }
+
+        @media (max-width: 768px) {
+            .section-title { font-size: 1.6rem; }
+            .features-wrapper { padding: 20px; }
+            h3.card-title { font-size: 18px; }
+            .about-title { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP BAR -->
+    <div class="bg-primary-color border-bottom py-2">
+        <div class="container">
+            <div class="row align-items-center justify-content-between">
+                
+                <!-- Center Side: Phone Numbers -->
+                <div class="col-12 col-md-4 text-center py-1 py-md-0">
+                    <div class="d-flex justify-content-center gap-2 flex-wrap">
+                        <span class="bg-muted text-light px-3 py-1 rounded small">
+                            <i class="fab fa-whatsapp me-1"></i> +91 - 7061122327
+                        </span>
+                        <span class="bg-muted text-light px-3 py-1 rounded small">
+                            <i class="fab fa-whatsapp me-1"></i> +91 - 7295993480
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Right Side: Social Icons + Bookmarks Button -->
+                <div class="col-md-4 d-none d-md-block text-end">
+                    <div class="d-inline-block text-white small me-3">
+                        <a href="mailto:askavach@gmail.com" class="text-white"><i class="fas fa-envelope me-3"></i></a>
+                        <a href="https://wa.me/7295993480"  target="_blank"  class="text-white"><i class="fab fa-whatsapp me-3"></i></a>
+                        <a href="http://" class="text-white"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                    <a href="https://wa.me/7295993480"  target="_blank"  class="btn btn-sm btn-top btn-outline-light rounded-pill px-3 text-white">All Bookmarks</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">SARITEX</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="AboutUs.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="Services.html">Services</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="Blogs.html">Blogs</a></li>
+                    <li class="nav-item"><a class="nav-link" href="Reviews.html">Reviews</a></li>
+                    <li class="nav-item"><a class="nav-link" href="ContactUs.html">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+        <!-- FULL SCREEN HERO HEADER -->
+    <header class="hero-section">
+        <div class="container">
+            <div class="row align-items-center h-100">
+                
+                <!-- Left: Text Content -->
+                <div class="col-lg-6 hero-content">
+                    <span class="hero-badge">
+                        <i class="fas fa-star me-2"></i> #1 Academic Support Platform
+                    </span>
+                    <h1 class="hero-title">
+                        Empowering Your <br>
+                        <span style="color: var(--secondary-color);">Academic Journey</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Expert guidance for Assignments, Dissertations, and Skill Development. <br>
+                        We help students across UK, USA, Australia, and beyond achieve excellence.
+                    </p>
+                    <div class="hero-buttons d-flex gap-3">
+                        <a href="https://wa.me/7295993480"  target="_blank"  class="btn btn-lg text-white fw-bold px-4 rounded-pill" style="background-color: var(--secondary-color); box-shadow: 0 5px 15px rgba(255, 153, 0, 0.4);">
+                            Get Started <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                        <a href="Services.html" class="btn btn-lg btn-outline-light rounded-pill px-4">
+                            View Services
+                        </a>
+                    </div>
+                    
+                    <!-- Quick Stats -->
+                    <div class="row mt-5 pt-3">
+                        <div class="col-4 border-end border-secondary">
+                            <h3 class="fw-bold mb-0">10k+</h3>
+                            <small>Students Helped</small>
+                        </div>
+                        <div class="col-4 border-end border-secondary">
+                            <h3 class="fw-bold mb-0">500+</h3>
+                            <small>Expert Tutors</small>
+                        </div>
+                        <div class="col-4">
+                            <h3 class="fw-bold mb-0">4.9/5</h3>
+                            <small>User Rating</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Animated Image Design -->
+                <div class="col-lg-6">
+                    <div class="hero-image-wrapper">
+                        <!-- Floating Educational Shapes -->
+                        <div class="floating-shape fs-1">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <div class="floating-shape fs-2">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div class="floating-shape fs-3">
+                            <i class="fas fa-award"></i>
+                        </div>
+
+                        <!-- Main Image (Placeholder of a student/graduate) -->
+                        <img src="Blog\mainBolgImg.png" alt="Saritex Student Success" class="img-fluid hero-main-img">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </header>
+    <!-- END HERO HEADER -->
+
+    <!-- MAIN CONTENT -->
+    <main>
+        <!-- BLOG SECTION -->
+        <section class="blog-section">
+            <div class="container">
+                <!-- Blog Grid -->
+                <div class="row g-4" id="blog-grid">
+                    <!-- Blogs will be injected here via JavaScript -->
+                </div>
+
+                <!-- Load More Button -->
+                <div class="load-more-container">
+                    <button id="loadMoreBtn" class="btn btn-load-more" onclick="loadMoreBlogs()">Load More Articles</button>
+                </div>
+            </div>
+        </section>
+    </main>
+  
+    <!-- CTA SECTION -->
+    <section class="section-padding1 bg-primary text-white text-center">
+        <div class="container">
+            <h2 class="fw-bold mb-3">Need Help with Your Assignment?</h2>
+            <p class="mb-4 fs-5">Don't let academic stress weigh you down. Get expert help today and secure your grades.</p>
+            <a href="https://wa.me/7295993480"  target="_blank" class="btn bg-secondary-color btn-lg text-white fw-bold px-5 rounded-pill">Chat Now</a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <a class="navbar-brand text-white mb-3 d-block" href="#">SARITEX</a>
+                    <p class="small">We are a leading provider of academic writing services, dedicated to helping students achieve their academic goals through excellence and support.</p>
+                    <div class="social-icons">
+                        <a href="mailto:askavach@gmail.com" aria-label="Mail"><i class="fas fa-envelope"></i></a>
+                        <a href="https://wa.me/7295993480"  target="_blank" aria-label="WhatsApp" ><i class="fab fa-whatsapp"></i></a>
+                        <a href="http://" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="AboutUs.html">About</a></li>
+                        <li><a href="Services.html">Services</a></li>
+                        <li><a href="Reviews.html">Reviews</a></li>
+                        <li><a href="ContactUs.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Subjects</h5>
+                    <ul>
+                        <li><a href="Services.html">Higher Education</a></li>
+                        <li><a href="Services.html">Data Science</a></li>
+                        <li><a href="Services.html">Dissertation writing</a></li>
+                        <li><a href="Services.html">AI with Python</a></li>
+                        <li><a href="Services.html">Java</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Contact Us</h5>
+                    <ul class="small">
+                        <li><a href="mailto:askavach@gmail.com" aria-label="Mail"><i class="fas fa-envelope me-2"></i> askavach@gmail.com</a></li>
+                        <li><a href="https://wa.me/7295993480"  target="_blank" aria-label="WhatsApp" ><i class="fas fa-phone me-2"></i> +91 7295993480</a> </li>
+                        <li><i class="fas fa-map-marker-alt me-2"></i> JTM Mall, Office No.LF24, Jagatpura, Jaipur(302017)</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <div class="row align-items-center">
+                    <div class="col-md-6 text-center text-md-start">
+                        <p class="mb-0">&copy; 2025 Saritex. All Rights Reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-center text-md-end">
+                        <a href="#" class="text-decoration-none text-white me-3 small">Privacy Policy</a>
+                        <a href="#" class="text-decoration-none text-white small">Terms & Conditions</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Sticky WhatsApp Button -->
+    <a href="https://wa.me/7295993480" class="whatsapp-float" target="_blank" title="Chat with us on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Blog Reading Modal -->
+    <div class="modal fade" id="blogModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="modalTitle">Blog Title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+                    <img id="modalImage" src="" class="img-fluid rounded mb-3 w-100" style="height: 300px; object-fit: cover;" alt="Blog Image">
+                    <div class="blog-meta mb-3 text-muted small">
+                        <span id="modalCategory"></span> &bull; <span id="modalDate"></span>
+                    </div>
+                    <div id="modalContent" class="blog-text">
+                        <!-- Content goes here -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JS Logic -->
+    <script>
+        // ============================================
+        // DATA: Blog Posts (4 Long + 12 Generated)
+        // ============================================
+        const blogsData = [
+            {
+                id: 1,
+                title: "Bridging Academic Excellence and Practical Skills",
+                category: "Higher Education",
+                date: "Oct 15, 2023",
+                image: "Blog/Bridging Academic.png",
+                excerpt: "In today’s competitive academic environment, students are expected not only to demonstrate theoretical understanding but also to apply knowledge...",
+                content: `<p>In today’s competitive academic environment, students are expected not only to demonstrate theoretical understanding but also to apply knowledge through research, analysis, and practical implementation. Universities across the UK, USA, Australia, and Europe increasingly emphasize independent thinking, technical proficiency, and research-based learning. However, many students struggle to balance academic rigor with evolving technical demands. This gap highlights the importance of structured academic support systems that go beyond traditional tutoring.</p>
+                <p>Saritex addresses this challenge by providing comprehensive academic assistance combined with skill-oriented learning. Through personalized coursework and assignment support, students receive guidance in essays, reports, case studies, and presentations across management, computer science, IT, and engineering disciplines. This structured approach ensures clarity in concepts, logical argumentation, and adherence to international assessment standards.</p>
+                <p>One of the defining strengths of Saritex lies in its one-to-one mentoring model. Unlike generic learning platforms, personalized mentoring allows students to engage deeply with subject matter, clarify doubts in real time, and strengthen analytical reasoning. This is particularly valuable for students working on complex research-based tasks, where conceptual understanding and methodological accuracy are equally important.</p>`
+            },
+            {
+                id: 2,
+                title: "Dissertation and Research Support: From Topic Selection",
+                category: "Dissertation",
+                date: "Oct 12, 2023",
+                image: "Blog/Dissertation and Research.png",
+                excerpt: "Dissertation writing is one of the most demanding milestones in higher education. It requires students to demonstrate independent research skills...",
+                content: `<p>Dissertation writing is one of the most demanding milestones in higher education. It requires students to demonstrate independent research skills, critical thinking, methodological rigor, and academic writing excellence. Many students, particularly international learners, face difficulties in selecting appropriate topics, structuring chapters, applying research methods, and meeting university expectations.</p>
+                <p>Saritex offers structured dissertation and research paper support designed to guide students through every stage of the research journey. From topic approval and proposal development to data analysis and final submission, students receive expert-led mentoring aligned with institutional guidelines. This systematic support ensures clarity, coherence, and academic integrity throughout the research process.</p>
+                <p>A key challenge in dissertation work is methodological implementation. Whether qualitative, quantitative, or mixed-methods research, students often struggle with data collection, statistical analysis, and result interpretation. Saritex provides hands-on guidance in research design, data analysis tools, model validation, and result presentation, ensuring accuracy and relevance.</p>
+                <p>Importantly, Saritex follows an ethical academic support framework. The goal is not to replace student effort but to strengthen understanding, guide implementation, and improve confidence. This ensures compliance with university policies while helping students achieve high-quality outcomes.</p>`
+            },
+            {
+                id: 3,
+                title: "Data Science and Technical Skill Development",
+                category: "Technology",
+                date: "Oct 10, 2023",
+                image: "Blog/Data Science and Technical Skill Development.png",
+                excerpt: "The rapid growth of data-driven decision-making has transformed academic learning and professional expectations...",
+                content: `<p>The rapid growth of data-driven decision-making has transformed academic learning and professional expectations. Students in computer science, IT, engineering, and management programs are increasingly required to demonstrate proficiency in data analysis, programming, and technical problem-solving. However, many learners face difficulties transitioning from theoretical knowledge to practical implementation.</p>
+                <p>Saritex bridges this gap through skill-based training programs focused on data science, analytics, and software development. These programs are designed to complement academic coursework while preparing students for real-world applications. Learners gain hands-on experience in data analysis, statistical evaluation, algorithm logic, and model interpretation under expert guidance.</p>
+                <p>What sets Saritex apart is its emphasis on personalized, project-based learning. One-to-one mentoring sessions allow students to work on academic projects, assignments, and research tasks while applying technical tools effectively. This approach enhances conceptual clarity and builds confidence in using industry-relevant technologies.</p>`
+            },
+            {
+                id: 4,
+                title: "Personalized Tutoring and Productivity Enhancement",
+                category: "Learning Tips",
+                date: "Oct 08, 2023",
+                image: "Blog/Personalized Tutoring.png",
+                excerpt: "Modern education demands high levels of self-discipline, time management, and independent learning...",
+                content: `<p>Modern education demands high levels of self-discipline, time management, and independent learning. Students often struggle to balance coursework, assignments, research, and personal commitments. Without structured guidance, academic stress and reduced productivity become common challenges.</p>
+                <p>Saritex addresses this issue through personalized tutoring and productivity-focused mentoring. One-to-one and group tutoring sessions provide tailored learning paths based on individual strengths, weaknesses, and academic goals. This personalized approach ensures efficient learning and consistent progress.</p>
+                <p>Productivity at Saritex is driven by structured timelines, focused mentoring, and clear academic strategies. Students are guided on how to break complex tasks into manageable components, meet deadlines, and improve implementation efficiency. This systematic approach enhances academic performance while reducing stress.</p>
+                <p>In addition, Saritex integrates mentoring with skill development. Students learn not only subject content but also professional practices such as problem-solving, analytical thinking, and effective communication. These skills are essential for success in both academic and professional environments.</p>`
+            },
+            // Generated Blogs (5-16)
+              {
+                id: 5,
+                title: "Simple Tips to Write High-Scoring Essays",
+                category: "Essay Help",
+                date: "Sep 25, 2023",
+                image: "Blog/blog5.png",
+                excerpt:
+                "Essay writing is one of the most common tasks given in colleges and universities. Even though essays look easy, many students struggle to write them properly.",
+                content: `<p>Essay writing is one of the most common tasks given in colleges and universities. Even though essays look easy, many students struggle to write them properly. A good essay needs clear structure, strong arguments, correct grammar, and proper referencing. That’s why essay help is very important for students who want better grades. At Saritex Assignment Writing & Online Sessions Services, we understand that every essay is a chance to think deeper and rise higher, and we guide students in the best way.</p>
+
+            <p>Many students face problems in essay writing because they don’t know where to start. The first step is understanding the question. Students often read the question quickly and start writing without understanding what is required. This leads to weak and irrelevant content. Saritex experts help students understand the essay question, highlight key words like “discuss”, “analyze”, “compare”, and “evaluate”, and then create the correct plan.</p>
+
+            <p>A strong essay always has three main parts: introduction, body, and conclusion. The introduction should explain the topic and give a small overview of what the essay will discuss. It should also have a clear thesis statement. The body paragraphs should include arguments, facts, and evidence. Each paragraph should focus on one main point. The conclusion should summarize the essay clearly and not add new ideas.</p>
+
+            <p>One major reason students lose marks is lack of structure and flow. Essay writing is not only about knowledge—it is also about how you present your ideas. Saritex helps students improve essay structure by creating clear outlines, paragraph plans, and logical flow.<br/>
+            Another important part is research. Essays need strong academic sources such as journals, books, and reports. Many students use random websites which are not accepted in academic work. Saritex provides high-quality research from reliable sources, ensuring the essay becomes strong and credible.</p>
+
+            <p>Referencing is another area where students struggle. Universities take plagiarism seriously, so proper referencing is required. Saritex supports students by using correct referencing styles such as Harvard, APA, MLA, and Chicago. This improves grades and makes writing professional.<br/>
+            At Saritex, we believe education support should be personalized. Some students need full writing support, while others only need proofreading or guidance. We provide both. Our online sessions also help students understand essay writing deeply, so they become confident.<br/>
+            Essay help is not about cheating. It is about support and learning. With Saritex guidance, students can improve writing skills, manage stress, and perform better academically. If you need help writing a high-scoring essay, Saritex is here to guide you towards success.</p>`,
+            },
+
+            // ✅ Blog 6 Added
+            {
+                id: 6,
+                title: "Case Study Help – How to Write a Perfect Case Study",
+                category: "Case Study Help",
+                date: "Sep 22, 2023",
+                image: "Blog/blog6.png",
+                excerpt:
+                "Case study writing tests real-life understanding and requires problem identification, critical analysis, and practical solutions.",
+                content: `<p>Case study writing is one of the most important academic tasks because it tests real-life understanding of business, healthcare, management, psychology, and many other fields. A case study requires problem identification, critical analysis, and practical solutions. Many students struggle because they don’t know how to analyze the case or how to structure the report. That is why professional case study help is very useful. At Saritex Assignment Writing & Online Sessions Services, we guide students step-by-step so they can write case studies confidently.</p>
+
+            <p>A case study usually includes background information, key issues, analysis, and recommendations. The biggest challenge students face is identifying the main problem. Sometimes a case includes too much information, and students get confused. Saritex experts help students highlight important facts and understand what the case is really asking.</p>
+
+            <p>After identifying the problem, the next step is analysis. A case study should not be based on personal opinion; it must be supported by theories, frameworks, and academic references. For example, business students may need SWOT analysis, PESTLE analysis, Porter’s Five Forces, or business models. Saritex experts help students apply correct frameworks to analyze the situation professionally.</p>
+
+            <p>Another major part is writing strong recommendations. Recommendations should be realistic, clear, and supported by evidence. Many students write weak recommendations without explaining why they are suitable. Saritex ensures recommendations are linked to the analysis and offer practical solutions.</p>
+
+            <p>Case studies also require a clear structure. Students often lose marks because their writing is disorganized. Saritex helps students create proper headings, clear paragraphs, and smooth flow. We also support proper formatting, referencing, and academic style.</p>
+
+            <p>At Saritex, we believe case studies help students build critical thinking and problem-solving skills. This is why we offer online sessions as well. During these sessions, students learn how to analyze cases, apply theories, and develop strong answers. This helps students not only in assignments but also in real-world skills.</p>
+
+            <p>Saritex is dedicated to providing exceptional academic support tailored to individual needs. Some students need full writing support, while others want guidance to learn. We provide both. Our goal is to make case study writing easy and effective.</p>
+
+            <p>If you are confused about how to start your case study or how to analyze it, Saritex is ready to guide you. Every case study is a chance to rise higher—so don’t let stress stop your success.</p>`,
+            },
+
+            // ✅ Blog 7 Added
+            {
+                id: 7,
+                title: "Coursework Help – Complete Guide for Better Results",
+                category: "Coursework Help",
+                date: "Sep 20, 2023",
+                image: "Blog/blog7.png",
+                excerpt:
+                "Coursework tests students over a longer period with reports, essays, research, and presentations. Saritex helps you manage and score better.",
+                content: `<p>Coursework is one of the most important parts of academic evaluation. Unlike exams, coursework tests students over a longer period and includes multiple tasks like reports, essays, research work, presentations, and practical analysis. Many students struggle to manage coursework because it requires continuous effort and strong academic skills. That is why coursework help is highly beneficial. At Saritex Assignment Writing & Online Sessions Services, we guide students to complete coursework successfully with personalized support.</p>
+
+            <p>One of the biggest challenges is time management. Coursework deadlines usually come with multiple subjects at the same time. Students often get stressed and submit poor-quality work. Saritex helps students plan coursework properly by dividing tasks into smaller steps and ensuring timely completion.</p>
+
+            <p>Another challenge is research. Coursework often requires deep study and critical evaluation. Students struggle to find academic sources, understand journal articles, and write structured content. Saritex experts provide strong academic support by helping students with research, referencing, and structure.</p>
+
+            <p>Coursework also requires clear understanding of learning outcomes. Universities give specific marking criteria, and students must meet those requirements. Saritex carefully checks coursework brief, ensures every requirement is covered, and helps students achieve higher grades.</p>
+
+            <p>At Saritex, we believe in empowering students globally. We provide coursework support for diploma, undergraduate, and postgraduate levels. We also provide online sessions, so students can learn and improve their skills.</p>
+
+            <p>If coursework is stressful for you, Saritex is here. We make coursework manageable, clear, and successful.</p>`,
+            },
+
+            // ✅ Blog 8 Added
+            {
+                id: 8,
+                title: "Proofreading Services – Improve Quality & Grades Instantly",
+                category: "Proofreading",
+                date: "Sep 18, 2023",
+                image: "Blog/blog8.png",
+                excerpt:
+                "Even strong assignments lose marks due to grammar mistakes, formatting issues, and unclear writing. Proofreading fixes this instantly.",
+                content: `<p>Many students work hard on writing assignments, but still lose marks due to spelling mistakes, grammar issues, unclear sentences, or formatting errors. This is where proofreading services become extremely important. Proofreading is the final stage where your writing is checked to make it polished and professional. At Saritex Assignment Writing & Online Sessions Services, we provide expert proofreading support to help students submit error-free work.</p>
+
+            <p>Proofreading is not only about correcting spelling mistakes. It also includes improving grammar, sentence flow, punctuation, and clarity. Sometimes students write good content, but poor language reduces the quality. Proofreading makes writing smooth and easy to understand.</p>
+
+            <p>Another key issue is referencing style. Many students lose marks because of wrong citation format. Saritex checks all in-text citations and reference lists properly in Harvard, APA, MLA, or Chicago style.</p>
+
+            <p>Proofreading also helps reduce plagiarism risk. If the writing includes incorrect paraphrasing or weak sentence structure, it may match other sources. Saritex improves sentence rewriting without changing the original meaning.</p>
+
+            <p>Saritex believes every assignment is a chance to rise higher, so we ensure your final draft looks perfect. If you want to improve quality instantly and score better marks, proofreading is the best solution.</p>`,
+            },
+
+            // ✅ Blog 9 Added
+            {
+                id: 9,
+                title: "Editing Services – Make Your Academic Writing Professional",
+                category: "Editing",
+                date: "Sep 15, 2023",
+                image: "Blog/blog9.png",
+                excerpt:
+                "Editing improves flow, structure, tone, and clarity so your assignment becomes more professional and meets academic requirements.",
+                content: `<p>Editing is one of the most powerful ways to improve academic work. Many students complete assignments but their writing is not strong due to weak structure, poor flow, or unclear arguments. This is why editing services are highly valuable. At Saritex Assignment Writing & Online Sessions Services, we provide professional editing that improves the quality of writing while maintaining the student’s original ideas.</p>
+
+            <p>Editing includes improving sentence structure, removing repeated content, and making writing more academic. Sometimes students write informally, and universities expect formal academic tone. Saritex editors improve the tone, vocabulary, and clarity.</p>
+
+            <p>Editing also helps in improving coherence. Assignments should have logical flow from one paragraph to another. Saritex ensures the writing follows a smooth structure and meets marking criteria.</p>
+
+            <p>We also focus on formatting, headings, and references. Proper formatting increases professionalism. Our editing service ensures your assignment looks clear and structured.</p>
+
+            <p>At Saritex, we provide personalized editing based on each student’s needs. Some students only need grammar correction; others need deep editing. We offer both. Your writing becomes professional and grade-ready.</p>`,
+            },
+
+            // ✅ Blog 10 Added
+            {
+                id: 10,
+                title: "Diploma Assignment Help – Best Support for Diploma Students",
+                category: "Diploma Help",
+                date: "Sep 12, 2023",
+                image: "Blog/blog10.png",
+                excerpt:
+                "Diploma students often struggle due to deadlines, practical subjects, and part-time work. Saritex provides structured support for success.",
+                content: `<p>Diploma students face different academic challenges compared to university students. They often have practical subjects, strict deadlines, and limited time. Many diploma students also work part-time. This makes it difficult to complete assignments properly. That is why diploma assignment help is very useful. Saritex Assignment Writing & Online Sessions Services provides complete academic support tailored for diploma learners.</p>
+
+            <p>Diploma assignments require clear understanding of concepts and practical approach. Many students struggle due to weak writing skills or lack of guidance. Saritex experts help students create structured assignments with clear points, correct formatting, and strong research.</p>
+
+            <p>We also support students with online sessions. This helps diploma students learn topics faster and understand how to complete tasks confidently. At Saritex, we believe in empowering students globally and helping them rise higher through personalized guidance.</p>
+
+            <p>Whether you need help in writing, editing, or proofreading your diploma assignments, Saritex is the best solution for academic success.</p>`,
+            },
+
+            // ✅ Blog 11 Added
+            {
+                id: 11,
+                title: "Online Academic Sessions – Learn Faster with Expert Tutors",
+                category: "Online Sessions",
+                date: "Sep 10, 2023",
+                image: "Blog/blog11.png",
+                excerpt:
+                "Online academic sessions help students understand topics clearly, improve confidence, and prepare better for assignments and exams.",
+                content: `<p>Many students need more than writing support—they need learning support. This is where online academic sessions become highly valuable. Online sessions help students understand topics, improve skills, and gain confidence. At Saritex Assignment Writing & Online Sessions Services, we provide personalized online sessions where students learn directly from experts.</p>
+
+            <p>Online learning is flexible. Students can learn from anywhere, anytime. Some students struggle with lectures in class, or they need extra help before exams or deadlines. Saritex online sessions help students understand topics in simple words and clear explanations.</p>
+
+            <p>Our sessions focus on assignment planning, research methods, academic writing, referencing, and concept understanding. We guide students step-by-step based on their needs. This personalized approach helps students improve faster.</p>
+
+            <p>At Saritex, we believe every session is a chance to think deeper and rise higher. That’s why we ensure each session is supportive, interactive, and helpful.</p>
+
+            <p>If you want to learn better and score higher, Saritex online sessions are the perfect choice.</p>`,
+            },
+
+            // ✅ Blog 12 Added
+            {
+                id: 12,
+                title: "Why Saritex is the Best Choice for Academic Support Worldwide",
+                category: "Saritex",
+                date: "Sep 08, 2023",
+                image: "Blog/blog12.png",
+                excerpt:
+                "Students face pressure from deadlines, exams, and assignments. Saritex supports students globally with quality academic assistance and learning guidance.",
+                content: `<p>In today’s academic world, students face pressure from deadlines, exams, and assignments. Many students feel stressed and confused about how to achieve high grades. This is why Saritex Assignment Writing & Online Sessions Services exists—to support students globally with quality academic assistance.</p>
+
+            <p>Saritex believes every assignment is a chance to rise higher. Our services are designed to provide personalized support based on individual student needs. We offer assignment help, dissertation help, thesis help, essay help, case study support, coursework help, diploma assignment help, proofreading, editing, and online academic sessions.</p>
+
+            <p>Our biggest strength is our expert team. We have subject specialists who understand academic requirements and marking criteria. We also focus on clear communication so students understand everything properly.</p>
+
+            <p>Saritex supports students not only by providing solutions but also by helping them learn. Our online sessions help students build skills like research, academic writing, critical thinking, and referencing.</p>
+
+            <p>We are dedicated to student success. Our work is structured, well-researched, properly referenced, and designed to help students improve. We believe in empowering students worldwide through quality education support.</p>
+
+            <p>If you want reliable academic help that is supportive and professional, Saritex is the right choice. With Saritex, you don’t just complete assignments—you improve your academic potential.</p>`,
+            },
+            {
+            id: 13,
+            title: "Coding Assignments 101",
+            category: "IT",
+            date: "Sep 05, 2023",
+            image: "Blog/blog13.png",
+            excerpt:
+                "A beginner's guide to tackling programming assignments in Python, Java, and C++.",
+            content: `<p>Coding assignments are becoming very common for students in IT, Computer Science, and Software Engineering. These assignments help students practice programming logic, problem-solving, and real-world coding skills. But many beginners feel confused when they see coding tasks, because programming is not only about writing code—it is about understanding logic, building structure, and fixing errors. That is why coding assignment guidance is very helpful. At Saritex Assignment Writing & Online Sessions Services, we support students step-by-step so they can complete coding assignments confidently and improve their skills.</p>
+
+            <p>The first step in any coding assignment is to understand the question properly. Many students start coding immediately without reading requirements. This creates incorrect output and missing features. Saritex experts help students understand what the assignment is asking: input, output, conditions, constraints, and required language (Python, Java, C++, etc.). Once the requirements are clear, the solution becomes easier.</p>
+
+            <p>After understanding the task, the next step is planning. Coding without planning often causes messy and confusing programs. A good programmer first creates logic in simple steps. This can be done using flowcharts, pseudocode, or step-by-step breakdown. Saritex helps students create a clear plan so the coding process becomes faster and more accurate.</p>
+
+            <p>Beginners also struggle with syntax errors and runtime errors. In programming languages like Python, small mistakes like missing indentation or wrong variable names create errors. In Java and C++, missing semicolons, incorrect brackets, or wrong data types create problems. Saritex helps students understand common errors, debug programs correctly, and write clean code.</p>
+
+            <p>Another major issue is not using proper concepts. Coding assignments usually include important topics such as loops, arrays, functions, OOP (Object-Oriented Programming), recursion, file handling, and data structures. Many students write solutions without applying correct concepts, which reduces marks. Saritex supports students with concept understanding and shows how to use best programming practices.</p>
+
+            <p>Testing is also an important part. Students often submit code without testing. This leads to wrong outputs. Saritex guides students to test with multiple inputs and edge cases. We also help students add comments inside code, so it looks professional and easy to understand.</p>
+
+            <p>At Saritex, we believe coding is not just about finishing assignments—it is about building skills for a strong career. Our online sessions help students learn coding in simple words, practice problems, and become confident. If coding assignments are stressful for you, Saritex is here to guide you. Every coding task is a chance to think deeper and rise higher.</p>`,
+            },
+
+            {
+            id: 14,
+            title: "Online vs Campus Learning",
+            category: "Education",
+            date: "Sep 01, 2023",
+            image: "Blog/blog14.png",
+            excerpt:
+                "Comparing the benefits and challenges of remote learning versus traditional classroom education.",
+            content: `<p>Education has changed a lot in recent years. Students now have two main options: online learning and campus learning. Both methods have their advantages and challenges. Some students learn better in classrooms, while others prefer learning from home. Choosing the right method depends on the student’s lifestyle, learning style, and personal needs. At Saritex Assignment Writing & Online Sessions Services, we support students in both online and campus learning environments and help them succeed in assignments and academic tasks.</p>
+
+            <p>Campus learning is the traditional method where students attend classes physically in colleges or universities. One big advantage is direct interaction. Students can ask questions face-to-face, participate in classroom discussions, and work in groups. This creates a strong learning environment. Campus learning is also good for students who need discipline and fixed routines.</p>
+
+            <p>However, campus learning also has challenges. Students must travel daily, which takes time and money. Attendance rules can also create stress. Some students may feel shy to ask questions in class or struggle to match the speed of lectures.</p>
+
+            <p>Online learning is a modern method where students study through digital platforms. The biggest benefit is flexibility. Students can learn from anywhere and manage their time easily. It is very useful for working students, international learners, and students with family responsibilities. Online learning also allows students to record sessions and rewatch lectures, which improves understanding.</p>
+
+            <p>But online learning has some challenges too. Students may feel isolated due to lack of face-to-face communication. Internet problems, distractions at home, and low motivation can also affect learning. Many students struggle to focus online and require extra guidance.</p>
+
+            <p>This is why Saritex provides support in both learning types. We provide online academic sessions where students can learn concepts clearly with experts. We also support campus learners by helping them manage assignments, deadlines, and research work. Whether you study online or on campus, Saritex believes every assignment is a chance to rise higher, and we guide students towards success.</p>
+
+            <p>In conclusion, both online and campus learning are valuable. The best choice depends on your situation. If you want flexibility, online learning is great. If you want classroom interaction, campus learning is better. With Saritex support, students can succeed in both systems.</p>`,
+            },
+
+            {
+            id: 15,
+            title: "Effective Presentation Skills",
+            category: "Soft Skills",
+            date: "Aug 28, 2023",
+            image: "Blog/blog15.png",
+            excerpt:
+                "How to design impactful slides and deliver your academic presentations with confidence.",
+            content: `<p>Presentation skills are very important for students in schools, colleges, and universities. Presentations are not only about speaking; they are about communication, confidence, and delivering information in a structured way. Many students feel nervous and scared during presentations. They may have good knowledge, but fear and lack of preparation makes them perform poorly. That is why learning effective presentation skills is necessary. At Saritex Assignment Writing & Online Sessions Services, we support students to improve presentation skills and perform confidently in academic life.</p>
+
+            <p>The first step for an effective presentation is preparation. Many students make slides quickly and memorize lines, which creates stress. A good presenter understands the topic clearly and prepares key points. Saritex helps students create strong presentation structure: introduction, main body points, examples, and conclusion.</p>
+
+            <p>The second important part is slide design. Slides should be clear and simple. Many students add too much text, which makes slides boring. Saritex guides students to use short bullet points, headings, diagrams, and charts. A good slide should support speaking, not replace it. We also help students choose correct fonts, spacing, and professional layout.</p>
+
+            <p>Confidence in speaking is another major part. Nervousness is common, but it can be reduced with practice. Saritex online sessions help students practice speaking, improve pronunciation, and learn how to speak clearly. We also guide students on body language: eye contact, standing posture, hand movement, and voice control.</p>
+
+            <p>Time management is also important. Students often speak too fast or too slow. Saritex helps students practice timing so they can finish within the required time limit. We also guide them to handle questions confidently after the presentation.</p>
+
+            <p>At Saritex, we believe every academic task is a chance to grow. Presentation skills also help in job interviews and professional careers. If you want to improve presentations and reduce fear, Saritex is here to guide you with expert academic support and personalized sessions.</p>`,
+            },
+
+            {
+            id: 16,
+            title: "The Future of EdTech",
+            category: "Trends",
+            date: "Aug 25, 2023",
+            image: "Blog/blog16.png",
+            excerpt:
+                "How emerging technologies are shaping the future of global education and student support.",
+            content: `<p>Education Technology (EdTech) is changing the way students learn across the world. In the past, learning was limited to classrooms, books, and teachers. But today, digital tools are becoming a big part of education. Online learning platforms, virtual classrooms, mobile apps, AI tutors, and smart learning systems are improving education. The future of EdTech is very bright, and it will continue to shape global learning in powerful ways. At Saritex Assignment Writing & Online Sessions Services, we support students with modern learning support and guide them through new education trends.</p>
+
+            <p>One major future trend is Artificial Intelligence in education. AI tools can help students learn faster by giving personalized learning paths, instant feedback, and smart recommendations. AI can also help teachers track student performance and identify learning gaps. But students must use AI ethically, especially in academic writing.</p>
+
+            <p>Another important EdTech development is online learning and hybrid education. Many universities now provide blended learning options where students can study both online and on campus. This makes education flexible for students globally.</p>
+
+            <p>Virtual Reality (VR) and Augmented Reality (AR) are also becoming popular in education. These technologies can create interactive learning experiences. For example, medical students can practice surgery in VR, and engineering students can explore machine parts in 3D. This improves practical understanding.</p>
+
+            <p>EdTech also supports students with accessibility. Students with disabilities can use speech-to-text tools, screen readers, and adaptive learning platforms. This creates equal learning opportunities for everyone.</p>
+
+            <p>At Saritex, we believe technology should support learning, not replace it. That is why we provide both academic writing help and online learning sessions. Our goal is to empower students globally with quality education support. The future of EdTech will be more personalized, flexible, and interactive. With Saritex guidance, students can adapt to modern learning trends and achieve academic success.</p>`,
+            },    
+        
+        
+        ];
+
+        let visibleCount = 8; // Show 8 blogs initially
+
+        // ============================================
+        // FUNCTION: Render Blogs
+        // ============================================
+        function renderBlogs(limit) {
+            const container = document.getElementById('blog-grid');
+            const blogsToShow = blogsData.slice(0, limit);
+
+            blogsToShow.forEach(blog => {
+                const col = document.createElement('div');
+                col.className = 'col-lg-3 col-md-6 reveal';
+                
+                col.innerHTML = `
+                    <div class="blog-card">
+                        <div class="blog-img-wrapper">
+                            <img src="${blog.image}" alt="${blog.title}">
+                        </div>
+                        <div class="blog-content">
+                            <span class="blog-tag">${blog.category}</span>
+                            <h3 class="blog-title">${blog.title}</h3>
+                            <p class="blog-excerpt">${blog.excerpt}</p>
+                            <div class="blog-footer">
+                                <small class="text-muted"><i class="far fa-calendar-alt me-1"></i> ${blog.date}</small>
+                                <a href="#" class="read-more-btn" onclick="openBlogModal(${blog.id}); return false;">Read More <i class="fas fa-arrow-right ms-1"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(col);
+            });
+
+            // Add reveal animation to new elements
+            checkReveal();
+        }
+
+        // ============================================
+        // FUNCTION: Load More
+        // ============================================
+        function loadMoreBlogs() {
+            const total = blogsData.length;
+            const current = document.querySelectorAll('#blog-grid .col-lg-3').length;
+
+            if (current >= total) {
+                document.getElementById('loadMoreBtn').style.display = 'none';
+                return;
+            }
+
+            const nextBatch = Math.min(current + 4, total);
+            renderBlogs(nextBatch);
+
+            if (nextBatch >= total) {
+                document.getElementById('loadMoreBtn').style.display = 'none';
+            }
+        }
+
+        // ============================================
+        // FUNCTION: Open Modal with Content
+        // ============================================
+        function openBlogModal(id) {
+            const blog = blogsData.find(b => b.id === id);
+            if (!blog) return;
+
+            document.getElementById('modalTitle').textContent = blog.title;
+            document.getElementById('modalImage').src = blog.image;
+            document.getElementById('modalCategory').textContent = blog.category;
+            document.getElementById('modalDate').textContent = blog.date;
+            
+            // If placeholder content, use excerpt; else use full content
+            const contentHTML = blog.content.includes("Full content placeholder") ? `<p>${blog.excerpt}</p>` : blog.content;
+            document.getElementById('modalContent').innerHTML = contentHTML;
+
+            const myModal = new bootstrap.Modal(document.getElementById('blogModal'));
+            myModal.show();
+        }
+
+        // ============================================
+        // INITIALIZATION & ANIMATION
+        // ============================================
+        document.addEventListener("DOMContentLoaded", () => {
+            renderBlogs(visibleCount); // Initial Render
+        });
+
+        // Reveal Animation Logic
+        function checkReveal() {
+            const reveals = document.querySelectorAll(".reveal");
+            const windowHeight = window.innerHeight;
+            const elementVisible = 100;
+
+            reveals.forEach((reveal) => {
+                const elementTop = reveal.getBoundingClientRect().top;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveal.classList.add("active");
+                }
+            });
+        }
+
+        window.addEventListener("scroll", checkReveal);
+
+        // Toast Logic
+        function showToast(message) {
+            let toast = document.getElementById('customToast');
+            if(!toast) {
+                toast = document.createElement('div');
+                toast.id = 'customToast';
+                toast.className = 'custom-toast';
+                toast.innerHTML = '<i class="fas fa-info-circle toast-icon"></i> <span id="toastMessage"></span>';
+                document.body.appendChild(toast);
+            }
+            const msgSpan = document.getElementById('toastMessage');
+            msgSpan.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // Modal Trigger Logic for CTA
+        function triggerModal() {
+            const myModal = new bootstrap.Modal(document.getElementById('blogModal')); 
+            // Reusing blog modal or creating new success modal if needed. 
+            // For now, let's keep it simple:
+            showToast("Opening chat interface...");
+        }
+
+    </script>
+</body>
+</html>

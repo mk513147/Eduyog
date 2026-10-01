@@ -7,7 +7,8 @@ dotenv.config({ path: path.join(__dirname, '..', '.env'), quiet: true });
 
 const VALID_NODE_ENVS = ['development', 'production', 'test'];
 const DEFAULT_PORT = 5000;
-const DEFAULT_DEV_FRONTEND_URL = 'http://localhost:5173';
+// Admin (5173), Fitness (5174) and Eduyarp (5175) Vite dev servers.
+const DEFAULT_DEV_FRONTEND_URL = 'http://localhost:5173,http://localhost:5174,http://localhost:5175';
 
 const errors = [];
 

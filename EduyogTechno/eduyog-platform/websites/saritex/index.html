@@ -1,0 +1,2103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Best Assignment Help UK | Workingment</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* =========================================
+           1. CSS VARIABLES & GLOBAL RESET
+           ========================================= */
+        :root {
+            /* Colors */
+            --primary-color: #0056b3;
+            --secondary-color: #ff9900;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --bg-light: #f8f9fa;
+            --whatsapp-green: #25D366;
+            --primary-orange: #ff9a45;
+            --primary-orange-dark: #e68a3e;
+            --text-black: #333;
+            --text-white: #ffffff;
+            --icon-green: #28a745;
+            --tag-bg: #eef2ff;
+            --tag-text: #4a6cf7;
+            --white: #ffffff;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+        }
+
+        /* Utility Classes */
+        .bg-primary-color { background-color: var(--primary-color) !important; }
+        .bg-secondary-color { background-color: var(--secondary-color) !important; }
+        .text-primary-color { color: var(--primary-color) !important; }
+        .text-muted { color: var(--text-light) !important; }
+
+        /* =========================================
+           2. TOPBAR & NAVBAR
+           ========================================= */
+        
+        /* Top Bar Buttons */
+        .btn-top:hover {
+            background-color: white;
+            color: #070707 !important;
+            font-weight: bold;
+        }
+
+        /* Navbar */
+        .navbar {
+            padding: 15px 0;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-color) !important;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-link {
+            color: var(--text-dark);
+            font-weight: 500;
+            margin: 0 10px;
+        }
+
+        .nav-link:hover { color: var(--primary-color); }
+
+        /* =========================================
+           3. HERO SECTION
+           ========================================= */
+        .hero-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #f0f4ff 0%, #ffffff 100%);
+            position: relative;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            color: #1a1a1a;
+        }
+
+        .hero-highlight { color: var(--primary-color); }
+
+        .hero-desc {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        /* Trust Ratings */
+        .trust-badges {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .rating-item {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            padding: 8px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+        }
+
+        .rating-score {
+            font-weight: 700;
+            color: #f39c12;
+            font-size: 1.2rem;
+            margin-right: 5px;
+        }
+
+        .rating-platform {
+            font-size: 0.8rem;
+            color: #888;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .stars {
+            color: #f39c12;
+            font-size: 0.8rem;
+            margin-right: 5px;
+        }
+
+        /* Buttons */
+        .btn-primary-custom {
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 15px 35px;
+            font-size: 1.1rem;
+            border-radius: 5px;
+            border: none;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 86, 179, 0.3);
+        }
+
+        .btn-primary-custom:hover {
+            background-color: #004494;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        /* Consult Form Card */
+        .consult-card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-top: 5px solid var(--secondary-color);
+        }
+
+        .form-title {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+        }
+
+        .form-control {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .form-control:focus {
+            box-shadow: none;
+            border-color: var(--primary-color);
+        }
+
+        .btn-submit {
+            width: 100%;
+            background-color: var(--secondary-color);
+            border: none;
+            padding: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #fff;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .btn-submit:hover { background-color: #069e0b; }
+
+        .secure-text {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #777;
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* =========================================
+           4. FEATURES STRIP (Below Hero)
+           ========================================= */
+        .features-strip {
+            background-color: #fff;
+            padding: 40px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .feature-box { text-align: center; padding: 10px; }
+
+        .feature-icon {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        /* =========================================
+           5. SERVICES SECTION
+           ========================================= */
+        .services-section { padding: 80px 0; background-color: #ffffff; }
+
+        .section-title1 {
+            font-weight: 700;
+            color: #1a1a1a;
+            font-size: 2.2rem;
+            line-height: 1.3;
+            margin-bottom: 50px;
+            text-align: center;
+        }
+
+        .service-card {
+            background: #fff;
+            padding: 20px 15px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s ease;
+            height: 100%;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            border-color: #e0e0e0;
+        }
+
+        .icon-wrapper {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .diamond-icon {
+            width: 20px;
+            height: 20px;
+            background-color: #ff7a00;
+            transform: rotate(45deg);
+            display: inline-block;
+            box-shadow: 0 2px 5px rgba(255, 122, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .service-card:hover .diamond-icon { transform: rotate(45deg) scale(1.2); }
+
+        .service-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2d2d2d;
+            margin: 0;
+            transition: color 0.3s ease;
+        }
+
+        .service-card:hover .service-name { color: #0056b3; }
+
+        .btn-view-more {
+            background-color: #0066cc;
+            color: #ffffff;
+            padding: 12px 35px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-transform: capitalize;
+            border: none;
+            transition: all 0.3s ease;
+            margin-top: 40px;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn-view-more:hover {
+            background-color: #004c99;
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 102, 204, 0.3);
+        }
+
+        /* =========================================
+           NEW: CUSTOM PDF MODAL STYLES
+           ========================================= */
+        
+        /* The Overlay (Blurred Background) */
+        .pdf-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px); /* The Blur Effect */
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            padding: 20px;
+        }
+
+        .pdf-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* The Modal Box */
+        .pdf-modal-box {
+            background: #fff;
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            overflow: hidden;
+        }
+
+        .pdf-modal-overlay.active .pdf-modal-box {
+            transform: scale(1);
+        }
+
+        /* Modal Header */
+        .pdf-modal-header {
+            padding: 20px 30px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+        }
+
+        .pdf-modal-title {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .pdf-modal-close {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: #999;
+            cursor: pointer;
+            transition: color 0.2s;
+            line-height: 1;
+        }
+
+        .pdf-modal-close:hover {
+            color: var(--secondary-color);
+        }
+
+        /* Modal Body (Grid of PDFs) */
+        .pdf-modal-body {
+            padding: 30px;
+            overflow-y: auto;
+            background-image: linear-gradient(to bottom, #f9f9f9, #f0edfa, #e6e2fb, #ddd6fc, #d4cbfc);
+        }
+
+        .pdf-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 25px;
+        }
+
+        /* Individual PDF Card */
+        .pdf-card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+        }
+
+        .pdf-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border-color: var(--primary-color);
+        }
+
+        /* Square Thumbnail Area */
+        .pdf-thumbnail {
+            width: 100%;
+            aspect-ratio: 1 / 1; /* Makes it square */
+            background-color: #bcbcbc;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            color: #e74c3c; /* PDF Red */
+            font-size: 3rem;
+        }
+
+        .pdf-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.3;
+        }
+
+        .pdf-view-btn {
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            padding: 8px 0;
+            width: 100%;
+            border-radius: 5px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-decoration: none;
+            display: block;
+        }
+
+        .pdf-view-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        /* See More Area */
+        .modal-footer-see-more {
+            text-align: center;
+            padding-top: 10px;
+            margin-top: 10px;
+            border-top: 1px dashed #ddd;
+        }
+
+        .btn-see-more {
+            background: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            padding: 8px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-see-more:hover {
+            background: var(--primary-color);
+            color: #fff;
+        }
+
+        /* Hidden class for JS pagination */
+        .pdf-hidden {
+            display: none;
+        }
+
+        /* =========================================
+           6. MARQUEE ANIMATION
+           ========================================= */
+        .marquee-container {
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .marquee-track { display: inline-block; animation: scroll 30s linear infinite; }
+        .marquee-container:hover .marquee-track { animation-play-state: paused; }
+
+        .logo-item {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 40px;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo-item:hover { opacity: 1; }
+
+        .logo-item img {
+            max-height: 50px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* =========================================
+           7. INTERACTIVE STEPS (How To Get A+)
+           ========================================= */
+        .steps-section { padding: 80px 0; background-color: #fff; }
+
+        .image-wrapper {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            height: 100%;
+            min-height: 500px;
+        }
+
+        #dynamic-image {
+            width: 100%;
+            height: 90%;
+            object-fit: cover;
+            transition: opacity 0.4s ease-in-out;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .experience-badge {
+            position: absolute;
+            top: 20px;
+            right: -10px;
+            background: rgb(252, 231, 4);
+            color: black;
+            padding: 15px 25px;
+            border-radius: 5px;
+            font-weight: 700;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 2;
+            transform: rotate(3deg);
+        }
+
+        .section-title {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 40px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .step-item {
+            display: flex;
+            margin-bottom: 25px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .step-item:hover { transform: translateX(5px); }
+
+        .step-number {
+            flex-shrink: 0;
+            width: 50px;
+            height: 50px;
+            background: #e0e0e0;
+            color: #666;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            margin-right: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .step-content {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            padding: 15px 20px;
+            flex-grow: 1;
+            transition: all 0.3s ease;
+        }
+
+        .step-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            color: #555;
+            transition: color 0.3s ease;
+        }
+
+        /* Active State */
+        .step-item.active .step-number {
+            background: var(--primary-color);
+            color: #fff;
+            box-shadow: 0 0 0 4px rgba(0, 74, 173, 0.2);
+        }
+
+        .step-item.active .step-content {
+            border-color: var(--primary-color);
+            background-color: rgba(0, 74, 173, 0.03);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .step-item.active .step-title { color: var(--primary-color); }
+
+        .btn-custom {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 35px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            border: 2px solid var(--primary-color);
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0,74,173,0.3);
+        }
+
+        .btn-custom:hover {
+            background-color: transparent;
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        /* =========================================
+           8. COMPARISON FEATURES (3 Columns)
+           ========================================= */
+        h2.section-title {
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            font-size: 28px;
+            line-height: 1.4;
+            text-align: center;
+        }
+
+        h3.card-title {
+            font-weight: 600;
+            font-size: 22px;
+            margin-bottom: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .features-wrapper {
+            background-image: linear-gradient(to right bottom, #dfe0f2, #d7daf1, #ced5f0, #c5cfef, #bbcaee, #b5c8ee, #afc6ee, #a9c4ee, #a6c5f0, #a2c6f2, #9fc7f3, #9bc8f5);
+            padding: 50px 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .feature-col {
+            padding: 25px 20px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            border: 1px solid #eee;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-list { list-style: none; padding: 0; margin: 0; }
+
+        .feature-list li {
+            margin-bottom: 18px;
+            display: flex;
+            align-items: flex-start;
+            font-size: 15px;
+            line-height: 1.5;
+            color: var(--text-black);
+            transition: color 0.3s ease;
+        }
+
+        .feature-list li i {
+            margin-right: 12px;
+            margin-top: 5px;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        /* Left & Right Columns */
+        .col-features .feature-list i,
+        .col-others .feature-list i {
+            color: #000;
+            font-size: 12px;
+        }
+
+        .col-features:hover,
+        .col-others:hover {
+            background-color: var(--primary-orange);
+            box-shadow: 0 10px 25px rgba(255, 154, 69, 0.4);
+            transform: translateY(-5px);
+        }
+
+        .col-features:hover h3,
+        .col-others:hover h3 {
+            color: var(--text-white);
+            text-decoration: underline;
+            text-decoration-color: var(--text-white);
+            text-underline-offset: 8px;
+        }
+
+        .col-features:hover .feature-list li,
+        .col-others:hover .feature-list li { color: var(--text-white); }
+
+        .col-features:hover .feature-list i,
+        .col-others:hover .feature-list i { color: var(--text-white); }
+
+        .col-others:hover .feature-list .icon { color: red; }
+
+        /* Middle Column */
+        .col-our-services {
+            background-color: #fff;
+            border: 1px solid #eee;
+        }
+
+        .col-our-services h3 {
+            color: var(--text-black);
+            text-decoration: underline;
+            text-decoration-color: var(--primary-orange);
+            text-underline-offset: 8px;
+        }
+
+        .col-our-services .feature-list i { color: #000; font-size: 14px; }
+
+        .col-our-services:hover {
+            background-color: var(--primary-orange);
+            box-shadow: 0 15px 30px rgba(255, 154, 69, 0.4);
+            transform: translateY(-5px);
+        }
+
+        .col-our-services:hover h3 { text-decoration-color: var(--text-white); }
+        .col-our-services:hover .feature-list li { color: var(--text-white); }
+        .col-our-services:hover .feature-list i { color: var(--icon-green); font-size: 16px; }
+
+        .btn-wrapper { text-align: center; margin-top: 30px; height: 50px; }
+
+        .btn-features {
+            display: none;
+            background-color: #fff;
+            color: var(--primary-orange);
+            padding: 10px 35px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .col-our-services:hover .btn-features {
+            display: inline-block;
+            animation: fadeInScale 0.4s ease-out forwards;
+        }
+
+        .btn-features:hover {
+            transform: scale(1.05);
+            background-color: #f9f9f9;
+            color: var(--primary-orange-dark);
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .social-float {
+            position: sticky;
+            bottom: 20px;
+            right: 20px;
+            background-color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 100;
+            width: max-content;
+            margin-top: 30px;
+        }
+
+        .we-are-here-text { font-weight: 600; color: var(--text-black); font-size: 14px; }
+        .social-icons a { color: #666; font-size: 18px; margin-left: 5px; transition: color 0.2s; }
+        .social-icons a:hover { color: var(--primary-orange); }
+
+        /* =========================================
+           9. BLOGS SECTION
+           ========================================= */
+        .blog-section-header { margin-bottom: 50px; text-align: center; }
+
+        .blog-section-header h2 { font-weight: 700; font-size: 32px; margin-bottom: 10px; }
+        .blog-section-header p { color: var(--text-light); font-weight: 300; font-size: 16px; }
+
+        .blog-card {
+            border: none;
+            background-color: #fff;
+            transition: all 0.3s ease;
+            height: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .card-img-top {
+            width: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .blog-card:hover .card-img-top { transform: scale(1.03); }
+
+        .card-body { padding: 20px; display: flex; flex-direction: column; }
+
+        /* Featured Blog */
+        .featured-blog .card-img-top { height: 350px; }
+        .featured-blog .blog-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-top: 15px;
+            line-height: 1.3;
+            color: var(--text-dark);
+        }
+        .featured-blog p {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-top: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Small Blog */
+        .small-blog .card-img-top { height: 160px; }
+        .small-blog .blog-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 10px;
+            line-height: 1.4;
+            color: var(--text-dark);
+        }
+        .small-blog p {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-top: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .blog-tag {
+            display: inline-block;
+            background-color: var(--tag-bg);
+            color: var(--tag-text);
+            font-size: 11px;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .view-more-container { margin-top: 40px; display: flex; justify-content: flex-end; }
+
+        /* =========================================
+           10. TESTIMONIALS
+           ========================================= */
+        .testimonial-card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            margin: 20px 0;
+        }
+
+        .testimonial-card .stars { color: #ffc107; margin-bottom: 15px; }
+
+        .client-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 15px;
+        }
+
+        .section-padding1 { padding: 80px 0; }
+
+        .section-title1 {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title1 h2 {
+            font-weight: 700;
+            color: var(--primary-color);
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .section-title1 h2::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 3px;
+            background: var(--secondary-color);
+            bottom: 0;
+            left: 25%;
+        }
+
+        /* =========================================
+           11. FOOTER
+           ========================================= */
+        footer {
+            background-color: #1a1a1a;
+            color: #ccc;
+            padding: 60px 0 20px;
+        }
+
+        footer h5 {
+            color: var(--white);
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        footer ul { list-style: none; padding: 0; }
+        footer ul li { margin-bottom: 12px; }
+        footer ul li a {
+            color: #ccc;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        footer ul li a:hover {
+            color: var(--secondary-color);
+            padding-left: 5px;
+        }
+
+        footer .social-icons a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            color: var(--white);
+            text-align: center;
+            line-height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        footer .social-icons a:hover { background: var(--secondary-color); }
+
+        .copyright {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 50px;
+            padding-top: 20px;
+            text-align: center;
+        }
+
+        /* =========================================
+           12. FLOATING ELEMENTS & TOAST
+           ========================================= */
+        /* Sticky WhatsApp */
+        .whatsapp-float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--whatsapp-green);
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .whatsapp-float:hover {
+            background-color: #1ebc57;
+            transform: scale(1.1);
+            color: #fff;
+        }
+
+        /* Toast Notification */
+        .custom-toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #333;
+            color: #fff;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            transform: translateY(150%);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .custom-toast.show { transform: translateY(0); }
+        .toast-icon { color: #4ade80; font-size: 1.2rem; }
+
+        /* =========================================
+           13. MEDIA QUERIES (RESPONSIVE)
+           ========================================= */
+        @media (max-width: 991px) {
+            .hero-section {
+                text-align: center;
+                padding-top: 40px;
+            }
+            .hero-title { font-size: 2.2rem; }
+            .trust-badges { justify-content: center; }
+            .consult-card { margin-top: 40px; }
+            .image-wrapper { min-height: 300px; margin-bottom: 40px; }
+            .featured-blog .card-img-top { height: 250px; }
+        }
+
+        @media (max-width: 768px) {
+            .section-title { font-size: 1.6rem; }
+            .features-wrapper { padding: 20px; }
+            h3.card-title { font-size: 18px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP BAR -->
+    <div class="bg-primary-color border-bottom py-2">
+        <div class="container">
+            <div class="row align-items-center justify-content-between">
+                
+                <!-- Center Side: Phone Numbers -->
+                <div class="col-12 col-md-4 text-center py-1 py-md-0">
+                    <div class="d-flex justify-content-center gap-2 flex-wrap">
+                        <span class="bg-muted text-light px-3 py-1 rounded small">
+                            <i class="fab fa-whatsapp me-1"></i> +91 - 7061122327
+                        </span>
+                        <span class="bg-muted text-light px-3 py-1 rounded small">
+                            <i class="fab fa-whatsapp me-1"></i> +91 - 7295993480
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Right Side: Social Icons + Bookmarks Button -->
+                <div class="col-md-4 d-none d-md-block text-end">
+                    <div class="d-inline-block text-white small me-3">
+                        <a href="mailto:askavach@gmail.com" class="text-white"><i class="fas fa-envelope me-3"></i></a>
+                        <a href="https://wa.me/7295993480"  target="_blank"  class="text-white"><i class="fab fa-whatsapp me-3"></i></a>
+                        <a href="http://" class="text-white"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                    <a href="https://wa.me/7295993480"  target="_blank"  class="btn btn-sm btn-top btn-outline-light rounded-pill px-3 text-white">All Bookmarks</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">SARITEX</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="AboutUs.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="Services.html">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="Blogs.html">Blogs</a></li>
+                    <li class="nav-item"><a class="nav-link" href="Reviews.html">Reviews</a></li>
+                    <li class="nav-item"><a class="nav-link" href="ContactUs.html">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                
+                <!-- Left Side: Content -->
+                <div class="col-lg-7">
+                    <h1 class="hero-title">
+                        Best Assignment Help For Students <br>
+                        <span class="hero-highlight">100% Confidential & Plagiarism - Free</span>
+                    </h1>
+                    <p class="hero-desc">
+                        Get professional academic writing assistance from Indian IITian and NITian experts. We deliver high-quality essays, dissertations, and assignments on time with guaranteed grades or your money back.
+                    </p>
+
+                    <!-- Ratings / Trust Badges -->
+                    <div class="trust-badges">
+                        <div class="rating-item">
+                            <span class="stars">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </span>
+                            <span class="rating-score">4.9</span>
+                            <span class="rating-platform">Sitejabber</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="stars">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                            </span>
+                            <span class="rating-score">4.5</span>
+                            <span class="rating-platform">Reviews.io</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="stars">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </span>
+                            <span class="rating-score">4.8</span>
+                            <span class="rating-platform">Trustpilot</span>
+                        </div>
+                    </div>
+
+                    <a href="https://wa.me/7295993480"  target="_blank" class="btn-primary-custom">
+                        <i class="fas fa-calendar-check me-2"></i> Book Your Assignment
+                    </a>
+                </div>
+
+                <!-- Right Side: Form -->
+                <div class="col-lg-5" id="consult-form">
+                    <div class="consult-card">
+                        <h3 class="form-title">Consult With Experts</h3>
+                        <form id="leadForm" onsubmit="handleFormSubmit(event) " action="https://sheetdb.io/api/v1/io3zycyrrbs36?sheet=Sheet1" method="post">
+                            <div class="form-group">
+                                <input type="text" name="data[NAME]" class="form-control" placeholder="Enter Your Name" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="email" name="data[EMAIL]" class="form-control" placeholder="Enter Your Email" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="tel" name="data[PHONE_NO]" class="form-control" placeholder="Enter Mobile Number" required>
+                            </div>
+                            <div class="form-group">
+                                <textarea class="form-control" name="data[MESSAGE]" rows="3" placeholder="Describe your requirements..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn-submit">
+                                Get Free Assistance <i class="fas fa-arrow-right ms-2"></i>
+                            </button>
+                            
+                            <div class="secure-text">
+                                <i class="fas fa-lock"></i> 100% Secure & Confidential
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES STRIP -->
+    <section class="features-strip">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 feature-box">
+                    <i class="fas fa-check-circle feature-icon"></i>
+                    <h5>Plagiarism Free</h5>
+                    <p class="text-muted">Every assignment is checked with Turnitin.</p>
+                </div>
+                <div class="col-md-4 feature-box">
+                    <i class="fas fa-stopwatch feature-icon"></i>
+                    <h5>On-Time Delivery</h5>
+                    <p class="text-muted">We never miss a deadline.</p>
+                </div>
+                <div class="col-md-4 feature-box">
+                    <i class="fas fa-user-graduate feature-icon"></i>
+                    <h5>Expert Writers</h5>
+                    <p class="text-muted">PhD qualified scholars from the UK.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICES SECTION -->
+    <section class="services-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h2 class="section-title1">Best Assignment Writing Services Offered For Master's and Bachelor's Students</h2>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <!-- 
+                   UPDATED SERVICE CARDS 
+                   Note: data-service maps to the keys in the JS object below.
+                -->
+                
+                <!-- Service 1: Maps to "AWS Work Files" -->
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="service-card" data-service="AWS Work Help">
+                        <div class="icon-wrapper">
+                            <span class="diamond-icon"></span>
+                        </div>
+                        <h3 class="service-name">AWS Work Help</h3>
+                    </div>
+                </div>
+
+                <!-- Service 2: Maps to "BigData Workfiles" -->
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="service-card" data-service="BigData Workfiles">
+                        <div class="icon-wrapper">
+                            <span class="diamond-icon"></span>
+                        </div>
+                        <h3 class="service-name">BigData Workfiles</h3>
+                    </div>
+                </div>
+
+                <!-- Service 3: Maps to "Deep Learning" -->
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="service-card" data-service="Deep Learning">
+                        <div class="icon-wrapper">
+                            <span class="diamond-icon"></span>
+                        </div>
+                        <h3 class="service-name">Deep Learning</h3>
+                    </div>
+                </div>
+
+                <!-- Service 4: Maps to "Intelligent system" -->
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="service-card" data-service="Intelligent system">
+                        <div class="icon-wrapper">
+                            <span class="diamond-icon"></span>
+                        </div>
+                        <h3 class="service-name">Intelligent System</h3>
+                    </div>
+                </div>
+
+                <!-- Service 5: Maps to "Dissertation" -->
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="service-card" data-service="Dissertation">
+                        <div class="icon-wrapper">
+                            <span class="diamond-icon"></span>
+                        </div>
+                        <h3 class="service-name">Dissertation</h3>
+                    </div>
+                </div>
+
+                <!-- Service 6: Maps to "Dissertation Proposal" -->
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="service-card" data-service="Dissertation Proposal">
+                        <div class="icon-wrapper">
+                            <span class="diamond-icon"></span>
+                        </div>
+                        <h3 class="service-name">Dissertation Proposal</h3>
+                    </div>
+                </div>
+
+                <!-- Service 7: Maps to "Software Engineering and Development" -->
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="service-card" data-service="Software Engineering and Development">
+                        <div class="icon-wrapper">
+                            <span class="diamond-icon"></span>
+                        </div>
+                        <h3 class="service-name">Software Engineering</h3>
+                    </div>
+                </div>
+
+                 <!-- Service 8: Maps to "Networking" -->
+                 <div class="col-6 col-md-4 col-lg-3">
+                    <div class="service-card" data-service="Networking">
+                        <div class="icon-wrapper">
+                            <span class="diamond-icon"></span>
+                        </div>
+                        <h3 class="service-name">Networking</h3>
+                    </div>
+                </div>
+                
+                <!-- Placeholder for original extra cards if needed -->
+             
+
+
+
+
+            <div class="row">
+                <div class="col-12 text-center">
+                    <a href="Services.html" class="btn-view-more" id="viewMoreBtn">View More Services</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- UNIVERSITY LOGO MARQUEE SECTION -->
+    <section class="py-5 bg-light">
+        <div class="container text-center mb-4">
+            <h2 class="fw-bold">Trusted By Over 85,000 Students</h2>
+            <p class="text-muted">Hire 5,000+ experts to help you achieve A+ grades</p>
+        </div>
+
+        <!-- Marquee Container -->
+        <div class="marquee-container">
+            <div class="marquee-track">
+                <!-- LIST 1 (Original) -->
+                <div class="logo-item"><img src="image\London.png" alt="London University"></div>
+                <div class="logo-item"><img src="image\liverpool.png" alt="Liverpool University"></div>
+                <div class="logo-item"><img src="image\greenwhich.png" alt="Greenwich University"></div>
+                <div class="logo-item"><img src="image\cambrige.png" alt="Cambridge University"></div>
+                <div class="logo-item"><img src="image\Edinburgh.png" alt="Edinburgh Nsper Universities"></div>
+                <div class="logo-item"><img src="image\alberta.png" alt="Alberta University"></div>
+                <div class="logo-item"><img src="image\bradford.png" alt="Bradford University"></div>
+
+                <!-- LIST 2 (Duplicate for seamless looping) -->
+                <div class="logo-item"><img src="image\London.png" alt="London University"></div>
+                <div class="logo-item"><img src="image\liverpool.png" alt="Liverpool University"></div>
+                <div class="logo-item"><img src="image\greenwhich.png" alt="Greenwich University"></div>
+                <div class="logo-item"><img src="image\cambrige.png" alt="Cambridge University"></div>
+                <div class="logo-item"><img src="image\Edinburgh.png" alt="Edinburgh Nsper Universities"></div>
+                <div class="logo-item"><img src="image\alberta.png" alt="Alberta University"></div>
+                <div class="logo-item"><img src="image\bradford.png" alt="Bradford University"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW TO GET A+ GRADES (INTERACTIVE) -->
+    <section class="steps-section">
+        <div class="container">
+            <div class="row align-items-center">
+                
+                <!-- Left Side: Image Area -->
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <div class="image-wrapper">
+                        <!-- Default Image (Step 1 Image) -->
+                        <img id="dynamic-image" src="image\share.png" alt="Step 1">
+                        
+                        <!-- Badge -->
+                        <div class="experience-badge">
+                            A+ Guaranteed
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Side: Interactive Steps -->
+                <div class="col-lg-6">
+                    
+                    <h2 class="section-title">How To Get A+ Grades</h2>
+                    <p class="mb-4 text-muted">Click on a step to see details:</p>
+
+                    <!-- Step 1 -->
+                    <div class="step-item active" data-image="image\share.png">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Share Assignment Requirements</h3>
+                            <p class="text-muted mb-0">Upload instructions, get matched with a writer in 30 mins.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="step-item" data-image="image\payment2.png">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Pay A Fair Price</h3>
+                            <p class="text-muted mb-0">Secure payment with affordable student-friendly rates.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="step-item" data-image="image\payment.webp">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Get Superior Quality Assignment</h3>
+                            <p class="text-muted mb-0">Receive your A+ grade paper before the deadline.</p>
+                        </div>
+                    </div>
+
+                    <!-- Call to Action -->
+                    <a href="https://wa.me/7295993480"  target="_blank" class="btn-custom">
+                        Get Started Now <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- WORLD-CLASS FEATURES (COMPARISON) -->
+    <section class="container mt-5 mb-5">
+        <div class="row justify-content-center align-items-stretch">
+            <div class="col-lg-11 col-12 bg-custom">
+                
+                <div class="text-center mb-5">
+                    <h2 class="section-title">World-Class Features That Make Our Assignment Help Services Stand Out</h2>
+                </div>
+
+                <div class="features-wrapper">
+                    <div class="row g-4 align-items-stretch">
+                        
+                        <!-- Column 1: Features & Benefits -->
+                        <div class="col-md-4 d-flex">
+                            <div class="feature-col col-features">
+                                <h3 class="card-title">Features & Benefits</h3>
+                                <ul class="feature-list">
+                                    <li><i class="fas fa-circle"></i><span>Plagiarism-Free Work</span></li>
+                                    <li><i class="fas fa-circle"></i><span>Achieve A+ Grades</span></li>
+                                    <li><i class="fas fa-circle"></i><span>100% Privacy Guaranteed</span></li>
+                                    <li><i class="fas fa-circle"></i><span>Native Writers</span></li>
+                                    <li><i class="fas fa-circle"></i><span>Pocket-Friendly Rates</span></li>
+                                    <li><i class="fas fa-circle"></i><span>24/7 Availability</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Column 2: Our Services -->
+                        <div class="col-md-4 d-flex">
+                            <div class="feature-col col-our-services">
+                                <h3 class="card-title">Our Services</h3>
+                                <ul class="feature-list">
+                                    <li><i class="fas fa-check-circle"></i><span>Live updates on your work</span></li>
+                                    <li><i class="fas fa-check-circle"></i><span>Free writing sample by a pro</span></li>
+                                    <li><i class="fas fa-check-circle"></i><span>Direct chat with the writer</span></li>
+                                    <li><i class="fas fa-check-circle"></i><span>On-time delivery always</span></li>
+                                    <li><i class="fas fa-check-circle"></i><span>Unlimited Free Revisions</span></li>
+                                    <li><i class="fas fa-check-circle"></i><span>Quality work guaranteed</span></li>
+                                </ul>
+                                
+                                <div class="btn-wrapper">
+                                    <a href="Services.html" class="btn-features">All Features</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Column 3: Other Providers -->
+                        <div class="col-md-4 d-flex">
+                            <div class="feature-col col-others">
+                                <h3 class="card-title">Other Providers</h3>
+                                <ul class="feature-list">
+                                    <li><i class="fa-solid fa-circle-xmark icon"></i><span>No option to track progress</span></li>
+                                    <li><i class="fa-solid fa-circle-xmark icon"></i><span>Hidden fees and unexpected charges</span></li>
+                                    <li><i class="fa-solid fa-circle-xmark icon"></i><span>Unresponsive support team</span></li>
+                                    <li><i class="fa-solid fa-circle-xmark icon"></i><span>Non-native writers</span></li>
+                                    <li><i class="fa-solid fa-circle-xmark icon"></i><span>Plagiarism issues</span></li>
+                                    <li><i class="fa-solid fa-circle-xmark icon"></i><span>Missed deadlines</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        
+        <!-- Social Float -->
+        <div class="social-float">
+            <span class="we-are-here-text">We Are Here!</span>
+            <div class="social-icons">
+                <a href="mailto:askavach@gmail.com" ><i class="fas fa-envelope me-3"></i></a>
+                <a href="https://wa.me/7295993480"  target="_blank" ><i class="fab fa-whatsapp me-3"></i></a>
+                <a href="http://" ><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- EXPLORE OUR BLOGS -->
+    <section class="container py-5 bg-light">
+        
+        <!-- Section Header -->
+        <div class="blog-section-header">
+            <h2>Explore Our Blogs</h2>
+            <p>Boost your grades with expert tips and tricks from our academic blog</p>
+        </div>
+
+        <!-- Blog Grid Layout -->
+        <div class="row g-4">
+            
+            <!-- Left Column: Featured Blog (Large) -->
+            <div class="col-lg-7">
+                <div class="blog-card featured-blog">
+                    <span class="blog-tag">Higher Education</span>
+                    <img src="Blog\Bridging Academic.png" class="card-img-top" alt="AI Education">
+                    <div class="card-body">
+                        <h3 class="blog-title">Bridging Academic Excellence and Practical Skills in Higher Education</h3>
+                        <p>In today’s competitive academic environment, students are expected not only to demonstrate theoretical understanding but also to apply knowledge through research, analysis, and practical implementation. Universities across the UK, USA, Australia, and Europe increasingly emphasize independent thinking, technical proficiency, and research-based learning. However, many students struggle to balance academic rigor with evolving technical demands. This gap highlights the importance of structured academic support systems that go beyond traditional tutoring.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: List of Smaller Blogs -->
+            <div class="col-lg-5">
+                <div class="d-flex flex-column gap-4 h-100">
+                    
+                    <!-- Small Blog 1 -->
+                    <div class="blog-card small-blog">
+                        <span class="blog-tag">Dissertation writing</span>
+                        <div class="row g-0">
+                            <div class="col-5">
+                                <img src="Blog\Dissertation and Research.png" class="card-img-top h-100 rounded-start" style="object-fit: cover;" alt="Modern Studies">
+                            </div>
+                            <div class="col-7">
+                                <div class="card-body">
+                                    <h5 class="blog-title">Dissertation and Research Support: From Topic Selection to Final Submission</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Small Blog 2 -->
+                    <div class="blog-card small-blog">
+                        <span class="blog-tag">Data Science</span>
+                        <div class="row g-0">
+                            <div class="col-5">
+                                <img src="Blog\Data Science and Technical Skill Development.png" class="card-img-top h-100 rounded-start" style="object-fit: cover;" alt="Maths Topics">
+                            </div>
+                            <div class="col-7">
+                                <div class="card-body">
+                                    <h5 class="blog-title">Data Science and Technical Skill Development for Academic and Career Growth</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Small Blog 3 -->
+                    <div class="blog-card small-blog">
+                        <span class="blog-tag">Personalized Tutoring</span>
+                        <div class="row g-0">
+                            <div class="col-5">
+                                <img src="Blog\Personalized Tutoring.png" class="card-img-top h-100 rounded-start" style="object-fit: cover;" alt="IGNOU Assignment">
+                            </div>
+                            <div class="col-7">
+                                <div class="card-body">
+                                    <h5 class="blog-title">Personalized Tutoring and Productivity Enhancement in Modern Learning</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- View More Button -->
+        <div class="view-more-container">
+            <a href="Blogs.html" class="btn-custom">View More Blogs</a>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section id="reviews" class="section-padding1">
+        <div class="container">
+            <div class="section-title1">
+                <h2>Student Reviews</h2>
+                <p class="text-muted">What our happy students say about us</p>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <div class="testimonial-card">
+                        <div class="stars">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                        <p class="text-muted">"I was extremely stressed about my deadline, but AskMeAssignment saved me. The work was top-notch and plagiarism free. Highly recommended!"</p>
+                        <div class="d-flex align-items-center">
+                            <img src="https://picsum.photos/seed/user1/100/100" class="client-img" alt="User">
+                            <div>
+                                <h6 class="mb-0 fw-bold">Sarah Jenkins</h6>
+                                <small class="text-muted">MBA Student</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <div class="testimonial-card">
+                        <div class="stars">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <p class="text-muted">"Great service! The customer support team was very helpful in guiding me through the process. My math assignment was perfectly solved."</p>
+                        <div class="d-flex align-items-center">
+                            <img src="https://picsum.photos/seed/user2/100/100" class="client-img" alt="User">
+                            <div>
+                                <h6 class="mb-0 fw-bold">Michael Chen</h6>
+                                <small class="text-muted">Engineering Student</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <div class="testimonial-card">
+                        <div class="stars">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                        <p class="text-muted">"Affordable and reliable. I have used their services for multiple essays and they never disappoint. The writers are true professionals."</p>
+                        <div class="d-flex align-items-center">
+                            <img src="https://picsum.photos/seed/user3/100/100" class="client-img" alt="User">
+                            <div>
+                                <h6 class="mb-0 fw-bold">Emily Davis</h6>
+                                <small class="text-muted">Literature Student</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+             <!-- View More Button -->
+            <div class="view-more-container">
+                <a href="Reviews.html" class="btn-custom">View More Reviews</a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- CTA SECTION -->
+    <section class="section-padding1 bg-primary text-white text-center">
+        <div class="container">
+            <h2 class="fw-bold mb-3">Need Help with Your Assignment?</h2>
+            <p class="mb-4 fs-5">Don't let academic stress weigh you down. Get expert help today and secure your grades.</p>
+            <a href="https://wa.me/7295993480"  target="_blank" class="btn bg-secondary-color btn-lg text-white fw-bold px-5 rounded-pill">Chat Now</a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <a class="navbar-brand text-white mb-3 d-block" href="#">SARITEX</a>
+                    <p class="small">We are a leading provider of academic writing services, dedicated to helping students achieve their academic goals through excellence and support.</p>
+                    <div class="social-icons">
+                        <a href="mailto:askavach@gmail.com" aria-label="Mail"><i class="fas fa-envelope"></i></a>
+                        <a href="https://wa.me/7295993480"  target="_blank" aria-label="WhatsApp" ><i class="fab fa-whatsapp"></i></a>
+                        <a href="http://" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="AboutUs.html">About</a></li>
+                        <li><a href="Services.html">Services</a></li>
+                        <li><a href="Reviews.html">Reviews</a></li>
+                        <li><a href="ContactUs.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Subjects</h5>
+                    <ul>
+                        <li><a href="Services.html">Higher Education</a></li>
+                        <li><a href="Services.html">Data Science</a></li>
+                        <li><a href="Services.html">Dissertation writing</a></li>
+                        <li><a href="Services.html">AI with Python</a></li>
+                        <li><a href="Services.html">Java</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Contact Us</h5>
+                    <ul class="small">
+                        <li><a href="mailto:askavach@gmail.com" aria-label="Mail"><i class="fas fa-envelope me-2"></i> askavach@gmail.com</a></li>
+                        <li><a href="https://wa.me/7295993480"  target="_blank" aria-label="WhatsApp" ><i class="fas fa-phone me-2"></i> +91 7295993480</a> </li>
+                        <li><i class="fas fa-map-marker-alt me-2"></i> JTM Mall, Office No.LF24, Jagatpura, Jaipur(302017)</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <div class="row align-items-center">
+                    <div class="col-md-6 text-center text-md-start">
+                        <p class="mb-0">&copy; 2025 Saritex. All Rights Reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-center text-md-end">
+                        <a href="#" class="text-decoration-none text-white me-3 small">Privacy Policy</a>
+                        <a href="#" class="text-decoration-none text-white small">Terms & Conditions</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Sticky WhatsApp Button -->
+    <a href="https://wa.me/1234567890" class="whatsapp-float" target="_blank" title="Chat with us on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+    
+    <!-- Bootstrap Modal (Success Message) -->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">Request Received!</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <i class="fas fa-check-circle text-success mb-3" style="font-size: 3rem;"></i>
+                    <p>Thank you for contacting us. An expert will reach you on WhatsApp shortly.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CUSTOM PDF MODAL HTML -->
+    <div class="pdf-modal-overlay" id="pdfModal">
+        <div class="pdf-modal-box">
+            <div class="pdf-modal-header">
+                <h3 class="pdf-modal-title" id="modalServiceTitle">Service Name</h3>
+                <button class="pdf-modal-close" id="closeModalBtn">&times;</button>
+            </div>
+            <div class="pdf-modal-body">
+                <div class="pdf-grid" id="pdfGridContainer">
+                    <!-- PDFs will be injected here via JS -->
+                </div>
+                <div class="modal-footer-see-more" id="seeMoreContainer" style="display: none;">
+                    <button class="btn-see-more" id="seeMoreBtn">See More PDFs</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            /* ------------------------------------------------
+               1. FORM SUBMISSION HANDLER
+               ------------------------------------------------ */
+            window.handleFormSubmit = function (event) {
+                event.preventDefault();
+                const form = event.target;
+                const url = form.action;
+                const formData = new FormData(form);
+                const data = {
+                    NAME: formData.get("data[NAME]"),
+                    EMAIL: formData.get("data[EMAIL]"),
+                    PHONE_NO: formData.get("data[PHONE_NO]"),
+                    MESSAGE: formData.get("data[MESSAGE]")
+                };
+
+                fetch(url, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ data: data })
+                })
+                .then(res => res.json())
+                .then(result => {
+                    console.log("✅ Saved in Sheet:", result);
+                    const myModal = new bootstrap.Modal(document.getElementById("successModal"));
+                    myModal.show();
+                    form.reset();
+                })
+                .catch(err => {
+                    console.log("❌ Error:", err);
+                    alert("❌ Failed to send data. Please try again!");
+                });
+            };
+
+            /* ------------------------------------------------
+               2. PDF DIRECTORY LOGIC (SIMULATION)
+               ------------------------------------------------ 
+               IMPORTANT: This simulates scanning your local folders.
+               Since browsers cannot auto-scan folders for security, 
+               we maintain this list. 
+               
+               Where to place your actual files?
+               Ensure your folder structure matches the 'folder' property below.
+               Example: assets/pdfs/AWS Work Files/sample.pdf
+            */
+            const pdfDirectory = {
+                "AWS Work Help": {
+                    folder: "SariteXpdf_File/AWS Work Files/",
+                    files: [
+                        "Akhil Report.pdf",
+                        "Ganna Report.pdf",
+                        "Navya Report.pdf",
+                        "Pooja Report.pdf",
+                        "Rambabu Report.pdf",
+                        "Sahith Report.pdf",
+                        "Sai Ganesh Report.pdf"
+                    ]
+                },
+                "BigData Workfiles": {
+                    folder: "SaritexPdf_File/BigData Workfiles/",
+                    files: [
+                        "7153CEM Big Data Analytics Akhila.pdf",
+                        "Coursework1 TimeSeries Meta.pdf",
+                        "Jai Patel Big Data.pdf",
+                        "Lovepreet Report.pdf",
+                        "Nishat Report.pdf",
+                        "Group_49 CRWK CN7030.pdf",
+                        "Group_ID_CN7031.pdf",
+                        "Your_Group ID CN7031 (6).pdf",
+                        "Your_Group Id CN7031 (7).pdf",
+                        "Your_Group_ID CN7031 (2).pdf",
+                        "Your_Group_ID CN7031 (3).pdf",
+                        "Your_Group_ID CN7031 (4).pdf",
+                        "Your_Group ID CN7031.pdf"
+
+                    ]
+                },
+
+                "Deep Learning": {
+                    folder: "SariteXpdf_File/Deep Learning/",
+                    files: [
+                        "CNN-Powered Animal Image Classifier in MATLAB.pdf",
+                        "Deep Learning - Rachana Report.pdf",
+                        "Deep Learning-Based Neural Network Approaches.pdf",
+                        "Fruit Classification Using CNN in MATLAB.pdf",
+                        "Image Classification Using CNN.pdf",
+                        "Matlab Report RUPA.pdf",
+                        "Rishi-Report-Image Classification (MATLAB).pdf",
+                        "Wali Report-Artificial Intelligence & Machine Vision.pdf"
+                    ]
+                },
+
+                "Intelligent system": {
+                    folder: "SaritexPdf_File/Intelligent system/",
+                    files: [
+                        "Achit IS Report.pdf",
+                        "Akshay.pdf",
+                        "Awasthi report.pdf",
+                        "Intelligent system- Bella Report.pdf",
+                        "Intelligent system- Kavya Report.pdf",
+                        "Intelligent System- MD Shoaib.pdf",
+                        "Intelligent system- Nikhith Report.pdf",
+                        "Intelligent system- Shanku Report.pdf",
+                        "Kangathi Report.pdf",
+                        "Lokesh Agentic Report.pdf",
+                        "Ranadeep Kothi Report.pdf",
+                        "Vinay Report IA.pdf"
+                    ]
+                },
+
+                "Dissertation": {
+                    folder: "SariteXpdf_File/Dissertation/",
+                    files: [
+                        "Chikitha Final Draft.pdf",
+                        "Duhita Final Draft.pdf",
+                        "Full Dissertation.pdf",
+                        "FULL WORK Poonamkant.pdf",
+                        "Gopichand Full Dissertation.pdf",
+                        "Harsh Shripremkumar Dissertation.pdf",
+                        "Mahendra Full Dissertation.pdf",
+                        "Mirza Dissertation.pdf",
+                        "Monish Final Draft.pdf",
+                        "Muhammad Full dissertation.pdf",
+                        "NeelaSai Full Dissertation.pdf",
+                        "NFT.pdf",
+                        "Raj Full Dissertation.pdf",
+                        "Rishi Full Dissertation.pdf",
+                        "Shanmukhi Full Dissertation.pdf",
+                        "Sree full dissertation.pdf",
+                        "Srikanth Final Draft.pdf",
+                        "Srujana Final Draft.pdf",
+                        "Tarun Final Draft.pdf",
+                        "UoS BDP Final Draft.pdf",
+                        "Vijay Complete Dissertation.pdf"
+                    ]
+                },
+
+                "Dissertation Proposal": {
+                    folder: "SariteXpdf_File/Dissertation Proposal/",
+                    files: [
+                        "Araveena Dissertation Proposal.pdf",
+                        "chikitha.pdf",
+                        "Dissertation Proposal - UEL (Maheshneelam proposal).pdf",
+                        "Dissertation Proposal - UEL Harshini.pdf",
+                        "Dissertation Proposal - UEL Prakash.pdf",
+                        "Dissertation Proposal - UEL Praneeth.pdf",
+                        "Duhita Proposal.pdf",
+                        "Ganesh Proposal.pdf",
+                        "Harshith Proposal.pdf",
+                        "Miral Proposal.pdf",
+                        "Proposal Copy.pdf",
+                        "Proposal Template.pdf",
+                        "Research Proposal.pdf",
+                        "Teja Proposal.pdf"
+                    ]
+                },
+
+                "Software Engineering and Development": {
+                    folder: "SariteXpdf_File/Software Engineering and Development/",
+                    files: [
+                        "Abhishek Github Report.pdf",
+                        "Atanas report web.pdf",
+                        "CN7021 Vishwajit.pdf",
+                        "Faik DIM22104 Blog Site Report.pdf",
+                        "Jitendra approval.pdf",
+                        "Rambabu Full Report.pdf",
+                        "S Miah Report.pdf",
+                        "SaiGanesh Report.pdf",
+                        "Software Engineering-Kamal Report.pdf"
+                    ]
+                },
+
+                "Networking": {
+                    folder: "SariteXpdf_File/Networking/",
+                    files: [
+                        "Computer-Network(2061).pdf",
+                        "Network Simulation Report.pdf",
+                        "Network_u2830528 Sahith PART A Report.pdf",
+                        "Network_u2835044 Sai ganesh Report.pdf",
+                        "Network_u2848393 Navya PART A.pdf",
+                        "Network_u2859156 Rambabu PART A Report.pdf",
+                        "Network_u2865199 Ganna PART A Report.pdf",
+                        "Network_u2865231 Pooja_PART A.pdf",
+                        "Network_u2869613 Akhil PART A Report.pdf"
+                    ]
+                },
+                // Fallback for others
+                /*"Other Services": {
+                    folder: "SariteXpdf_File/Other Services/",
+                    files: [
+                        "Sample Document 1.pdf",
+                        "Sample Document 2.pdf",
+                        "Sample Document 3.pdf"
+                    ]
+                }*/
+            };
+
+            /* ------------------------------------------------
+               3. MODAL FUNCTIONALITY
+               ------------------------------------------------ */
+            const modal = document.getElementById('pdfModal');
+            const modalTitle = document.getElementById('modalServiceTitle');
+            const pdfGrid = document.getElementById('pdfGridContainer');
+            const seeMoreContainer = document.getElementById('seeMoreContainer');
+            const seeMoreBtn = document.getElementById('seeMoreBtn');
+            const closeBtn = document.getElementById('closeModalBtn');
+
+            // Function to Open Modal
+            window.openServiceModal = function(serviceName) {
+                const data = pdfDirectory[serviceName];
+                
+                if (!data) {
+                    alert("No folder configuration found for this service.");
+                    return;
+                }
+
+                // Set Title
+                modalTitle.textContent = serviceName;
+
+                // Clear previous content
+                pdfGrid.innerHTML = '';
+                seeMoreContainer.style.display = 'none';
+
+                // Generate HTML for PDF Cards
+                data.files.forEach((filename, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'pdf-card';
+                    
+                    // Logic: If index > 3, add 'pdf-hidden' class
+                    if (index >= 4) {
+                        card.classList.add('pdf-hidden');
+                    }
+
+                    const fullPath = data.folder + filename;
+
+                    card.innerHTML = `
+                        <div class="pdf-thumbnail">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <div class="pdf-name" title="${filename}">${filename}</div>
+                        <a href="${fullPath}" target="_blank" class="pdf-view-btn">View PDF</a>
+                    `;
+                    pdfGrid.appendChild(card);
+                });
+
+                // Show "See More" button if files > 4
+                if (data.files.length > 4) {
+                    seeMoreContainer.style.display = 'block';
+                }
+
+                // Show Modal
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            };
+
+            // Function to Close Modal
+            window.closeServiceModal = function() {
+                modal.classList.remove('active');
+                document.body.style.overflow = ''; // Restore scrolling
+            };
+
+            // Event Listeners
+            // 1. Click on Service Card
+            document.querySelectorAll('.service-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const serviceName = this.getAttribute('data-service');
+                    openServiceModal(serviceName);
+                });
+            });
+
+            // 2. Close Button
+            closeBtn.addEventListener('click', closeServiceModal);
+
+            // 3. Click Outside Modal (on overlay)
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeServiceModal();
+                }
+            });
+
+            // 4. See More Button
+            seeMoreBtn.addEventListener('click', function() {
+                const hiddenCards = pdfGrid.querySelectorAll('.pdf-hidden');
+                hiddenCards.forEach(card => {
+                    card.classList.remove('pdf-hidden');
+                });
+                seeMoreContainer.style.display = 'none';
+            });
+
+            /* ------------------------------------------------
+               4. INTERACTIVE STEPS (Image Swapper)
+               ------------------------------------------------ */
+            const steps = document.querySelectorAll('.step-item');
+            const mainImage = document.getElementById('dynamic-image');
+
+            if(steps.length > 0 && mainImage) {
+                steps.forEach(step => {
+                    step.addEventListener('click', function() {
+                        steps.forEach(s => s.classList.remove('active'));
+                        this.classList.add('active');
+
+                        const newImageSrc = this.getAttribute('data-image');
+
+                        if (mainImage.src !== newImageSrc) {
+                            mainImage.style.opacity = '0';
+                            setTimeout(() => {
+                                mainImage.src = newImageSrc;
+                                mainImage.style.opacity = '1';
+                            }, 300);
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
