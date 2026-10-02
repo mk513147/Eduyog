@@ -6,6 +6,22 @@ import { Alert, EmptyState, ErrorState, LoadingState } from '../components/State
 import { useResource } from '../hooks/useResource'
 import { formatDateTime } from '../utils/format'
 
+// Detail fields in display order. `long` fields span the full width and keep
+// line breaks. Leads created before these fields existed may have them empty.
+const DETAIL_FIELDS = [
+  { key: 'businessName', label: 'Business Name' },
+  { key: 'contactName', label: 'Contact Person' },
+  { key: 'email', label: 'Email', className: 'cell-break' },
+  { key: 'phone', label: 'Phone' },
+  { key: 'businessType', label: 'Business Type' },
+  { key: 'location', label: 'Location' },
+  { key: 'servicesOffered', label: 'Services Offered', long: true },
+  { key: 'marketingRequirements', label: 'Current Marketing Requirements', long: true },
+  { key: 'websiteLinks', label: 'Website / Social Media Links', long: true },
+  { key: 'marketingObjectives', label: 'Marketing Objectives', long: true },
+  { key: 'message', label: 'Additional Requirements', long: true },
+]
+
 function LeadDetailModal({ leadId, onClose }) {
   const loader = useCallback(() => leadsApi.get(leadId), [leadId])
   const { data: lead, error, loading, reload } = useResource(loader)
@@ -16,31 +32,17 @@ function LeadDetailModal({ leadId, onClose }) {
   else
     body = (
       <dl className="details">
-        <div>
-          <dt>Business</dt>
-          <dd>{lead.businessName}</dd>
-        </div>
-        <div>
-          <dt>Contact person</dt>
-          <dd>{lead.contactName}</dd>
-        </div>
-        <div>
-          <dt>Email</dt>
-          <dd className="cell-break">{lead.email}</dd>
-        </div>
-        <div>
-          <dt>Phone</dt>
-          <dd>{lead.phone || <span className="muted">Not provided</span>}</dd>
-        </div>
+        {DETAIL_FIELDS.map(({ key, label, long, className }) => (
+          <div key={key} className={long ? 'details__full' : undefined}>
+            <dt>{label}</dt>
+            <dd className={long ? 'details__message' : className}>
+              {lead[key] || <span className="muted">Not provided</span>}
+            </dd>
+          </div>
+        ))}
         <div>
           <dt>Received</dt>
           <dd>{formatDateTime(lead.createdAt)}</dd>
-        </div>
-        <div className="details__full">
-          <dt>Message</dt>
-          <dd className="details__message">
-            {lead.message || <span className="muted">No message</span>}
-          </dd>
         </div>
       </dl>
     )

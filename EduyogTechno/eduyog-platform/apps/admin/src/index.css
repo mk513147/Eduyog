@@ -975,3 +975,243 @@ a {
     padding: 24px 20px;
   }
 }
+
+/* ---------- Eduyarp ---------- */
+
+.badge--danger {
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+
+.input--sm {
+  width: auto;
+  min-height: 32px;
+  padding: 4px 8px;
+  font-size: 13px;
+}
+
+.small {
+  font-size: 13px;
+}
+
+.nav__group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav__group + .nav__group {
+  margin-top: 16px;
+}
+
+.nav__heading {
+  padding: 0 12px 4px;
+  color: var(--color-sidebar-text);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+  text-transform: uppercase;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  color: var(--color-primary);
+}
+
+.cell-link {
+  display: inline-block;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.cell-link:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.form__row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.course-admin {
+  display: grid;
+  gap: 20px;
+}
+
+.course-admin__side {
+  display: grid;
+  gap: 20px;
+  align-content: start;
+}
+
+@media (min-width: 1100px) {
+  .course-admin {
+    grid-template-columns: minmax(0, 1fr) 360px;
+    align-items: start;
+  }
+}
+
+.section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.section-title {
+  margin: 0 0 12px;
+  font-size: 16px;
+}
+
+.section-head .section-title {
+  margin: 0;
+}
+
+.curriculum {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.curriculum__module {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-muted);
+}
+
+.curriculum__head,
+.curriculum__topic {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px 12px;
+}
+
+.curriculum__head {
+  padding: 12px 14px;
+}
+
+.curriculum__topics {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+
+.curriculum__topic {
+  align-items: center;
+  padding: 8px 14px 8px 28px;
+}
+
+.curriculum__topic + .curriculum__topic {
+  border-top: 1px solid var(--color-border);
+}
+
+.curriculum__empty {
+  margin: 0;
+  padding: 0 14px 12px;
+}
+
+.curriculum__order {
+  display: inline-block;
+  min-width: 32px;
+  margin-right: 6px;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.plain-list {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+}
+
+.plain-list__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.inline-form {
+  display: flex;
+  gap: 8px;
+}
+
+.inline-form .input {
+  flex: 1;
+  min-width: 0;
+}
+
+.details--stacked {
+  grid-template-columns: 1fr;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mini-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 120px;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.mini-progress__track {
+  flex: 1;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--color-primary-soft);
+}
+
+.mini-progress__fill {
+  height: 100%;
+  background: var(--color-primary);
+}
+
+/* The course page header holds a badge and several buttons. */
+.page-header__actions {
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* The Eduyarp group makes the menu taller; scroll it on short screens. */
+.sidebar .nav {
+  min-height: 0;
+  overflow-y: auto;
+}

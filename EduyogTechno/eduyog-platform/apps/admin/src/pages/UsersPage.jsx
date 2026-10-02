@@ -8,6 +8,9 @@ import { Alert, EmptyState, ErrorState, LoadingState } from '../components/State
 import { useResource } from '../hooks/useResource'
 import { useToast } from '../toast/useToast'
 import { formatDate } from '../utils/format'
+import { ROLE_LABELS, ROLES } from '../utils/labels'
+
+const ROLE_ARTICLES = { student: 'a Student', trainer: 'a Trainer', admin: 'an Admin' }
 
 export default function UsersPage() {
   const { user: currentUser } = useAuth()
@@ -18,9 +21,10 @@ export default function UsersPage() {
   const [busy, setBusy] = useState(false)
   const [changeError, setChangeError] = useState(null)
 
-  const requestChange = (user) => {
+  const requestChange = (user, role) => {
+    if (role === user.role) return
     setChangeError(null)
-    setPending({ user, role: user.role === 'admin' ? 'student' : 'admin' })
+    setPending({ user, role })
   }
 
   const confirmChange = async () => {
@@ -28,7 +32,7 @@ export default function UsersPage() {
     setChangeError(null)
     try {
       const updated = await usersApi.changeRole(pending.user.id, pending.role)
-      toast.success(`${updated.fullName} is now ${updated.role === 'admin' ? 'an Admin' : 'a Student'}.`)
+      toast.success(`${updated.fullName} is now ${ROLE_ARTICLES[updated.role]}.`)
       setPending(null)
       // If you demoted yourself, this reload returns 403 and ends the session.
       reload()
@@ -77,13 +81,18 @@ export default function UsersPage() {
                   <td className="cell-nowrap">{formatDate(user.createdAt)}</td>
                   <td>
                     <div className="row-actions">
-                      <button
-                        type="button"
-                        className="btn btn--secondary btn--sm"
-                        onClick={() => requestChange(user)}
+                      <select
+                        className="input input--sm"
+                        value={user.role}
+                        onChange={(e) => requestChange(user, e.target.value)}
+                        aria-label={`Role for ${user.fullName}`}
                       >
-                        {user.role === 'admin' ? 'Make student' : 'Make admin'}
-                      </button>
+                        {ROLES.map((role) => (
+                          <option key={role} value={role}>
+                            {ROLE_LABELS[role]}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                   </td>
                 </tr>
@@ -94,7 +103,11 @@ export default function UsersPage() {
       </div>
     )
 
-  const isSelfDemotion = pending && pending.user.id === currentUser.id && pending.role === 'student'
+  const isSelfDemotion = pending && pending.user.id === currentUser.id && pending.role !== 'admin'
+  const losesAdmin = pending && pending.user.role === 'admin' && pending.role !== 'admin'
+  // Mirrors the backend: a Student leaving the Student role has their active
+  // Eduyarp enrolments cancelled (not restored if they become a Student again).
+  const cancelsEnrolments = pending && pending.user.role === 'student' && pending.role !== 'student'
 
   return (
     <>
@@ -107,24 +120,45 @@ export default function UsersPage() {
 
       {pending && (
         <ConfirmDialog
-          title={pending.role === 'admin' ? 'Grant Admin access?' : 'Remove Admin access?'}
-          confirmLabel={pending.role === 'admin' ? 'Make admin' : 'Make student'}
-          tone={pending.role === 'admin' ? 'primary' : 'danger'}
+          title={
+            pending.role === 'admin'
+              ? 'Grant Admin access?'
+              : losesAdmin
+                ? 'Remove Admin access?'
+                : `Make ${pending.user.fullName} ${ROLE_ARTICLES[pending.role]}?`
+          }
+          confirmLabel={`Make ${ROLE_LABELS[pending.role].toLowerCase()}`}
+          tone={losesAdmin ? 'danger' : 'primary'}
           busy={busy}
           error={changeError}
           onConfirm={confirmChange}
           onClose={() => setPending(null)}
         >
-          {pending.role === 'admin' ? (
+          {pending.role === 'admin' && (
             <p>
               <strong>{pending.user.fullName}</strong> will be able to manage platforms, services,
-              users and Fitness leads.
+              users, Fitness leads and Eduyarp.
             </p>
-          ) : (
+          )}
+          {pending.role === 'trainer' && (
             <p>
-              <strong>{pending.user.fullName}</strong> will become a Student and lose access to
-              this console.
+              <strong>{pending.user.fullName}</strong> will become a Trainer and can then be
+              assigned to Eduyarp courses. Trainers only have access to the courses they are
+              assigned to{losesAdmin ? ' and lose access to this console' : ''}.
             </p>
+          )}
+          {pending.role === 'student' && (
+            <p>
+              <strong>{pending.user.fullName}</strong> will become a Student
+              {losesAdmin ? ' and lose access to this console' : ''}
+              {pending.user.role === 'trainer' ? ' and lose access to assigned courses' : ''}.
+            </p>
+          )}
+          {cancelsEnrolments && (
+            <Alert tone="warning">
+              Any active Eduyarp enrolments of this user will be cancelled. Their progress is kept,
+              but enrolments are not restored if they become a Student again.
+            </Alert>
           )}
           {isSelfDemotion && (
             <Alert tone="warning">

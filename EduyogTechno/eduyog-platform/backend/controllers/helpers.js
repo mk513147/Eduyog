@@ -1,11 +1,12 @@
 const HttpError = require('../utils/httpError');
 const { parseId } = require('../utils/validators');
 
-// Returns req.params.id as a validated id string, or responds 400.
-function getIdParam(req) {
-  const id = parseId(req.params.id);
+// Returns req.params[name] (default "id") as a validated id string, or
+// responds 400.
+function getIdParam(req, name = 'id') {
+  const id = parseId(req.params[name]);
   if (id === null) {
-    throw new HttpError(400, 'Invalid id');
+    throw new HttpError(400, `Invalid ${name}`);
   }
   return id;
 }

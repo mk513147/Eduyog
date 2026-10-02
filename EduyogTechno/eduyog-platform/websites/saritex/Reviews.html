@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reviews Page - Saritex</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* =========================================
+           1. CSS VARIABLES & GLOBAL RESET
+           ========================================= */
+        :root {
+            /* Colors */
+            --primary-color: #0056b3;
+            --secondary-color: #ff9900;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --bg-light: #f8f9fa;
+            --whatsapp-green: #25D366;
+            --primary-orange: #ff9a45;
+            --primary-orange-dark: #e68a3e;
+            --text-black: #333;
+            --text-white: #ffffff;
+            --icon-green: #28a745;
+            --tag-bg: #eef2ff;
+            --tag-text: #4a6cf7;
+            --white: #ffffff;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+        }
+
+        /* Utility Classes */
+        .bg-primary-color { background-color: var(--primary-color) !important; }
+        .bg-secondary-color { background-color: var(--secondary-color) !important; }
+        .text-primary-color { color: var(--primary-color) !important; }
+        .text-muted { color: var(--text-light) !important; }
+
+        /* =========================================
+           2. ANIMATION UTILITIES
+           ========================================= */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* =========================================
+           3. TOPBAR & NAVBAR
+           ========================================= */
+        
+        /* Top Bar Buttons */
+        .btn-top:hover {
+            background-color: white;
+            color: #070707 !important;
+            font-weight: bold;
+        }
+
+        /* Navbar */
+        .navbar {
+            padding: 15px 0;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-color) !important;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-link {
+            color: var(--text-dark);
+            font-weight: 500;
+            margin: 0 10px;
+            position: relative;
+        }
+
+        .nav-link:hover { color: var(--primary-color); }
+
+        /* Active Link Indicator */
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--secondary-color);
+            transition: width 0.3s;
+        }
+        .nav-link:hover::after { width: 100%; }
+
+        /* =========================================
+           4. REVIEWS SECTION STYLES
+           ========================================= */
+        .reviews-section {
+            padding: 80px 0;
+            background-color: var(--bg-light);
+        }
+
+        .page-header-reviews {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .review-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: var(--transition);
+            height: 100%;
+            position: relative;
+            border-top: 4px solid transparent;
+        }
+
+        .review-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            border-top: 4px solid var(--secondary-color);
+        }
+
+        .quote-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 3rem;
+            color: rgba(0, 86, 179, 0.05);
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .review-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 15px;
+            border: 2px solid var(--bg-light);
+        }
+
+        .reviewer-info h5 {
+            font-size: 1.1rem;
+            margin-bottom: 0;
+            color: var(--primary-color);
+        }
+
+        .reviewer-info p {
+            font-size: 0.85rem;
+            margin-bottom: 0;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .stars {
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .review-text {
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        /* Load More Button */
+        .load-more-container {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .btn-load-reviews {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            transition: var(--transition);
+        }
+
+        .btn-load-reviews:hover {
+            background: #004494;
+            transform: scale(1.05);
+            color: white;
+        }
+
+        /* =========================================
+           11. FOOTER & EXISTING STYLES
+           ========================================= */
+        /*CTA*/
+        .section-padding1 { padding: 80px 0; }
+        /*END CTA*/
+
+        footer {
+            background-color: #1a1a1a;
+            color: #ccc;
+            padding: 60px 0 20px;
+        }
+
+        footer h5 {
+            color: var(--white);
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        footer ul { list-style: none; padding: 0; }
+        footer ul li { margin-bottom: 12px; }
+        footer ul li a {
+            color: #ccc;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        footer ul li a:hover {
+            color: var(--secondary-color);
+            padding-left: 5px;
+        }
+
+        footer .social-icons a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            color: var(--white);
+            text-align: center;
+            line-height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        footer .social-icons a:hover { background: var(--secondary-color); }
+
+        .copyright {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 50px;
+            padding-top: 20px;
+            text-align: center;
+        }
+
+        /* =========================================
+           12. FLOATING ELEMENTS & TOAST
+           ========================================= */
+        /* Sticky WhatsApp */
+        .whatsapp-float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--whatsapp-green);
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .whatsapp-float:hover {
+            background-color: #1ebc57;
+            transform: scale(1.1);
+            color: #fff;
+        }
+
+        /* Toast Notification */
+        .custom-toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #333;
+            color: #fff;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            transform: translateY(150%);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .custom-toast.show { transform: translateY(0); }
+        .toast-icon { color: #4ade80; font-size: 1.2rem; }
+
+        /* =========================================
+           13. MEDIA QUERIES (RESPONSIVE)
+           ========================================= */
+        @media (max-width: 991px) {
+            .hero-section {
+                text-align: center;
+                padding-top: 40px;
+            }
+            .hero-title { font-size: 2.2rem; }
+            .trust-badges { justify-content: center; }
+            .consult-card { margin-top: 40px; }
+            .image-wrapper { min-height: 300px; margin-bottom: 40px; }
+            .featured-blog .card-img-top { height: 250px; }
+        }
+
+        @media (max-width: 768px) {
+            .section-title { font-size: 1.6rem; }
+            .features-wrapper { padding: 20px; }
+            h3.card-title { font-size: 18px; }
+            .about-title { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP BAR -->
+    <div class="bg-primary-color border-bottom py-2">
+        <div class="container">
+            <div class="row align-items-center justify-content-between">
+                
+                <!-- Center Side: Phone Numbers -->
+                <div class="col-12 col-md-4 text-center py-1 py-md-0">
+                    <div class="d-flex justify-content-center gap-2 flex-wrap">
+                        <span class="bg-muted text-light px-3 py-1 rounded small">
+                            <i class="fab fa-whatsapp me-1"></i> +91 - 7061122327
+                        </span>
+                        <span class="bg-muted text-light px-3 py-1 rounded small">
+                            <i class="fab fa-whatsapp me-1"></i> +91 - 7295993480
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Right Side: Social Icons + Bookmarks Button -->
+                <div class="col-md-4 d-none d-md-block text-end">
+                    <div class="d-inline-block text-white small me-3">
+                        <a href="mailto:askavach@gmail.com" class="text-white"><i class="fas fa-envelope me-3"></i></a>
+                        <a href="https://wa.me/7295993480"  target="_blank"  class="text-white"><i class="fab fa-whatsapp me-3"></i></a>
+                        <a href="http://" class="text-white"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                    <a href="https://wa.me/7295993480"  target="_blank"  class="btn btn-sm btn-top btn-outline-light rounded-pill px-3 text-white">All Bookmarks</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">SARITEX</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="AboutUs.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="Services.html">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="Blogs.html">Blogs</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="Reviews.html">Reviews</a></li>
+                    <li class="nav-item"><a class="nav-link" href="ContactUs.html">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- REVIEWS SECTION -->
+    <section class="reviews-section">
+        <div class="container">
+            <div class="page-header-reviews reveal">
+                <h6 class="text-secondary-color fw-bold text-uppercase ls-2">Testimonials</h6>
+                <h2 class="display-6 fw-bold text-dark">Student Reviews</h2>
+                <p class="lead text-muted">What our happy students say about us</p>
+                <div class="mx-auto bg-primary-color" style="width: 60px; height: 3px;"></div>
+            </div>
+
+            <!-- Reviews Grid -->
+            <div class="row g-4" id="reviews-grid">
+                <!-- Reviews injected via JS -->
+            </div>
+
+            <!-- Load More Button -->
+            <div class="load-more-container reveal">
+                <button id="loadMoreBtn" class="btn btn-load-reviews" onclick="loadMoreReviews()">
+                    Show More Reviews <i class="fas fa-chevron-down ms-2"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA SECTION -->
+    <section class="section-padding1 bg-primary text-white text-center">
+        <div class="container">
+            <h2 class="fw-bold mb-3">Need Help with Your Assignment?</h2>
+            <p class="mb-4 fs-5">Don't let academic stress weigh you down. Get expert help today and secure your grades.</p>
+            <a href="https://wa.me/7295993480"  target="_blank" class="btn bg-secondary-color btn-lg text-white fw-bold px-5 rounded-pill">Chat Now</a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <a class="navbar-brand text-white mb-3 d-block" href="#">SARITEX</a>
+                    <p class="small">We are a leading provider of academic writing services, dedicated to helping students achieve their academic goals through excellence and support.</p>
+                    <div class="social-icons">
+                        <a href="mailto:askavach@gmail.com" aria-label="Mail"><i class="fas fa-envelope"></i></a>
+                        <a href="https://wa.me/7295993480"  target="_blank" aria-label="WhatsApp" ><i class="fab fa-whatsapp"></i></a>
+                        <a href="http://" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="AboutUs.html">About</a></li>
+                        <li><a href="Services.html">Services</a></li>
+                        <li><a href="Reviews.html">Reviews</a></li>
+                        <li><a href="ContactUs.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Subjects</h5>
+                    <ul>
+                        <li><a href="Services.html">Higher Education</a></li>
+                        <li><a href="Services.html">Data Science</a></li>
+                        <li><a href="Services.html">Dissertation writing</a></li>
+                        <li><a href="Services.html">AI with Python</a></li>
+                        <li><a href="Services.html">Java</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Contact Us</h5>
+                    <ul class="small">
+                        <li><a href="mailto:askavach@gmail.com" aria-label="Mail"><i class="fas fa-envelope me-2"></i> askavach@gmail.com</a></li>
+                        <li><a href="https://wa.me/7295993480"  target="_blank" aria-label="WhatsApp" ><i class="fas fa-phone me-2"></i> +91 7295993480</a> </li>
+                        <li><i class="fas fa-map-marker-alt me-2"></i> JTM Mall, Office No.LF24, Jagatpura, Jaipur(302017)</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <div class="row align-items-center">
+                    <div class="col-md-6 text-center text-md-start">
+                        <p class="mb-0">&copy; 2025 Saritex. All Rights Reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-center text-md-end">
+                        <a href="#" class="text-decoration-none text-white me-3 small">Privacy Policy</a>
+                        <a href="#" class="text-decoration-none text-white small">Terms & Conditions</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Sticky WhatsApp Button -->
+    <a href="https://wa.me/7295993480" class="whatsapp-float" target="_blank" title="Chat with us on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JS Logic for Reviews -->
+    <script>
+        // ============================================
+        // DATA GENERATOR (50 Reviews)
+        // ============================================
+        const reviewData = [
+            { name: "Sarah Jenkins", course: "MBA Student", rating: 5, text: "The service was timely and the work was excellent. Absolutely no plagiarism and very professional." },
+            { name: "Michael Chen", course: "Engineering Student", rating: 5, text: "Customer service guided me through the math problems. Great help with my engineering assignments." },
+            { name: "Emily Davis", course: "Literature Student", rating: 5, text: "Affordable, reliable, and the authors are very professional. Helped me ace my finals!" },
+            { name: "James Wilson", course: "Computer Science", rating: 4, text: "Good technical support for my coding project. The explanation was clear and helped me learn." },
+            { name: "Anita Roy", course: "Nursing", rating: 5, text: "The case study analysis was spot on. Highly recommended for nursing students." },
+            { name: "David Smith", course: "Law", rating: 5, text: "Structured my dissertation perfectly. The referencing was accurate and the content was deep." },
+            { name: "Sophia Garcia", course: "Psychology", rating: 4, text: "Very patient tutors. Helped me understand complex theories easily." },
+            { name: "Robert Brown", course: "Finance", rating: 5, text: "Great insights on my financial modeling project. Delivered before the deadline." },
+            { name: "Linda Johnson", course: "Marketing", rating: 5, text: "Creative and well-researched marketing plan. The team really knows their stuff." },
+            { name: "William Lee", course: "Data Science", rating: 4, text: "Helped me clean and visualize my dataset. The Python code worked flawlessly." },
+            { name: "Patricia Martinez", course: "History", rating: 5, text: "A well-written essay on European history. The writer captured the nuances perfectly." },
+            { name: "Thomas Taylor", course: "Architecture", rating: 5, text: "Detailed CAD drawings and design descriptions. Very professional assistance." },
+            { name: "Elizabeth Anderson", course: "Sociology", rating: 4, text: "Good research on my social impact paper. The citations were up to date." },
+            { name: "Christopher Thomas", course: "Physics", rating: 5, text: "Solved the complex quantum mechanics problems with clear steps. Very helpful." },
+            { name: "Jessica Jackson", course: "Chemistry", rating: 5, text: "Lab reports were perfectly formatted. The results analysis was top-notch." },
+            { name: "Daniel White", course: "Economics", rating: 4, text: "Good understanding of macroeconomic trends. The report was comprehensive." },
+            { name: "Sarah Harris", course: "Biology", rating: 5, text: "Detailed diagrams and explanations for my biology project. Exceeded expectations." },
+            { name: "Matthew Martin", course: "IT Management", rating: 5, text: "Strategic analysis for my IT project was excellent. Very insightful." },
+            { name: "Ashley Thompson", course: "Graphic Design", rating: 4, text: "Creative concepts and portfolio advice. Helped me refine my design thesis." },
+            { name: "Joshua Garcia", course: "Mathematics", rating: 5, text: "Calculus made easy! The step-by-step tutoring was a lifesaver." },
+            { name: "Amanda Robinson", course: "Public Health", rating: 5, text: "Thorough research on epidemiology. The writing style was academic and formal." },
+            { name: "Kevin Clark", course: "Mechanical Eng", rating: 4, text: "Solid modeling assignment done well. The engineer who helped was very skilled." },
+            { name: "Stephanie Rodriguez", course: "Education", rating: 5, text: "Lesson plan evaluation was very helpful. Great pedagogical insights." },
+            { name: "Andrew Lewis", course: "Business Admin", rating: 5, text: "SWOT analysis was detailed and accurate. Helped me get an A." },
+            { name: "Michelle Lee", course: "Accounting", rating: 4, text: "Balance sheet reconciliation was tricky, but they solved it quickly." },
+            { name: "Brandon Walker", course: "Sports Science", rating: 5, text: "Biomechanics report was excellent. The data analysis was impressive." },
+            { name: "Jennifer Hall", course: "Art History", rating: 4, text: "Comparison between Renaissance and Baroque art was well articulated." },
+            { name: "Joshua Allen", course: "Philosophy", rating: 5, text: "Complex philosophical arguments broken down clearly. Great critical thinking." },
+            { name: "Nicole Young", course: "Geography", rating: 5, text: "GIS mapping project was completed perfectly. The analysis was top-tier." },
+            { name: "Justin King", course: "Political Science", rating: 4, text: "Policy analysis was unbiased and well-researched." },
+            { name: "Hannah Wright", course: "Environmental Sci", rating: 5, text: "Impact assessment report was thorough and cited properly." },
+            { name: "Ryan Scott", course: "Software Eng", rating: 5, text: "Code review and documentation were exactly what I needed. Very professional." },
+            { name: "Rachel Green", course: "Nutrition", rating: 4, text: "Diet plan analysis was scientifically accurate. Good work." },
+            { name: "Edward Baker", course: "Statistics", rating: 5, text: "SPSS analysis was a breeze with their help. The results were interpreted well." },
+            { name: "Laura Adams", course: "HR Management", rating: 5, text: "HR policies case study was handled with expertise. Very practical advice." },
+            { name: "Brian Nelson", course: "Network Security", rating: 4, text: "Network topology design was solid. Good security protocols suggested." },
+            { name: "Sandra Hill", course: "Mass Comm", rating: 5, text: "Media campaign strategy was creative and effective. Great presentation." },
+            { name: "Kevin Moore", course: "Civil Eng", rating: 5, text: "Structural analysis calculations were double-checked and accurate." },
+            { name: "Melissa Mitchell", course: "Music", rating: 4, text: "Music theory analysis was deep and interesting. Good research." },
+            { name: "Robert Perez", course: "Operations Mgmt", rating: 5, text: "Supply chain optimization project was detailed and practical." },
+            { name: "Karen Roberts", course: "Criminal Justice", rating: 5, text: "Case law analysis was precise and well-argued. Excellent legal writing." },
+            { name: "Steven Turner", course: "Automotive", rating: 4, text: "Vehicle dynamics assignment was tough, but they made it easy." },
+            { name: "Deborah Phillips", course: "Pharmacy", rating: 5, text: "Drug interaction report was detailed and clinically accurate." },
+            { name: "Paul Campbell", course: "Astrophysics", rating: 5, text: "Complex physics equations solved and explained. Brilliant service." },
+            { name: "Sharon Parker", course: "Hospitality", rating: 4, text: "Hotel management plan was comprehensive and realistic." },
+            { name: "Andrew Evans", course: "Biotechnology", rating: 5, text: "Lab report on genetic engineering was perfectly written." },
+            { name: "Michelle Edwards", course: "International Rel", rating: 5, text: "Diplomacy essay was insightful and well-structured." },
+            { name: "Mark Collins", course: "Electronics", rating: 4, text: "Circuit design was correct and the simulation worked perfectly." }
+        ];
+
+        let visibleCount = 8; // Initial Load
+
+        // ============================================
+        // RENDER FUNCTION
+        // ============================================
+        function renderReviews(limit) {
+            const container = document.getElementById('reviews-grid');
+            const reviewsToShow = reviewData.slice(0, limit);
+
+            reviewsToShow.forEach((review, index) => {
+                const col = document.createElement('div');
+                col.className = 'col-lg-3 col-md-6 reveal';
+                
+                // Generate Star HTML
+                let starsHtml = '';
+                for(let i=0; i<5; i++) {
+                    if(i < review.rating) {
+                        starsHtml += '<i class="fas fa-star"></i>';
+                    } else {
+                        starsHtml += '<i class="far fa-star"></i>';
+                    }
+                }
+
+                // Avatar seed based on name for consistency
+                    const gender = index % 2 === 0 ? "women" : "men";
+                    const avatarId = (index % 99) + 1;
+                    const avatarUrl = `https://randomuser.me/api/portraits/${gender}/${avatarId}.jpg`;
+
+                col.innerHTML = `
+                    <div class="review-card">
+                        <i class="fas fa-quote-right quote-icon"></i>
+                        <div class="review-header">
+                            <img src="${avatarUrl}" alt="${review.name}" class="review-avatar">
+                            <div class="reviewer-info">
+                                <h5>${review.name}</h5>
+                                <p>${review.course}</p>
+                            </div>
+                        </div>
+                        <div class="stars">
+                            ${starsHtml}
+                        </div>
+                        <p class="review-text">
+                            "${review.text}"
+                        </p>
+                    </div>
+                `;
+                container.appendChild(col);
+            });
+
+            checkReveal();
+        }
+
+        // ============================================
+        // LOAD MORE FUNCTION
+        // ============================================
+        function loadMoreReviews() {
+            const total = reviewData.length;
+            const current = document.querySelectorAll('#reviews-grid .col-lg-3').length;
+
+            if (current >= total) {
+                document.getElementById('loadMoreBtn').style.display = 'none';
+                showToast("You've reached the end of reviews!");
+                return;
+            }
+
+            // Load 8 more
+            const nextBatch = Math.min(current + 8, total);
+            renderReviews(nextBatch);
+
+            if (nextBatch >= total) {
+                document.getElementById('loadMoreBtn').style.display = 'none';
+            }
+        }
+
+        // ============================================
+        // ANIMATION LOGIC
+        // ============================================
+        function checkReveal() {
+            const reveals = document.querySelectorAll(".reveal");
+            const windowHeight = window.innerHeight;
+            const elementVisible = 100;
+
+            reveals.forEach((reveal) => {
+                const elementTop = reveal.getBoundingClientRect().top;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveal.classList.add("active");
+                }
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            renderReviews(visibleCount);
+        });
+
+        window.addEventListener("scroll", checkReveal);
+
+        // Toast Logic
+        function showToast(message) {
+            let toast = document.getElementById('customToast');
+            if(!toast) {
+                toast = document.createElement('div');
+                toast.id = 'customToast';
+                toast.className = 'custom-toast';
+                toast.innerHTML = '<i class="fas fa-info-circle toast-icon"></i> <span id="toastMessage"></span>';
+                document.body.appendChild(toast);
+            }
+            const msgSpan = document.getElementById('toastMessage');
+            msgSpan.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+        
+        function triggerModal() {
+             showToast("Opening chat interface...");
+        }
+    </script>
+</body>
+</html>

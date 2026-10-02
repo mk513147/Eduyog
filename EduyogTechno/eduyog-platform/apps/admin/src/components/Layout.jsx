@@ -3,12 +3,26 @@ import { useAuth } from '../auth/useAuth'
 import { Link } from '../router/Link'
 import { Icon } from './Icon'
 
-const NAV_ITEMS = [
-  { to: '/', label: 'Overview', icon: 'overview' },
-  { to: '/platforms', label: 'Platforms', icon: 'platforms' },
-  { to: '/services', label: 'Services', icon: 'services' },
-  { to: '/users', label: 'Users', icon: 'users' },
-  { to: '/fitness-leads', label: 'Fitness Leads', icon: 'leads' },
+const NAV_GROUPS = [
+  {
+    label: null,
+    items: [
+      { to: '/', label: 'Overview', icon: 'overview' },
+      { to: '/platforms', label: 'Platforms', icon: 'platforms' },
+      { to: '/services', label: 'Services', icon: 'services' },
+      { to: '/users', label: 'Users', icon: 'users' },
+      { to: '/fitness-leads', label: 'Fitness Leads', icon: 'leads' },
+    ],
+  },
+  {
+    label: 'Eduyarp',
+    items: [
+      { to: '/eduyarp/courses', label: 'Courses', icon: 'courses' },
+      { to: '/eduyarp/trainers', label: 'Trainers', icon: 'trainers' },
+      { to: '/eduyarp/enrolments', label: 'Enrolments', icon: 'enrolments' },
+      { to: '/eduyarp/classes', label: 'Classes', icon: 'classes' },
+    ],
+  },
 ]
 
 export function Layout({ children }) {
@@ -49,11 +63,16 @@ export function Layout({ children }) {
         </div>
 
         <nav className="nav" aria-label="Main">
-          {NAV_ITEMS.map((item) => (
-            <Link key={item.to} to={item.to} className="nav__link" onClick={closeMenu}>
-              <Icon name={item.icon} />
-              {item.label}
-            </Link>
+          {NAV_GROUPS.map((group) => (
+            <div key={group.label ?? 'main'} className="nav__group">
+              {group.label && <p className="nav__heading">{group.label}</p>}
+              {group.items.map((item) => (
+                <Link key={item.to} to={item.to} className="nav__link" onClick={closeMenu}>
+                  <Icon name={item.icon} />
+                  {item.label}
+                </Link>
+              ))}
+            </div>
           ))}
         </nav>
 

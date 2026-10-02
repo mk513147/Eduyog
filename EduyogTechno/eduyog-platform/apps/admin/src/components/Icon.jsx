@@ -12,6 +12,11 @@ const PATHS = {
   close: 'M6 6l12 12M18 6L6 18',
   plus: 'M12 5v14M5 12h14',
   external: 'M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5',
+  courses: 'M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zm0 16V5M8 7h7',
+  trainers: 'M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM5 20v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1M16 4l2 2 3-3',
+  enrolments: 'M9 5h10v15H5V9zM9 5v4H5M9 13h6M9 16h4',
+  classes: 'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4',
+  back: 'M19 12H5M11 6l-6 6 6 6',
 }
 
 export function Icon({ name, size = 18 }) {
