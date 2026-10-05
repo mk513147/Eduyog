@@ -37,6 +37,18 @@ function TopicItem({ topic, busy, onComplete }) {
           <span className="visually-hidden">: {topic.title}</span>
         </button>
       )}
+      {topic.videoEmbedUrl && (
+        <div className="topic__video">
+          <iframe
+            src={topic.videoEmbedUrl}
+            title={`Video: ${topic.title}`}
+            loading="lazy"
+            allow="fullscreen; picture-in-picture"
+            allowFullScreen
+            referrerPolicy="strict-origin-when-cross-origin"
+          />
+        </div>
+      )}
     </li>
   )
 }

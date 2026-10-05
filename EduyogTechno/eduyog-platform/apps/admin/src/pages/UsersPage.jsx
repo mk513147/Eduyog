@@ -14,7 +14,7 @@ const ROLE_ARTICLES = { student: 'a Student', trainer: 'a Trainer', admin: 'an A
 
 export default function UsersPage() {
   const { user: currentUser } = useAuth()
-  const { data: users, error, loading, reload } = useResource(usersApi.list)
+  const { data: users, error, loading, reload } = useResource(usersApi.list, { refetchOnFocus: true })
   const toast = useToast()
   // { user, role } while confirming a role change.
   const [pending, setPending] = useState(null)

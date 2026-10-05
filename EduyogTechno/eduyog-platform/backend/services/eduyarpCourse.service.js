@@ -1,6 +1,7 @@
 const pool = require('../config/database');
 const HttpError = require('../utils/httpError');
 const { PG_ERRORS, buildSetClause } = require('../utils/db');
+const { parseVideoUrl } = require('../utils/videoUrl');
 
 const COURSE_COLUMNS = `c.id, c.title, c.slug, c.description, c.learning_objectives, c.duration,
   c.level, c.fee, c.status, c.created_at, c.updated_at`;
@@ -55,7 +56,9 @@ function translateWriteError(err) {
 
 // Modules with their topics, in display order. With studentId, each topic
 // also carries that student's completion state.
-async function getOutline(courseId, { studentId = null } = {}) {
+// Video fields are included only for audiences with course access (enrolled
+// student, assigned trainer, Admin); the public outline never has them.
+async function getOutline(courseId, { studentId = null, includeVideo = false } = {}) {
   const progressJoin = studentId
     ? 'LEFT JOIN topic_progress p ON p.topic_id = t.id AND p.student_id = $2 AND p.completed'
     : '';
@@ -66,7 +69,7 @@ async function getOutline(courseId, { studentId = null } = {}) {
     `SELECT m.id AS module_id, m.title AS module_title, m.description AS module_description,
             m.display_order AS module_order,
             t.id AS topic_id, t.title AS topic_title, t.description AS topic_description,
-            t.display_order AS topic_order${progressColumns}
+            t.display_order AS topic_order, t.video_url AS topic_video_url${progressColumns}
      FROM course_modules m
      LEFT JOIN course_topics t ON t.module_id = m.id
      ${progressJoin}
@@ -97,6 +100,12 @@ async function getOutline(courseId, { studentId = null } = {}) {
         description: row.topic_description,
         displayOrder: row.topic_order,
       };
+      if (includeVideo) {
+        topic.videoUrl = row.topic_video_url;
+        topic.videoEmbedUrl = row.topic_video_url
+          ? (parseVideoUrl(row.topic_video_url)?.embedUrl ?? null)
+          : null;
+      }
       if (studentId) {
         topic.completed = row.topic_completed_at !== null;
         topic.completedAt = row.topic_completed_at;
@@ -197,7 +206,7 @@ async function getCourse(id) {
   return {
     ...course,
     trainers: trainers.get(String(course.id)),
-    modules: await getOutline(course.id),
+    modules: await getOutline(course.id, { includeVideo: true }),
   };
 }
 

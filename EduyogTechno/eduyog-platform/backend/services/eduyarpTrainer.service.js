@@ -121,7 +121,7 @@ async function getTrainerCourse(trainerId, courseId) {
   return {
     ...course,
     enrolmentCount: Number(countRows[0].count),
-    modules: await courseService.getOutline(courseId),
+    modules: await courseService.getOutline(courseId, { includeVideo: true }),
     classes: classRows.map((row) => ({
       id: row.id,
       title: row.title,

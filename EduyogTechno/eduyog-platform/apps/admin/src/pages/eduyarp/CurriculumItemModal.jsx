@@ -4,17 +4,33 @@ import { Modal } from '../../components/Modal'
 import { Alert, Spinner } from '../../components/States'
 import { splitApiError } from '../../utils/errors'
 
-const FIELDS = ['title', 'description', 'displayOrder']
+const FIELDS = ['title', 'description', 'displayOrder', 'videoUrl']
+const VIDEO_URL_ERROR = 'Enter a YouTube or Vimeo video link, e.g. https://www.youtube.com/watch?v=...'
+
+// Quick pre-check only; the backend is the authority on what is accepted.
+function looksLikeVideoUrl(value) {
+  try {
+    const url = new URL(value)
+    return (
+      ['http:', 'https:'].includes(url.protocol) &&
+      /(^|\.)(youtube\.com|youtu\.be|vimeo\.com)$/i.test(url.hostname)
+    )
+  } catch {
+    return false
+  }
+}
 
 // Add or edit a module or topic; both have title, description and order.
 // kind: 'Module' | 'Topic'. item: existing item to edit, or null to add.
 // save(payload) performs the API call and resolves with the saved item.
 export function CurriculumItemModal({ kind, item, context, save, onClose, onSaved }) {
   const isEdit = Boolean(item)
+  const hasVideo = kind === 'Topic'
   const [form, setForm] = useState({
     title: item?.title ?? '',
     description: item?.description ?? '',
     displayOrder: item ? String(item.displayOrder) : '',
+    videoUrl: item?.videoUrl ?? '',
   })
   const [fieldErrors, setFieldErrors] = useState({})
   const [formError, setFormError] = useState(null)
@@ -27,10 +43,17 @@ export function CurriculumItemModal({ kind, item, context, save, onClose, onSave
 
   const handleSubmit = async (event) => {
     event.preventDefault()
+    const videoUrl = form.videoUrl.trim()
+    if (hasVideo && videoUrl !== '' && !looksLikeVideoUrl(videoUrl)) {
+      setFieldErrors({ videoUrl: VIDEO_URL_ERROR })
+      return
+    }
     setBusy(true)
     setFormError(null)
     setFieldErrors({})
     const payload = { title: form.title, description: form.description }
+    // Empty clears the video (null); only topics have one.
+    if (hasVideo) payload.videoUrl = videoUrl === '' ? null : videoUrl
     // Blank order on create: the backend appends it after existing items.
     if (form.displayOrder.trim() !== '') payload.displayOrder = Number(form.displayOrder)
     try {
@@ -94,6 +117,18 @@ export function CurriculumItemModal({ kind, item, context, save, onClose, onSave
           error={fieldErrors.displayOrder}
           hint={isEdit ? 'Lower numbers appear first.' : 'Optional. Leave blank to add it at the end.'}
         />
+        {hasVideo && (
+          <TextField
+            label="Video URL (optional)"
+            type="url"
+            value={form.videoUrl}
+            onChange={(e) => update('videoUrl', e.target.value)}
+            error={fieldErrors.videoUrl}
+            hint="Add a YouTube or Vimeo video URL. Leave empty for no video."
+            maxLength={2048}
+            placeholder="https://www.youtube.com/watch?v=..."
+          />
+        )}
       </form>
     </Modal>
   )

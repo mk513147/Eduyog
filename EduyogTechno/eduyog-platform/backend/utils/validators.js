@@ -1,3 +1,6 @@
+const { parseVideoUrl } = require('./videoUrl');
+
+const VIDEO_URL_MAX_LENGTH = 2048;
 const EMAIL_MAX_LENGTH = 254;
 const FULL_NAME_MAX_LENGTH = 150;
 const PASSWORD_MIN_LENGTH = 8;
@@ -419,8 +422,9 @@ function validateCourse(body, { partial = false } = {}) {
   return finish(errors, value, partial);
 }
 
-// Shared by modules and topics, which have the same fields.
-function validateCurriculumItem(body, { partial = false } = {}) {
+// Shared by modules and topics. Only topics accept videoUrl (a YouTube or
+// Vimeo URL, or null to remove it).
+function validateCurriculumItem(body, { partial = false, allowVideo = false } = {}) {
   const input = body || {};
   const errors = {};
   const value = {};
@@ -434,8 +438,22 @@ function validateCurriculumItem(body, { partial = false } = {}) {
   if (input.displayOrder !== undefined) {
     optionalDisplayOrder(input, errors, value);
   }
+  if (allowVideo && input.videoUrl !== undefined) {
+    optionalText(input, 'videoUrl', 'Video URL', VIDEO_URL_MAX_LENGTH, errors, value);
+    if (!errors.videoUrl && value.videoUrl !== null && !parseVideoUrl(value.videoUrl)) {
+      errors.videoUrl = 'Video URL must be a YouTube or Vimeo video link';
+    }
+  }
 
   return finish(errors, value, partial);
+}
+
+// The only supported change is cancellation.
+function validateEnrolmentUpdate(body) {
+  if ((body || {}).status !== 'cancelled') {
+    return { errors: { status: "Status must be 'cancelled'" } };
+  }
+  return { value: { status: 'cancelled' } };
 }
 
 function validateTrainerAssignment(body) {
@@ -498,5 +516,6 @@ module.exports = {
   validateCourse,
   validateCurriculumItem,
   validateTrainerAssignment,
+  validateEnrolmentUpdate,
   validateClass,
 };

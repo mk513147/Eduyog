@@ -1215,3 +1215,16 @@ a {
   min-height: 0;
   overflow-y: auto;
 }
+
+.filters {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) repeat(2, minmax(0, 1fr)) auto;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 720px) {
+  .filters {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

@@ -13,7 +13,7 @@ import { ClassFormModal } from './ClassFormModal'
 
 export default function ClassesPage() {
   const { data: classes, error, loading, reload } = useResource(eduyarpApi.classes.list)
-  const courses = useResource(eduyarpApi.courses.list)
+  const courses = useResource(eduyarpApi.courses.list, { refetchOnFocus: true })
   const toast = useToast()
   // null = closed, { cls: null } = create, { cls } = edit
   const [formState, setFormState] = useState(null)
@@ -42,12 +42,19 @@ export default function ClassesPage() {
     }
   }
 
+  // Trainer assignments may have changed since this page loaded, so refresh
+  // the course/trainer data whenever the form is opened.
+  const openForm = (cls) => {
+    courses.reload()
+    setFormState({ cls })
+  }
+
   const canSchedule = Boolean(courses.data)
   const addButton = (
     <button
       type="button"
       className="btn btn--primary"
-      onClick={() => setFormState({ cls: null })}
+      onClick={() => openForm(null)}
       disabled={!canSchedule}
     >
       <Icon name="plus" /> Schedule class
@@ -112,7 +119,7 @@ export default function ClassesPage() {
                     <button
                       type="button"
                       className="btn btn--secondary btn--sm"
-                      onClick={() => setFormState({ cls })}
+                      onClick={() => openForm(cls)}
                       disabled={!canSchedule}
                     >
                       Edit

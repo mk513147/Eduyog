@@ -55,7 +55,7 @@ function LeadDetailModal({ leadId, onClose }) {
 }
 
 export default function FitnessLeadsPage() {
-  const { data: leads, error, loading, reload } = useResource(leadsApi.list)
+  const { data: leads, error, loading, reload } = useResource(leadsApi.list, { refetchOnFocus: true })
   const [selectedId, setSelectedId] = useState(null)
 
   let content

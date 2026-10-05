@@ -5,6 +5,7 @@ export function ConfirmDialog({
   title,
   children,
   confirmLabel = 'Confirm',
+  cancelLabel = 'Cancel',
   tone = 'primary',
   busy = false,
   error = null,
@@ -23,7 +24,7 @@ export function ConfirmDialog({
       footer={
         <>
           <button type="button" className="btn btn--secondary" onClick={close} disabled={busy}>
-            Cancel
+            {cancelLabel}
           </button>
           <button
             type="button"

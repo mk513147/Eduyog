@@ -24,6 +24,7 @@ router.post('/courses/:courseId/trainers', controller.assignTrainer);
 router.delete('/courses/:courseId/trainers/:trainerId', controller.unassignTrainer);
 
 router.get('/enrolments', controller.listEnrolments);
+router.patch('/enrolments/:id', controller.updateEnrolment);
 
 router.get('/classes', controller.listClasses);
 router.post('/classes', controller.createClass);

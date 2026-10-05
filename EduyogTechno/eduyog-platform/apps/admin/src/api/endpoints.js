@@ -80,6 +80,10 @@ export const eduyarpApi = {
   },
   enrolments: {
     list: () => request('/admin/eduyarp/enrolments').then((d) => d.enrolments),
+    cancel: (id) =>
+      request(`/admin/eduyarp/enrolments/${id}`, { method: 'PATCH', body: { status: 'cancelled' } }).then(
+        (d) => d.enrolment,
+      ),
   },
   classes: {
     list: () => request('/admin/eduyarp/classes').then((d) => d.classes),

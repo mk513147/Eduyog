@@ -138,7 +138,7 @@ async function getStudentCourse(studentId, courseId) {
   return {
     ...toStudentCourse(rows[0]),
     trainers: trainers.get(String(courseId)),
-    modules: await courseService.getOutline(courseId, { studentId }),
+    modules: await courseService.getOutline(courseId, { studentId, includeVideo: true }),
   };
 }
 
@@ -234,23 +234,48 @@ async function getStudentSchedule(studentId) {
 // Admin
 // ---------------------------------------------------------------------------
 
-// Includes cancelled enrolments, with the progress the student had.
-async function listEnrolments() {
-  const { rows } = await pool.query(
-    `SELECT e.id AS enrolment_id, e.status AS enrolment_status, e.enrolled_at,
-            u.id AS student_id, u.full_name AS student_name, u.email AS student_email,
-            c.id AS course_id, c.title AS course_title,
-            ${PROGRESS_COLUMNS}
-     FROM enrolments e
-     JOIN users u ON u.id = e.student_id
-     JOIN courses c ON c.id = e.course_id
-     ORDER BY e.enrolled_at DESC, e.id DESC`
-  );
-  return rows.map((row) => ({
+const ADMIN_ENROLMENT_SELECT = `
+  SELECT e.id AS enrolment_id, e.status AS enrolment_status, e.enrolled_at,
+         u.id AS student_id, u.full_name AS student_name, u.email AS student_email,
+         c.id AS course_id, c.title AS course_title,
+         ${PROGRESS_COLUMNS}
+  FROM enrolments e
+  JOIN users u ON u.id = e.student_id
+  JOIN courses c ON c.id = e.course_id`;
+
+function toAdminEnrolment(row) {
+  return {
     ...toEnrolment(row),
     student: { id: row.student_id, fullName: row.student_name, email: row.student_email },
     course: { id: row.course_id, title: row.course_title },
-  }));
+  };
+}
+
+// Includes cancelled enrolments, with the progress the student had.
+async function listEnrolments() {
+  const { rows } = await pool.query(
+    `${ADMIN_ENROLMENT_SELECT}
+     ORDER BY e.enrolled_at DESC, e.id DESC`
+  );
+  return rows.map(toAdminEnrolment);
+}
+
+// Admin cancellation of one active enrolment. A single conditional UPDATE, so
+// a completed or already cancelled enrolment can never be changed. Topic
+// progress is not touched.
+async function cancelEnrolment(id) {
+  const { rowCount } = await pool.query(
+    "UPDATE enrolments SET status = 'cancelled' WHERE id = $1 AND status = 'active'",
+    [id]
+  );
+  const { rows } = await pool.query(`${ADMIN_ENROLMENT_SELECT} WHERE e.id = $1`, [id]);
+  if (!rows[0]) {
+    throw new HttpError(404, 'Enrolment not found');
+  }
+  if (rowCount === 0) {
+    throw new HttpError(409, `Only active enrolments can be cancelled; this one is ${rows[0].enrolment_status}`);
+  }
+  return toAdminEnrolment(rows[0]);
 }
 
 // Called inside the role-change transaction when a Student becomes a Trainer
@@ -272,4 +297,5 @@ module.exports = {
   completeTopic,
   getStudentSchedule,
   listEnrolments,
+  cancelEnrolment,
 };

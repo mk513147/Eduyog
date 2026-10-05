@@ -41,6 +41,10 @@ export function ClassFormModal({ cls, courses, onClose, onSaved }) {
     trainerOptions.push({ id: cls.trainerId, fullName: `${cls.trainerName} (no longer assigned)` })
   }
 
+  // courses can be refreshed while the form is open; never keep (or submit) a
+  // trainer that is not in the current list for the selected course.
+  const trainerId = trainerOptions.some((t) => t.id === form.trainerId) ? form.trainerId : ''
+
   const update = (field, value) => {
     setForm((prev) => {
       const next = { ...prev, [field]: value }
@@ -60,7 +64,7 @@ export function ClassFormModal({ cls, courses, onClose, onSaved }) {
       return
     }
     setBusy(true)
-    const payload = { ...form, scheduledAt: new Date(form.scheduledAt).toISOString() }
+    const payload = { ...form, trainerId, scheduledAt: new Date(form.scheduledAt).toISOString() }
     // Unchanged course/trainer are not re-sent, so editing other fields of a
     // class whose trainer was later unassigned still works.
     if (isEdit) {
@@ -118,7 +122,7 @@ export function ClassFormModal({ cls, courses, onClose, onSaved }) {
         </SelectField>
         <SelectField
           label="Trainer"
-          value={form.trainerId}
+          value={trainerId}
           onChange={(e) => update('trainerId', e.target.value)}
           error={fieldErrors.trainerId}
           hint={

@@ -1,6 +1,7 @@
 const pool = require('../config/database');
 const HttpError = require('../utils/httpError');
 const { PG_ERRORS, buildSetClause } = require('../utils/db');
+const { parseVideoUrl } = require('../utils/videoUrl');
 const { syncCourseStatuses } = require('./eduyarpEnrolment.service');
 
 // Modules and topics have the same shape; only the table and parent differ.
@@ -19,6 +20,7 @@ const KINDS = {
     parentField: 'moduleId',
     label: 'Topic',
     parentLabel: 'Module',
+    hasVideo: true,
   },
 };
 
@@ -26,10 +28,11 @@ const WRITABLE_COLUMNS = {
   title: 'title',
   description: 'description',
   displayOrder: 'display_order',
+  videoUrl: 'video_url',
 };
 
 function toItem(kind, row) {
-  return {
+  const item = {
     id: row.id,
     [kind.parentField]: row[kind.parentColumn],
     title: row.title,
@@ -38,6 +41,11 @@ function toItem(kind, row) {
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
+  if (kind.hasVideo) {
+    item.videoUrl = row.video_url;
+    item.videoEmbedUrl = row.video_url ? (parseVideoUrl(row.video_url)?.embedUrl ?? null) : null;
+  }
+  return item;
 }
 
 // Course of a module or topic parent, for re-syncing enrolment status.
@@ -55,15 +63,20 @@ function translateWriteError(kind, err) {
 }
 
 // Without displayOrder, the item goes after its current siblings.
-async function createItem(kindName, parentId, { title, description = null, displayOrder }) {
+async function createItem(kindName, parentId, { title, description = null, displayOrder, videoUrl = null }) {
   const kind = KINDS[kindName];
+  // Modules have no video column; the validator never passes videoUrl for them.
+  const videoColumn = kind.hasVideo ? ', video_url' : '';
+  const videoParam = kind.hasVideo ? ', $5' : '';
   try {
     const { rows } = await pool.query(
-      `INSERT INTO ${kind.table} (${kind.parentColumn}, title, description, display_order)
+      `INSERT INTO ${kind.table} (${kind.parentColumn}, title, description, display_order${videoColumn})
        VALUES ($1, $2, $3, COALESCE($4::integer,
-         (SELECT COALESCE(MAX(display_order), 0) + 1 FROM ${kind.table} WHERE ${kind.parentColumn} = $1)))
+         (SELECT COALESCE(MAX(display_order), 0) + 1 FROM ${kind.table} WHERE ${kind.parentColumn} = $1))${videoParam})
        RETURNING *`,
-      [parentId, title, description, displayOrder ?? null]
+      kind.hasVideo
+        ? [parentId, title, description, displayOrder ?? null, videoUrl]
+        : [parentId, title, description, displayOrder ?? null]
     );
     if (kindName === 'topic') {
       await syncCourseStatuses(await courseIdFor('topic', parentId));

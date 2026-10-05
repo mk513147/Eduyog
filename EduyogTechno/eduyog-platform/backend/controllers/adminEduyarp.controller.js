@@ -7,6 +7,7 @@ const {
   validateCourse,
   validateCurriculumItem,
   validateTrainerAssignment,
+  validateEnrolmentUpdate,
   validateClass,
 } = require('../utils/validators');
 const { getIdParam, requireValid } = require('./helpers');
@@ -66,14 +67,14 @@ async function deleteModule(req, res) {
 
 async function createTopic(req, res) {
   const moduleId = getIdParam(req, 'moduleId');
-  const input = requireValid(validateCurriculumItem(req.body));
+  const input = requireValid(validateCurriculumItem(req.body, { allowVideo: true }));
   const topic = await curriculumService.createTopic(moduleId, input);
   res.status(201).json({ topic });
 }
 
 async function updateTopic(req, res) {
   const id = getIdParam(req);
-  const changes = requireValid(validateCurriculumItem(req.body, { partial: true }));
+  const changes = requireValid(validateCurriculumItem(req.body, { partial: true, allowVideo: true }));
   const topic = await curriculumService.updateTopic(id, changes);
   res.json({ topic });
 }
@@ -110,6 +111,13 @@ async function unassignTrainer(req, res) {
 async function listEnrolments(req, res) {
   const enrolments = await enrolmentService.listEnrolments();
   res.json({ enrolments });
+}
+
+async function updateEnrolment(req, res) {
+  const id = getIdParam(req);
+  requireValid(validateEnrolmentUpdate(req.body));
+  const enrolment = await enrolmentService.cancelEnrolment(id);
+  res.json({ enrolment });
 }
 
 // Classes
@@ -153,6 +161,7 @@ module.exports = {
   assignTrainer,
   unassignTrainer,
   listEnrolments,
+  updateEnrolment,
   listClasses,
   createClass,
   updateClass,

@@ -281,6 +281,7 @@ export default function CourseDetailPage({ params }) {
                             <span className="curriculum__order">#{topic.displayOrder}</span>
                             {topic.title}
                             {topic.description && <div className="cell-secondary">{topic.description}</div>}
+                            {topic.videoUrl && <div className="cell-secondary">Video attached</div>}
                           </div>
                           <div className="row-actions">
                             <button
