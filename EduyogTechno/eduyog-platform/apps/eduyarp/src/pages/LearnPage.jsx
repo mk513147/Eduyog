@@ -18,7 +18,6 @@ function TopicItem({ topic, busy, onComplete }) {
       </span>
       <div className="topic__body">
         <span className="topic__title">{topic.title}</span>
-        {topic.description && <span className="topic__text">{topic.description}</span>}
         {topic.completed && (
           <span className="topic__meta">Completed {formatShortDate(topic.completedAt)}</span>
         )}
@@ -28,7 +27,7 @@ function TopicItem({ topic, busy, onComplete }) {
       ) : (
         <button
           type="button"
-          className="btn btn--secondary btn--sm"
+          className="btn btn--secondary btn--sm topic__action"
           onClick={() => onComplete(topic)}
           disabled={busy}
         >
@@ -49,6 +48,7 @@ function TopicItem({ topic, busy, onComplete }) {
           />
         </div>
       )}
+      {topic.description && <p className="topic__text">{topic.description}</p>}
     </li>
   )
 }

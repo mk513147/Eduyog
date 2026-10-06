@@ -1,0 +1,544 @@
+/* ==========================================================================
+   StudentAQ — premium layer (Eduyog ecosystem design language)
+   Loaded after styles.css. It re-skins the existing components; markup and
+   behaviour are unchanged. StudentAQ keeps its own accent: the navy and blue
+   sampled from its logo, with a sky highlight.
+
+   1. Design tokens   2. Type   3. Header   4. Buttons   5. Hero
+   6. Page header     7. Cards & sections   8. CTA band   9. Footer
+   10. Motion
+   ========================================================================== */
+
+/* 1. Design tokens --------------------------------------------------------- */
+:root {
+  /* Colour (semantic) */
+  --color-bg: #f7f9fc;
+  --color-surface: #ffffff;
+  --color-surface-soft: #f1f5fa;
+  --color-text: #0b1f36;
+  --color-text-muted: #51627a;
+  --color-primary: #1e73bf; /* StudentAQ blue (logo) */
+  --color-primary-hover: #185c9c;
+  --color-accent: #38bdf8; /* sky highlight for dark surfaces */
+  --color-ink: #071a30; /* deep navy for dark sections */
+  --color-ink-2: #0e335a; /* StudentAQ navy (logo) */
+
+  /* Spacing (4px base) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 72px;
+
+  /* Shape & depth — aligned with Eduyog / Eduyarp / Fitness */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+  --shadow-sm: 0 1px 3px rgba(7, 26, 48, 0.08), 0 1px 2px rgba(7, 26, 48, 0.04);
+  --shadow-md: 0 12px 32px -14px rgba(7, 26, 48, 0.25);
+  --shadow-lg: 0 28px 60px -24px rgba(7, 26, 48, 0.35);
+
+  /* Motion */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration: 200ms;
+  --duration-slow: 600ms;
+
+  --gradient-ink: radial-gradient(1000px 480px at 88% -10%, rgba(56, 189, 248, 0.28), transparent 60%),
+    radial-gradient(800px 480px at 0% 110%, rgba(30, 115, 191, 0.4), transparent 60%),
+    linear-gradient(160deg, var(--color-ink-2), var(--color-ink));
+}
+
+/* 2. Type ------------------------------------------------------------------ */
+body {
+  background: var(--color-bg);
+  font-feature-settings: 'cv11', 'ss01';
+}
+
+h1,
+h2,
+h3,
+h4 {
+  letter-spacing: -0.025em;
+}
+
+.section-title {
+  font-weight: 800;
+  font-size: clamp(1.8rem, 1.2rem + 2vw, 2.7rem);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+}
+
+.eyebrow,
+.overline {
+  letter-spacing: 0.12em;
+}
+
+.section {
+  background: var(--color-bg);
+}
+
+.section--muted {
+  background: linear-gradient(180deg, #eef4fb 0%, var(--color-bg) 100%);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+/* 3. Header ---------------------------------------------------------------- */
+/* The blur lives on a pseudo-element: backdrop-filter on the header itself would
+   make it the containing block of the fixed-position mobile menu. */
+.site-header {
+  background: transparent;
+}
+
+.site-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: rgba(255, 255, 255, 0.82);
+  -webkit-backdrop-filter: saturate(1.6) blur(14px);
+  backdrop-filter: saturate(1.6) blur(14px);
+}
+
+.site-header.is-scrolled {
+  border-bottom-color: rgba(7, 26, 48, 0.08);
+  box-shadow: 0 8px 24px -18px rgba(7, 26, 48, 0.4);
+}
+
+.nav__link {
+  border-radius: var(--radius-full, 999px);
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.nav__link:hover {
+  background: #e8f1fb;
+  color: var(--color-primary);
+}
+
+.nav__link[aria-current='page'] {
+  background: #e8f1fb;
+  color: var(--color-primary);
+}
+
+.menu-toggle {
+  border-radius: 12px;
+  transition: background-color var(--duration) var(--ease);
+}
+
+.menu-toggle:hover {
+  background: var(--color-surface-soft);
+}
+
+.mobile-menu {
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  background: rgba(255, 255, 255, 0.97);
+}
+
+.mobile-menu:not([hidden]) {
+  animation: menu-in 260ms var(--ease);
+}
+
+.mobile-menu:not([hidden]) .mobile-menu__link {
+  animation: menu-link-in 380ms var(--ease) backwards;
+}
+
+.mobile-menu:not([hidden]) .mobile-menu__link:nth-child(2) {
+  animation-delay: 40ms;
+}
+
+.mobile-menu:not([hidden]) .mobile-menu__link:nth-child(3) {
+  animation-delay: 80ms;
+}
+
+.mobile-menu:not([hidden]) .mobile-menu__link:nth-child(4) {
+  animation-delay: 120ms;
+}
+
+.mobile-menu:not([hidden]) .mobile-menu__link:nth-child(5) {
+  animation-delay: 160ms;
+}
+
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes menu-link-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* 4. Buttons --------------------------------------------------------------- */
+.btn {
+  border-radius: 999px;
+  font-weight: 600;
+  transition:
+    background-color var(--duration) var(--ease),
+    border-color var(--duration) var(--ease),
+    color var(--duration) var(--ease),
+    box-shadow var(--duration) var(--ease),
+    transform var(--duration) var(--ease);
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(1px) scale(0.99);
+}
+
+.btn--primary {
+  background-image: none;
+  background-color: var(--color-primary);
+}
+
+.btn--primary:hover {
+  background-image: none;
+  background-color: var(--color-primary-hover);
+}
+
+.btn--secondary {
+  border-color: #c4d3e4;
+}
+
+.btn--secondary:hover {
+  border-color: var(--color-primary);
+  background: #eef5fc;
+  color: var(--color-primary);
+}
+
+.btn--light {
+  box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.5);
+}
+
+.btn .icon {
+  transition: transform var(--duration) var(--ease);
+}
+
+.btn--icon-end:hover .icon {
+  transform: translateX(3px);
+}
+
+/* 5. Home hero (dark, matching the ecosystem) ------------------------------ */
+.hero {
+  background: var(--gradient-ink);
+  color: #d6e4f5;
+  padding-block: clamp(48px, 7vw, 96px) clamp(72px, 9vw, 120px);
+}
+
+.hero .pattern {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+  opacity: 1;
+  -webkit-mask-image: radial-gradient(ellipse at 75% 30%, #000 0%, transparent 70%);
+  mask-image: radial-gradient(ellipse at 75% 30%, #000 0%, transparent 70%);
+}
+
+.hero__title {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: clamp(2.4rem, 1.2rem + 4.2vw, 4.1rem);
+  line-height: 1.06;
+  letter-spacing: -0.035em;
+  color: #fff;
+}
+
+.hero__title em {
+  font-style: normal;
+  white-space: normal;
+  background: linear-gradient(100deg, #7dd3fc 0%, #38bdf8 45%, #67e8f9 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero__text {
+  color: #c3d4e8;
+}
+
+.hero__points li {
+  color: #d6e4f5;
+}
+
+.hero__points .icon {
+  color: var(--color-accent);
+}
+
+.hero .pill {
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  color: #e1ecf8;
+}
+
+.hero .btn--secondary {
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+  box-shadow: none;
+}
+
+.hero .btn--secondary:hover {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+.hero .btn--secondary .icon--whatsapp {
+  color: #4ade80;
+}
+
+.hero__visual::before {
+  background: radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.5), transparent 70%);
+  filter: blur(40px);
+}
+
+.hero .media {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 40px 70px -30px rgba(0, 0, 0, 0.7);
+}
+
+.hero .roadmap {
+  border-color: rgba(255, 255, 255, 0.6);
+  border-radius: var(--radius-xl);
+}
+
+/* 6. Page headers (inner pages) -------------------------------------------- */
+.page-header {
+  background: var(--gradient-ink);
+  border-bottom: 0;
+  color: #d6e4f5;
+}
+
+.page-header .pattern {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+  opacity: 1;
+}
+
+.page-header .eyebrow {
+  color: var(--color-accent);
+}
+
+.page-header__title {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: clamp(2.1rem, 1.2rem + 3.4vw, 3.4rem);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  color: #fff;
+}
+
+.page-header__text {
+  color: #c3d4e8;
+}
+
+.page-header .media {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.6);
+}
+
+.jump-link {
+  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.jump-link:hover {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+}
+
+/* 7. Cards & sections ------------------------------------------------------ */
+.card,
+.feature--card,
+.service-detail,
+.destination-card,
+.info-card {
+  border-radius: var(--radius-xl);
+  border-color: #dde6f0;
+  box-shadow: var(--shadow-sm);
+}
+
+.card--interactive:hover,
+.destination-card:hover {
+  border-color: #b9d3ee;
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-5px);
+}
+
+.icon-tile {
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--color-primary), #38a1e8);
+  color: #fff;
+  box-shadow: 0 10px 22px -10px rgba(30, 115, 191, 0.7);
+}
+
+.card__title {
+  letter-spacing: -0.02em;
+}
+
+.card__cta {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.step {
+  border-radius: var(--radius-xl);
+}
+
+.step__badge {
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--color-primary), #38a1e8);
+  color: #fff;
+  box-shadow: 0 10px 22px -10px rgba(30, 115, 191, 0.7);
+}
+
+.step__number {
+  color: var(--color-primary);
+  letter-spacing: 0.1em;
+}
+
+.media {
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+}
+
+.faq__item {
+  border-radius: var(--radius-lg);
+}
+
+.chip {
+  border-radius: 999px;
+}
+
+.testimonial {
+  border-radius: var(--radius-xl);
+}
+
+/* 8. CTA band -------------------------------------------------------------- */
+.cta-band {
+  border-radius: var(--radius-xl);
+  background: var(--gradient-ink);
+  box-shadow: var(--shadow-lg);
+}
+
+.cta-band__title {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+/* 9. Footer ---------------------------------------------------------------- */
+.site-footer {
+  background: var(--color-ink);
+  border-top: 0;
+  color: #9db3cc;
+}
+
+.site-footer .brand__name {
+  color: #fff;
+}
+
+.site-footer .brand__name span {
+  color: var(--color-accent);
+}
+
+.site-footer .footer__about,
+.site-footer .footer__bottom {
+  color: #9db3cc;
+}
+
+.site-footer .footer__title {
+  color: #fff;
+}
+
+.site-footer .footer__links a {
+  color: #c3d4e8;
+}
+
+.site-footer .footer__links a:hover {
+  color: #fff;
+}
+
+.site-footer .footer__links--contact .icon {
+  color: var(--color-accent);
+}
+
+.site-footer .footer__bottom {
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+.site-footer .brand__mark {
+  filter: brightness(0) invert(1);
+}
+
+/* 10. Motion --------------------------------------------------------------- */
+.hero__content > *,
+.hero__visual,
+.page-header__content > *,
+.page-header__media {
+  animation: rise 700ms var(--ease) backwards;
+}
+
+.hero__content > :nth-child(2) {
+  animation-delay: 70ms;
+}
+
+.hero__content > :nth-child(3) {
+  animation-delay: 140ms;
+}
+
+.hero__content > :nth-child(4) {
+  animation-delay: 210ms;
+}
+
+.hero__content > :nth-child(5) {
+  animation-delay: 280ms;
+}
+
+.hero__visual {
+  animation-delay: 200ms;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__content > *,
+  .hero__visual,
+  .page-header__content > *,
+  .page-header__media,
+  .mobile-menu:not([hidden]),
+  .mobile-menu:not([hidden]) .mobile-menu__link {
+    animation: none;
+  }
+
+  .card--interactive:hover,
+  .destination-card:hover,
+  .btn:hover:not(:disabled) {
+    transform: none;
+  }
+}

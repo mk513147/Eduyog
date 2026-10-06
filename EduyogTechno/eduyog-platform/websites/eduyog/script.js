@@ -271,7 +271,42 @@
     if (year) year.textContent = String(new Date().getFullYear());
   }
 
+  // ---------------------------------------------------------------------
+  // Scroll reveal
+  //
+  // Elements with .reveal fade in once as they enter the viewport. Without
+  // IntersectionObserver, or with reduced motion, they are shown immediately.
+  // ---------------------------------------------------------------------
+
+  function initReveal() {
+    var items = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+    if (items.length === 0) return;
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced || !('IntersectionObserver' in window)) {
+      items.forEach(function (item) {
+        item.classList.add('is-visible');
+      });
+      return;
+    }
+    var observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        });
+      },
+      { rootMargin: '0px 0px -8% 0px', threshold: 0.08 }
+    );
+    items.forEach(function (item, index) {
+      // Small stagger for siblings revealed together.
+      item.style.transitionDelay = (index % 3) * 70 + 'ms';
+      observer.observe(item);
+    });
+  }
+
   initNavigation();
   setCurrentYear();
   loadPlatforms();
+  initReveal();
 })();

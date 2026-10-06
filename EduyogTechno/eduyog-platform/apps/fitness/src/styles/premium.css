@@ -1,0 +1,406 @@
+/* Eduyog Fitness — premium visual layer. Loaded after index.css. Energetic: dark ink
+   sections, teal brand with an orange energy accent. Shares tokens.css with Eduyarp. */
+
+:root {
+  --color-bg: #f6f8f9;
+  --color-surface: #fff;
+  --color-tint: #eef6f5;
+  --color-border: var(--slate-200);
+  --color-border-strong: var(--slate-300);
+  --color-text: var(--slate-950);
+  --color-text-muted: var(--slate-600);
+  --color-primary: var(--teal-600);
+  --color-primary-hover: #0f766e;
+  --color-primary-soft: #ccfbf1;
+  --color-ink: #071a1c;
+  --color-ink-soft: #0c2a2c;
+  --color-on-ink: #d5ebe9;
+  --color-on-ink-muted: #8fb8b5;
+  --color-accent: #5eead4;
+  --color-focus: #0d9488;
+  font-family: var(--font-sans);
+  font-feature-settings: 'cv11', 'ss01';
+}
+
+body {
+  background: var(--color-bg);
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+:focus-visible {
+  outline: 2px solid var(--teal-500);
+  outline-offset: 3px;
+}
+
+.eyebrow {
+  color: var(--teal-600);
+  letter-spacing: 0.12em;
+}
+
+.eyebrow--light {
+  color: #5eead4;
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  border-radius: 999px;
+  font-weight: 600;
+  transition:
+    background-color var(--t-fast) var(--ease-out),
+    border-color var(--t-fast) var(--ease-out),
+    color var(--t-fast) var(--ease-out),
+    transform var(--t-fast) var(--ease-out),
+    box-shadow var(--t-base) var(--ease-out);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(1px) scale(0.99);
+}
+
+.btn--primary {
+  background: var(--orange-500);
+  color: #1a0a00;
+  box-shadow: 0 10px 26px -10px rgba(249, 115, 22, 0.75);
+}
+
+.btn--primary:hover:not(:disabled) {
+  background: #fb8a3c;
+  transform: translateY(-1px);
+  box-shadow: 0 14px 30px -10px rgba(249, 115, 22, 0.85);
+}
+
+.btn--lg {
+  min-height: 52px;
+  padding: 12px 26px;
+}
+
+.btn svg {
+  transition: transform var(--t-fast) var(--ease-out);
+}
+
+.btn:hover svg:last-child:not(:first-child) {
+  transform: translateX(2px);
+}
+
+.btn--outline {
+  border-color: var(--slate-300);
+}
+
+.btn--outline:hover {
+  border-color: var(--teal-600);
+  color: var(--teal-600);
+}
+
+.text-link {
+  color: var(--teal-600);
+  font-weight: 600;
+}
+
+/* ---------- Navbar ---------- */
+
+.navbar {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: saturate(1.6) blur(14px);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.brand__mark {
+  border-radius: 11px;
+  background: linear-gradient(135deg, var(--teal-600), var(--cyan-400));
+  box-shadow: 0 6px 16px -6px rgba(13, 148, 136, 0.7);
+}
+
+.navbar__link {
+  border-radius: 999px;
+  transition: background-color var(--t-fast), color var(--t-fast);
+}
+
+.navbar__link:hover {
+  background: #e6f6f4;
+  color: var(--teal-600);
+}
+
+/* ---------- Hero ---------- */
+
+.hero {
+  background:
+    radial-gradient(900px 480px at 88% -10%, rgba(249, 115, 22, 0.28), transparent 60%),
+    radial-gradient(900px 520px at 0% 110%, rgba(20, 184, 166, 0.34), transparent 60%),
+    var(--color-ink);
+  padding: clamp(56px, 9vw, 120px) 0 clamp(64px, 10vw, 130px);
+}
+
+.hero__rings {
+  position: absolute;
+  top: 50%;
+  right: -10%;
+  width: min(720px, 90vw);
+  aspect-ratio: 1;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.hero__rings span {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(94, 234, 212, 0.14);
+  border-radius: 50%;
+}
+
+.hero__rings span:nth-child(2) {
+  inset: 14%;
+  border-color: rgba(94, 234, 212, 0.18);
+}
+
+.hero__rings span:nth-child(3) {
+  inset: 28%;
+  border-color: rgba(249, 115, 22, 0.28);
+}
+
+.hero__grid {
+  position: relative;
+  align-items: center;
+}
+
+.hero__title {
+  font-size: var(--text-hero);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  max-width: 16ch;
+}
+
+.hero__title span {
+  background: linear-gradient(100deg, #5eead4, #fdba74);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero__lead {
+  max-width: 54ch;
+  font-size: clamp(1rem, 0.4vw + 0.95rem, 1.2rem);
+}
+
+.hero__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin-top: 28px;
+  color: var(--color-on-ink);
+  font-size: 14px;
+}
+
+.hero__facts li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hero__facts svg {
+  color: #5eead4;
+}
+
+.hero__panel {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--radius-xl);
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.6);
+}
+
+.hero__item {
+  border-radius: var(--radius-lg);
+  transition: background-color var(--t-fast), transform var(--t-fast) var(--ease-out);
+}
+
+.hero__item:hover {
+  transform: translateX(3px);
+}
+
+.hero__item-icon {
+  background: linear-gradient(135deg, rgba(20, 184, 166, 0.35), rgba(249, 115, 22, 0.3));
+  color: #fff;
+  border-radius: 12px;
+}
+
+/* ---------- Sections ---------- */
+
+.section {
+  padding: var(--section-space) 0;
+}
+
+.section-title {
+  font-size: var(--text-h2);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.section--tinted {
+  background: linear-gradient(180deg, #eaf5f3, var(--color-bg));
+}
+
+.section--dark {
+  background:
+    radial-gradient(800px 400px at 100% 0%, rgba(249, 115, 22, 0.16), transparent 60%),
+    var(--color-ink);
+  color: var(--color-on-ink);
+}
+
+.section-header--light .section-title {
+  color: #fff;
+}
+
+.section-header--light .section-text {
+  color: var(--color-on-ink);
+}
+
+.section-header--light .eyebrow {
+  color: #5eead4;
+}
+
+.service-card {
+  border-radius: var(--radius-xl);
+  transition:
+    transform var(--t-base) var(--ease-out),
+    box-shadow var(--t-base) var(--ease-out),
+    border-color var(--t-base);
+}
+
+.service-card:hover {
+  transform: translateY(-5px);
+  border-color: #99e0d8;
+  box-shadow: var(--shadow-lg);
+}
+
+.service-card__icon {
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--teal-600), var(--cyan-400));
+  color: #fff;
+  box-shadow: 0 10px 22px -10px rgba(13, 148, 136, 0.8);
+}
+
+.check-list svg {
+  padding: 3px;
+  border-radius: 50%;
+  background: var(--teal-600);
+  color: #fff;
+}
+
+.approach {
+  display: grid;
+  gap: 20px;
+}
+
+@media (min-width: 640px) {
+  .approach {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1000px) {
+  .approach {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.approach__step {
+  position: relative;
+  padding: 28px 24px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-xl);
+  background: rgba(255, 255, 255, 0.05);
+  transition:
+    transform var(--t-base) var(--ease-out),
+    border-color var(--t-base),
+    background-color var(--t-base);
+}
+
+.approach__step:hover {
+  transform: translateY(-4px);
+  border-color: rgba(94, 234, 212, 0.45);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.approach__num {
+  position: absolute;
+  top: 20px;
+  right: 22px;
+  color: rgba(255, 255, 255, 0.28);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.approach__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--orange-500);
+  color: #1a0a00;
+}
+
+.approach__step h3 {
+  margin: 18px 0 8px;
+  color: #fff;
+  font-size: var(--text-h3);
+}
+
+.approach__step p {
+  color: var(--color-on-ink);
+  font-size: 15px;
+}
+
+.about__point {
+  border-radius: var(--radius-lg);
+}
+
+.about__point-icon {
+  border-radius: 12px;
+  background: #ccfbf1;
+  color: #0f766e;
+}
+
+.form-card {
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  border-top: 4px solid var(--orange-500);
+}
+
+.input {
+  border-radius: var(--radius-md);
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+
+.input:focus {
+  border-color: var(--teal-500);
+  box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.2);
+  outline: none;
+}
+
+.footer {
+  background: #041012;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-card:hover,
+  .approach__step:hover,
+  .hero__item:hover {
+    transform: none;
+  }
+}
+
+.approach {
+  padding: 0;
+  list-style: none;
+}

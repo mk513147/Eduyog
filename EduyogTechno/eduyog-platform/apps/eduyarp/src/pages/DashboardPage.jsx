@@ -2,6 +2,7 @@ import { studentApi } from '../api/endpoints'
 import { useAuth } from '../auth/useAuth'
 import { ClassStatusBadge, CourseStatusBadge, EnrolmentStatusBadge, LevelBadge } from '../components/Badges'
 import { Icon } from '../components/Icon'
+import { Reveal } from '../components/Reveal'
 import { ProgressBar } from '../components/ProgressBar'
 import { EmptyState, ErrorState, LoadingState } from '../components/States'
 import { usePageTitle } from '../hooks/usePageTitle'
@@ -9,8 +10,8 @@ import { useResource } from '../hooks/useResource'
 import { Link } from '../router/Link'
 import { formatDate, formatTime } from '../utils/format'
 
-function MyCourses() {
-  const { data: courses, error, loading, reload } = useResource(studentApi.courses)
+function MyCourses({ resource }) {
+  const { data: courses, error, loading, reload } = resource
 
   if (loading) return <LoadingState label="Loading your courses…" />
   if (error && !courses) return <ErrorState error={error} onRetry={reload} />
@@ -98,15 +99,37 @@ function UpcomingClasses() {
 export default function DashboardPage() {
   usePageTitle('My dashboard')
   const { user } = useAuth()
+  const coursesResource = useResource(studentApi.courses)
+  const myCourses = coursesResource.data
+  const total = myCourses?.length ?? 0
+  const finished = myCourses?.filter((c) => c.enrolment.status === 'completed').length ?? 0
+  const topicsDone = myCourses?.reduce((sum, c) => sum + c.enrolment.progress.completedTopics, 0) ?? 0
 
   return (
     <div className="container page">
-      <header className="page__header">
+      <Reveal as="header" className="welcome">
         <div>
-          <p className="eyebrow">Student dashboard</p>
-          <h1 className="page__title">Welcome, {user.fullName.split(' ')[0]}</h1>
+          <p className="eyebrow eyebrow--light">Student dashboard</p>
+          <h1 className="welcome__title">Welcome back, {user.fullName.split(' ')[0]}</h1>
+          <p className="welcome__text">Pick up where you left off, or find your next course.</p>
         </div>
-      </header>
+        {myCourses && (
+          <ul className="welcome__stats" aria-label="Your learning at a glance">
+            <li>
+              <strong>{total}</strong>
+              <span>{total === 1 ? 'Course' : 'Courses'}</span>
+            </li>
+            <li>
+              <strong>{topicsDone}</strong>
+              <span>Topics done</span>
+            </li>
+            <li>
+              <strong>{finished}</strong>
+              <span>Completed</span>
+            </li>
+          </ul>
+        )}
+      </Reveal>
 
       <div className="dashboard">
         <section className="card profile" aria-labelledby="profile-title">
@@ -134,7 +157,7 @@ export default function DashboardPage() {
               Browse more courses
             </Link>
           </div>
-          <MyCourses />
+          <MyCourses resource={coursesResource} />
         </section>
 
         <section className="card dashboard__classes" aria-labelledby="classes-title">

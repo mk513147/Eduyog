@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAuth } from '../auth/useAuth'
 import { Link } from '../router/Link'
 import { useRouter } from '../router/useRouter'
@@ -9,9 +9,24 @@ export function Layout({ children }) {
   const { status, user, isStudent, logout } = useAuth()
   const { path, fullPath, navigate } = useRouter()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   // Return here after logging in, except from the login/register pages.
   const loginLink = path === '/login' || path === '/register' ? '/login' : loginPath(fullPath)
   const closeMenu = () => setMenuOpen(false)
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  useEffect(() => {
+    if (!menuOpen) return undefined
+    const onKey = (event) => event.key === 'Escape' && setMenuOpen(false)
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [menuOpen])
 
   const handleLogout = () => {
     closeMenu()
@@ -25,7 +40,7 @@ export function Layout({ children }) {
         Skip to content
       </a>
 
-      <header className="header">
+      <header className={`header${scrolled ? ' header--scrolled' : ''}${menuOpen ? ' header--open' : ''}`}>
         <div className="container header__inner">
           <Link to="/" className="brand" onClick={closeMenu}>
             <span className="brand__mark" aria-hidden="true">
@@ -61,7 +76,9 @@ export function Layout({ children }) {
               {status === 'authenticated' ? (
                 <>
                   <span className="nav__user" title={user.email}>
-                    <Icon name="user" size={16} />
+                    <span className="avatar avatar--sm" aria-hidden="true">
+                      {user.fullName.charAt(0).toUpperCase()}
+                    </span>
                     {user.fullName}
                   </span>
                   <button type="button" className="btn btn--secondary btn--sm" onClick={handleLogout}>
@@ -90,10 +107,19 @@ export function Layout({ children }) {
 
       <footer className="footer">
         <div className="container footer__inner">
-          <p>
-            <strong>Eduyarp</strong> · Professional training and technical classes by Eduyog Techno
-            Solution Pvt. Ltd.
-          </p>
+          <div className="footer__brand">
+            <span className="brand__mark" aria-hidden="true">
+              E
+            </span>
+            <p>
+              <strong>Eduyarp</strong>
+              <span>Professional training and technical classes by Eduyog Techno Solution Pvt. Ltd.</span>
+            </p>
+          </div>
+          <nav className="footer__links" aria-label="Footer">
+            <Link to="/courses">Courses</Link>
+            {isStudent ? <Link to="/dashboard">My dashboard</Link> : <Link to="/login">Log in</Link>}
+          </nav>
         </div>
       </footer>
     </div>

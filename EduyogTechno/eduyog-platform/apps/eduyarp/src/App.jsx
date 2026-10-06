@@ -4,6 +4,7 @@ import { Alert, LoadingState } from './components/States'
 import CatalogPage from './pages/CatalogPage'
 import CourseDetailPage from './pages/CourseDetailPage'
 import DashboardPage from './pages/DashboardPage'
+import LandingPage from './pages/LandingPage'
 import LearnPage from './pages/LearnPage'
 import LoginPage from './pages/LoginPage'
 import NotFoundPage from './pages/NotFoundPage'
@@ -15,7 +16,7 @@ import { useRouter } from './router/useRouter'
 
 // access: 'public' | 'guest' (signed-out only) | 'student'
 const ROUTES = [
-  { pattern: '/', Page: CatalogPage, access: 'public' },
+  { pattern: '/', Page: LandingPage, access: 'public' },
   { pattern: '/courses', Page: CatalogPage, access: 'public' },
   { pattern: '/courses/:slug', Page: CourseDetailPage, access: 'public' },
   { pattern: '/login', Page: LoginPage, access: 'guest' },

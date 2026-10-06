@@ -1,21 +1,24 @@
 import { SERVICES } from '../content'
 import { Icon } from './Icon'
+import { Reveal, RevealItem, Stagger } from './Reveal'
 import { SectionHeader } from './SectionHeader'
 
 export function Services() {
   return (
     <section className="section" id="services" aria-labelledby="services-title">
       <div className="container">
+        <Reveal>
         <SectionHeader
           id="services-title"
           eyebrow="Services"
           title="Wellness services for modern workplaces"
           text="Choose a single service or combine them into a plan that suits your organisation."
         />
+        </Reveal>
 
-        <div className="card-grid">
+        <Stagger className="card-grid">
           {SERVICES.map((service) => (
-            <article className="service-card" id={service.id} key={service.id}>
+            <RevealItem as="article" className="service-card" id={service.id} key={service.id}>
               <span className="service-card__icon">
                 <Icon name={service.icon} size={26} />
               </span>
@@ -33,9 +36,9 @@ export function Services() {
                 Enquire about this service
                 <Icon name="arrow-right" size={16} />
               </a>
-            </article>
+            </RevealItem>
           ))}
-        </div>
+        </Stagger>
       </div>
     </section>
   )

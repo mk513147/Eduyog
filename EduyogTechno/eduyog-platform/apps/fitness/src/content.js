@@ -54,3 +54,10 @@ export const ENQUIRY_TIPS = [
   'The services you are interested in',
   'Your goals and any preferred dates or formats',
 ]
+
+export const APPROACH = [
+  { icon: 'users', title: 'Understand your team', text: 'We start by learning about your team, your workplace and what you want to achieve.' },
+  { icon: 'target', title: 'Plan the program', text: 'We suggest services and a format that suit your goals, schedule and fitness levels.' },
+  { icon: 'activity', title: 'Run the sessions', text: 'Sessions and activities take place on-site or online, as one-offs or as an ongoing program.' },
+  { icon: 'heart', title: 'Keep people engaged', text: 'Team activities and participation-focused events help build an active, supportive culture.' },
+]

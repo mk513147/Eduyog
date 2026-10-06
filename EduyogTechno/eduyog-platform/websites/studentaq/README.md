@@ -100,7 +100,7 @@ Each HTML file contains only:
 
 - `<title>`, meta description and social-share tags. These stay in HTML so Google and link
   previews can read them without running JavaScript.
-- Favicon, Google Fonts and stylesheet links.
+- Favicon, the preloaded Inter font and the two stylesheet links (`styles.css`, then `premium.css`).
 - The 8 script tags, **in a fixed order** (see below).
 - `<body data-page="…">`, which tells `app.js` which page to render:
 
@@ -325,7 +325,8 @@ backgrounds. A builder that returns `null` is skipped, and the colours still alt
 
 - **Colours:** edit the tokens at the top of `styles.css` (`--navy-800`, `--blue-600`, etc.).
   Every component uses these variables.
-- **Font:** change the Google Fonts `<link>` in all 7 HTML files and `--font-sans` in `styles.css`.
+- **Font:** Inter is bundled in `assets/fonts/` (`@font-face` in `styles.css`). To change it, replace the files, the `@font-face` rules, the preload `<link>` in all 7 HTML files and `--font-sans`.
+- **Look and feel:** `assets/css/premium.css` (loaded after `styles.css`) holds the Eduyog-ecosystem design tokens and re-skins the components.
 
 ### Change the logo
 
@@ -746,7 +747,7 @@ Starts the site once the scripts have loaded.
 | `--border` / `--border-strong` | greys | Card borders / input borders |
 | `--surface` / `--surface-muted` | white / light grey | Backgrounds |
 | `--whatsapp*`, `--success-*`, `--danger-*` | | WhatsApp buttons, success and error states |
-| `--font-sans` | Plus Jakarta Sans | All text |
+| `--font-sans` | Inter (variable, bundled) | All text |
 | `--radius-*`, `--shadow-*` | | Rounded corners, soft shadows |
 | `--container` | `1160px` | Maximum content width |
 | `--gutter` | 16–32px | Side padding (scales with screen) |

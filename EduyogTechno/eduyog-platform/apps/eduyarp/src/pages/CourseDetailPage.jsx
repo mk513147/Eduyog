@@ -3,6 +3,7 @@ import { coursesApi, studentApi } from '../api/endpoints'
 import { useAuth } from '../auth/useAuth'
 import { CourseStatusBadge, LevelBadge } from '../components/Badges'
 import { Icon } from '../components/Icon'
+import { Reveal } from '../components/Reveal'
 import { Alert, ErrorState, LoadingState, Spinner } from '../components/States'
 import { usePageTitle } from '../hooks/usePageTitle'
 import { useResource } from '../hooks/useResource'
@@ -135,7 +136,7 @@ export default function CourseDetailPage({ params }) {
   return (
     <>
       <section className="course-hero">
-        <div className="container">
+        <div className="container course-hero__inner">
           <Link to="/courses" className="back-link">
             <Icon name="arrowLeft" size={16} /> All courses
           </Link>
@@ -148,13 +149,25 @@ export default function CourseDetailPage({ params }) {
           </div>
           <h1 className="course-hero__title">{course.title}</h1>
           {course.description && <p className="course-hero__text">{course.description}</p>}
+          <ul className="course-hero__stats">
+            <li>
+              <Icon name="layers" size={16} /> {course.modules.length}{' '}
+              {course.modules.length === 1 ? 'module' : 'modules'}
+            </li>
+            <li>
+              <Icon name="book" size={16} /> {course.modules.reduce((sum, m) => sum + m.topics.length, 0)} topics
+            </li>
+            <li>
+              <Icon name="level" size={16} /> {LEVEL_LABELS[course.level]}
+            </li>
+          </ul>
         </div>
       </section>
 
       <div className="container course-layout">
         <div className="course-main">
           {objectives.length > 0 && (
-            <section className="card" aria-labelledby="objectives-title">
+            <Reveal as="section" className="card" aria-labelledby="objectives-title">
               <h2 id="objectives-title" className="card__title">
                 <Icon name="target" /> What you will learn
               </h2>
@@ -166,10 +179,10 @@ export default function CourseDetailPage({ params }) {
                   </li>
                 ))}
               </ul>
-            </section>
+            </Reveal>
           )}
 
-          <section className="card" aria-labelledby="curriculum-title">
+          <Reveal as="section" className="card" aria-labelledby="curriculum-title">
             <h2 id="curriculum-title" className="card__title">
               <Icon name="book" /> Course content
             </h2>
@@ -179,25 +192,33 @@ export default function CourseDetailPage({ params }) {
               <ol className="curriculum">
                 {course.modules.map((module, index) => (
                   <li key={module.id} className="curriculum__module">
-                    <div className="curriculum__head">
-                      <span className="curriculum__number">Module {index + 1}</span>
-                      <h3 className="curriculum__title">{module.title}</h3>
-                      {module.description && <p className="curriculum__text">{module.description}</p>}
-                    </div>
-                    {module.topics.length > 0 && (
-                      <ul className="curriculum__topics">
-                        {module.topics.map((topic) => (
-                          <li key={topic.id}>{topic.title}</li>
-                        ))}
-                      </ul>
-                    )}
+                    <details className="acc" open={index === 0}>
+                      <summary className="acc__summary">
+                        <span className="curriculum__number">Module {index + 1}</span>
+                        <h3 className="curriculum__title">{module.title}</h3>
+                        <span className="acc__count">
+                          {module.topics.length} {module.topics.length === 1 ? 'topic' : 'topics'}
+                        </span>
+                        <Icon name="chevronDown" size={18} className="acc__chev" />
+                      </summary>
+                      <div className="acc__panel">
+                        {module.description && <p className="curriculum__text">{module.description}</p>}
+                        {module.topics.length > 0 && (
+                          <ul className="curriculum__topics">
+                            {module.topics.map((topic) => (
+                              <li key={topic.id}>{topic.title}</li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    </details>
                   </li>
                 ))}
               </ol>
             )}
-          </section>
+          </Reveal>
 
-          <section className="card" aria-labelledby="trainers-title">
+          <Reveal as="section" className="card" aria-labelledby="trainers-title">
             <h2 id="trainers-title" className="card__title">
               <Icon name="user" /> Trainers
             </h2>
@@ -215,7 +236,7 @@ export default function CourseDetailPage({ params }) {
                 ))}
               </ul>
             )}
-          </section>
+          </Reveal>
         </div>
 
         <EnrolPanel course={course} />
