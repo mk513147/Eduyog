@@ -64,6 +64,46 @@ async function verifyCredentials(email, password) {
   return matches ? toPublicUser(user) : null;
 }
 
+// For the authenticate middleware: the public user plus when the password was last
+// changed (NULL if never), which is not part of the public user.
+async function findUserForAuth(id) {
+  const { rows } = await pool.query(
+    `SELECT id, full_name, email, role, created_at, password_changed_at
+     FROM users
+     WHERE id = $1`,
+    [id]
+  );
+  if (!rows[0]) return null;
+  return { user: toPublicUser(rows[0]), passwordChangedAt: rows[0].password_changed_at };
+}
+
+// Changes the signed-in user's password. A wrong current password is a validation
+// error (400), never 401: the frontends treat 401 as an expired session.
+async function changePassword(userId, currentPassword, newPassword) {
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    const { rows } = await client.query('SELECT password_hash FROM users WHERE id = $1 FOR UPDATE', [userId]);
+    if (!rows[0]) {
+      throw new HttpError(404, 'User not found');
+    }
+    if (!(await bcrypt.compare(currentPassword, rows[0].password_hash))) {
+      throw new HttpError(400, 'Validation failed', { currentPassword: 'Current password is incorrect' });
+    }
+    const passwordHash = await bcrypt.hash(newPassword, BCRYPT_ROUNDS);
+    await client.query(
+      'UPDATE users SET password_hash = $1, password_changed_at = now() WHERE id = $2',
+      [passwordHash, userId]
+    );
+    await client.query('COMMIT');
+  } catch (err) {
+    await client.query('ROLLBACK').catch(() => {});
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
 async function findUserById(id) {
   const { rows } = await pool.query(
     `SELECT id, full_name, email, role, created_at
@@ -79,4 +119,6 @@ module.exports = {
   registerStudent,
   verifyCredentials,
   findUserById,
+  findUserForAuth,
+  changePassword,
 };

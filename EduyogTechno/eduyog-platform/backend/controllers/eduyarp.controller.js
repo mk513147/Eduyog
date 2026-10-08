@@ -1,6 +1,5 @@
 const courseService = require('../services/eduyarpCourse.service');
 const enrolmentService = require('../services/eduyarpEnrolment.service');
-const trainerService = require('../services/eduyarpTrainer.service');
 const { getIdParam } = require('./helpers');
 
 // ---------------------------------------------------------------------------
@@ -46,15 +45,6 @@ async function completeTopic(req, res) {
   res.json(result);
 }
 
-// ---------------------------------------------------------------------------
-// Trainer: access is checked against course_trainers for req.user.
-// ---------------------------------------------------------------------------
-
-async function getTrainerCourse(req, res) {
-  const course = await trainerService.getTrainerCourse(req.user.id, getIdParam(req, 'courseId'));
-  res.json({ course });
-}
-
 module.exports = {
   listCourses,
   getCourse,
@@ -63,5 +53,4 @@ module.exports = {
   getMyCourse,
   getMySchedule,
   completeTopic,
-  getTrainerCourse,
 };

@@ -3,6 +3,7 @@ const HttpError = require('../utils/httpError');
 const { PG_ERRORS, buildSetClause } = require('../utils/db');
 const courseService = require('./eduyarpCourse.service');
 const trainerService = require('./eduyarpTrainer.service');
+const classNotifications = require('./classNotification.service');
 
 const WRITABLE_COLUMNS = {
   courseId: 'course_id',
@@ -70,6 +71,7 @@ async function getClass(id) {
 
 async function createClass(input) {
   await checkCourseAndTrainer(input.courseId, input.trainerId);
+  let created;
   try {
     const { rows } = await pool.query(
       `INSERT INTO classes (course_id, trainer_id, title, scheduled_at, meeting_link, status)
@@ -84,20 +86,23 @@ async function createClass(input) {
         input.status ?? null,
       ]
     );
-    return getClass(rows[0].id);
+    created = await getClass(rows[0].id);
   } catch (err) {
     throw translateWriteError(err);
   }
+  // After the commit; a failure here is logged and never fails the class.
+  await classNotifications.classCreated(created);
+  return created;
 }
 
 // Re-checks the trainer assignment only when the course or trainer changes,
 // so a class keeps working if its trainer is later unassigned.
 async function updateClass(id, changes) {
+  const before = await getClass(id);
   if (changes.courseId !== undefined || changes.trainerId !== undefined) {
-    const current = await getClass(id);
     await checkCourseAndTrainer(
-      changes.courseId ?? current.courseId,
-      changes.trainerId ?? current.trainerId
+      changes.courseId ?? before.courseId,
+      changes.trainerId ?? before.trainerId
     );
   }
 
@@ -115,7 +120,9 @@ async function updateClass(id, changes) {
   if (rowCount === 0) {
     throw new HttpError(404, 'Class not found');
   }
-  return getClass(id);
+  const after = await getClass(id);
+  await classNotifications.classUpdated(before, after);
+  return after;
 }
 
 async function deleteClass(id) {

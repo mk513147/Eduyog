@@ -4,6 +4,7 @@ import { EnrolmentStatusBadge, LevelBadge } from '../components/Badges'
 import { CourseArt } from '../components/CourseArt'
 import { CourseIcon } from '../components/CourseIcon'
 import { Icon } from '../components/Icon'
+import { CourseExtras } from '../components/learn/CourseExtras'
 import { LearnWorkspace } from '../components/learn/LearnWorkspace'
 import { ProgressBar } from '../components/ProgressBar'
 import { Alert, ErrorState, LoadingState } from '../components/States'
@@ -29,6 +30,7 @@ export default function LearnPage({ params }) {
       setData((prev) => ({
         ...prev,
         enrolment: { ...prev.enrolment, status: result.enrolmentStatus, progress: result.progress },
+        certificate: result.certificate ?? prev.certificate,
         modules: prev.modules.map((module) => ({
           ...module,
           topics: module.topics.map((t) =>
@@ -88,7 +90,30 @@ export default function LearnPage({ params }) {
 
         {actionError && <Alert>{actionError}</Alert>}
 
+        {course.enrolment.status === 'completed' && (
+          <div className="completion" role="status">
+            <Icon name="award" size={28} />
+            <div className="completion__text">
+              <strong>Course completed</strong>
+              {course.certificate ? (
+                <span>
+                  {course.certificate.status === 'revoked' ? 'Your certificate has been revoked.' : 'Certificate issued.'}
+                </span>
+              ) : (
+                <span>You have finished every topic.</span>
+              )}
+            </div>
+            {course.certificate && (
+              <Link to={`/certificates/${course.certificate.id}`} className="btn btn--primary btn--sm">
+                View certificate
+              </Link>
+            )}
+          </div>
+        )}
+
         <LearnWorkspace course={course} busyTopicId={busyTopicId} onComplete={completeTopic} />
+
+        <CourseExtras courseId={course.id} />
       </div>
     </div>
   )

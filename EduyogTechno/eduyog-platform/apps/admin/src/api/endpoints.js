@@ -29,6 +29,9 @@ export const servicesApi = {
 
 export const usersApi = {
   list: () => request('/admin/users').then((d) => d.users),
+  get: (id) => request(`/admin/users/${id}`).then((d) => d.profile),
+  updateProfile: (id, changes) =>
+    request(`/admin/users/${id}/profile`, { method: 'PATCH', body: changes }).then((d) => d.profile),
   changeRole: (id, role) =>
     request(`/admin/users/${id}/role`, { method: 'PATCH', body: { role } }).then((d) => d.user),
 }
@@ -92,5 +95,59 @@ export const eduyarpApi = {
     update: (id, changes) =>
       request(`/admin/eduyarp/classes/${id}`, { method: 'PATCH', body: changes }).then((d) => d.class),
     remove: (id) => request(`/admin/eduyarp/classes/${id}`, { method: 'DELETE' }),
+  },
+  faqs: {
+    list: (courseId) => request(`/admin/eduyarp/courses/${courseId}/faqs`).then((d) => d.faqs),
+    create: (courseId, input) =>
+      request(`/admin/eduyarp/courses/${courseId}/faqs`, { method: 'POST', body: input }).then((d) => d.faq),
+    update: (id, changes) =>
+      request(`/admin/eduyarp/faqs/${id}`, { method: 'PATCH', body: changes }).then((d) => d.faq),
+    remove: (id) => request(`/admin/eduyarp/faqs/${id}`, { method: 'DELETE' }),
+    // ids: every FAQ id of the course, in the wanted order.
+    reorder: (courseId, ids) =>
+      request(`/admin/eduyarp/courses/${courseId}/faqs/reorder`, { method: 'POST', body: { ids } }).then((d) => d.faqs),
+  },
+  resources: {
+    list: (courseId) => request(`/admin/eduyarp/courses/${courseId}/resources`).then((d) => d.resources),
+    create: (courseId, input) =>
+      request(`/admin/eduyarp/courses/${courseId}/resources`, { method: 'POST', body: input }).then((d) => d.resource),
+    update: (id, changes) =>
+      request(`/admin/eduyarp/resources/${id}`, { method: 'PATCH', body: changes }).then((d) => d.resource),
+    remove: (id) => request(`/admin/eduyarp/resources/${id}`, { method: 'DELETE' }),
+  },
+  assignments: {
+    list: (courseId) => request(`/admin/eduyarp/courses/${courseId}/assignments`).then((d) => d.assignments),
+    create: (courseId, input) =>
+      request(`/admin/eduyarp/courses/${courseId}/assignments`, { method: 'POST', body: input }).then((d) => d.assignment),
+    update: (id, changes) =>
+      request(`/admin/eduyarp/assignments/${id}`, { method: 'PATCH', body: changes }).then((d) => d.assignment),
+    remove: (id) => request(`/admin/eduyarp/assignments/${id}`, { method: 'DELETE' }),
+    submissions: (id) => request(`/admin/eduyarp/assignments/${id}/submissions`),
+    submission: (id) => request(`/admin/eduyarp/submissions/${id}`),
+  },
+  certificates: {
+    list: (filters = {}) => {
+      const query = new URLSearchParams(Object.entries(filters).filter(([, v]) => v)).toString()
+      return request(`/admin/eduyarp/certificates${query ? `?${query}` : ''}`).then((d) => d.certificates)
+    },
+    get: (id) => request(`/admin/eduyarp/certificates/${id}`).then((d) => d.certificate),
+    revoke: (id, reason) =>
+      request(`/admin/eduyarp/certificates/${id}/revoke`, { method: 'POST', body: { reason } }).then((d) => d.certificate),
+  },
+  announcements: {
+    // filter: '' (all), 'platform' (platform-wide only) or a course id.
+    list: (filter = '') =>
+      request(
+        `/admin/eduyarp/announcements${
+          filter === 'platform' ? '?scope=platform' : filter ? `?courseId=${encodeURIComponent(filter)}` : ''
+        }`,
+      ).then((d) => d.announcements),
+    // courseId '' or null = platform-wide.
+    create: ({ courseId, title, body }) =>
+      request('/admin/eduyarp/announcements', {
+        method: 'POST',
+        body: { courseId: courseId || null, title, body },
+      }).then((d) => d.announcement),
+    remove: (id) => request(`/admin/eduyarp/announcements/${id}`, { method: 'DELETE' }),
   },
 }

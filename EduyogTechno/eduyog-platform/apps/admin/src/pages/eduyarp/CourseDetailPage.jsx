@@ -9,6 +9,7 @@ import { useResource } from '../../hooks/useResource'
 import { Link } from '../../router/Link'
 import { useToast } from '../../toast/useToast'
 import { formatFee, LEVEL_LABELS } from '../../utils/labels'
+import { CourseContent } from './CourseContent'
 import { CourseFormModal } from './CourseFormModal'
 import { CurriculumItemModal } from './CurriculumItemModal'
 
@@ -336,6 +337,8 @@ export default function CourseDetailPage({ params }) {
           </section>
         </div>
       </div>
+
+      <CourseContent course={course} />
 
       {editing && (
         <CourseFormModal

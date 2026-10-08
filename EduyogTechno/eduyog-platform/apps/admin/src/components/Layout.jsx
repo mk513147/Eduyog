@@ -21,6 +21,8 @@ const NAV_GROUPS = [
       { to: '/eduyarp/trainers', label: 'Trainers', icon: 'trainers' },
       { to: '/eduyarp/enrolments', label: 'Enrolments', icon: 'enrolments' },
       { to: '/eduyarp/classes', label: 'Classes', icon: 'classes' },
+      { to: '/eduyarp/certificates', label: 'Certificates', icon: 'certificates' },
+      { to: '/eduyarp/announcements', label: 'Announcements', icon: 'announcements' },
     ],
   },
 ]

@@ -8,6 +8,7 @@ import { Alert, EmptyState, ErrorState, LoadingState } from '../components/State
 import { useResource } from '../hooks/useResource'
 import { useToast } from '../toast/useToast'
 import { formatDate } from '../utils/format'
+import { UserProfileModal } from './UserProfileModal'
 import { ROLE_LABELS, ROLES } from '../utils/labels'
 
 const ROLE_ARTICLES = { student: 'a Student', trainer: 'a Trainer', admin: 'an Admin' }
@@ -20,6 +21,8 @@ export default function UsersPage() {
   const [pending, setPending] = useState(null)
   const [busy, setBusy] = useState(false)
   const [changeError, setChangeError] = useState(null)
+  // The user whose profile is open, if any.
+  const [profileUserId, setProfileUserId] = useState(null)
 
   const requestChange = (user, role) => {
     if (role === user.role) return
@@ -81,6 +84,14 @@ export default function UsersPage() {
                   <td className="cell-nowrap">{formatDate(user.createdAt)}</td>
                   <td>
                     <div className="row-actions">
+                      <button
+                        type="button"
+                        className="btn btn--secondary btn--sm"
+                        onClick={() => setProfileUserId(user.id)}
+                      >
+                        Profile
+                        <span className="visually-hidden"> of {user.fullName}</span>
+                      </button>
                       <select
                         className="input input--sm"
                         value={user.role}
@@ -117,6 +128,18 @@ export default function UsersPage() {
       />
       {error && users && <Alert>Could not refresh the list: {error.message}</Alert>}
       <div className="card card--flush">{content}</div>
+
+      {profileUserId && (
+        <UserProfileModal
+          userId={profileUserId}
+          onClose={() => setProfileUserId(null)}
+          onSaved={(profile) => {
+            setProfileUserId(null)
+            toast.success(`Saved ${profile.fullName}'s profile.`)
+            reload()
+          }}
+        />
+      )}
 
       {pending && (
         <ConfirmDialog

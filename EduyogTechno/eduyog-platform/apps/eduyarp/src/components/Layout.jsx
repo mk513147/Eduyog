@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '../auth/useAuth'
+import { NotificationBell } from '../notifications/NotificationBell'
 import { Link } from '../router/Link'
 import { useRouter } from '../router/useRouter'
 import { loginPath } from '../router/match'
 import { Icon } from './Icon'
 
 export function Layout({ children }) {
-  const { status, user, isStudent, logout } = useAuth()
+  const { status, user, isStudent, isTrainer, logout } = useAuth()
   const { path, fullPath, navigate } = useRouter()
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -52,6 +53,8 @@ export function Layout({ children }) {
             </span>
           </Link>
 
+          {status === 'authenticated' && <NotificationBell className="bell--header" watch />}
+
           <button
             type="button"
             className="btn btn--ghost btn--icon header__toggle"
@@ -72,15 +75,27 @@ export function Layout({ children }) {
                 My dashboard
               </Link>
             )}
+            {isStudent && (
+              <Link to="/certificates" className="nav__link" onClick={closeMenu}>
+                Certificates
+              </Link>
+            )}
+            {isTrainer && (
+              <Link to="/trainer" className="nav__link" onClick={closeMenu}>
+                Trainer dashboard
+              </Link>
+            )}
             <div className="nav__actions">
               {status === 'authenticated' ? (
                 <>
-                  <span className="nav__user" title={user.email}>
+                  <NotificationBell className="bell--nav" />
+                  <Link to="/profile" className="nav__user" title={`${user.email} · Profile and account settings`} onClick={closeMenu}>
                     <span className="avatar avatar--sm" aria-hidden="true">
                       {user.fullName.charAt(0).toUpperCase()}
                     </span>
                     {user.fullName}
-                  </span>
+                    <span className="visually-hidden"> (profile and account settings)</span>
+                  </Link>
                   <button type="button" className="btn btn--secondary btn--sm" onClick={handleLogout}>
                     <Icon name="logout" size={16} />
                     Log out
@@ -118,7 +133,11 @@ export function Layout({ children }) {
           </div>
           <nav className="footer__links" aria-label="Footer">
             <Link to="/courses">Courses</Link>
-            {isStudent ? <Link to="/dashboard">My dashboard</Link> : <Link to="/login">Log in</Link>}
+            {isStudent && <Link to="/dashboard">My dashboard</Link>}
+            {isStudent && <Link to="/certificates">Certificates</Link>}
+            {isTrainer && <Link to="/trainer">Trainer dashboard</Link>}
+            {status === 'authenticated' && <Link to="/notifications">Notifications</Link>}
+            {status === 'authenticated' ? <Link to="/profile">Profile</Link> : <Link to="/login">Log in</Link>}
           </nav>
         </div>
       </footer>

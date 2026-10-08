@@ -27,6 +27,17 @@ function validateEmail(email, errors) {
   }
 }
 
+// Shared by registration and password change. Sets errors[field] when invalid.
+function validatePasswordValue(password, errors, field = 'password') {
+  if (typeof password !== 'string' || password === '') {
+    errors[field] = 'Password is required';
+  } else if (password.length < PASSWORD_MIN_LENGTH) {
+    errors[field] = `Password must be at least ${PASSWORD_MIN_LENGTH} characters`;
+  } else if (Buffer.byteLength(password, 'utf8') > PASSWORD_MAX_BYTES) {
+    errors[field] = `Password must be at most ${PASSWORD_MAX_BYTES} bytes`;
+  }
+}
+
 function validateRegistration(body) {
   const { fullName, email, password } = body || {};
   const errors = {};
@@ -39,13 +50,7 @@ function validateRegistration(body) {
 
   validateEmail(email, errors);
 
-  if (typeof password !== 'string' || password === '') {
-    errors.password = 'Password is required';
-  } else if (password.length < PASSWORD_MIN_LENGTH) {
-    errors.password = `Password must be at least ${PASSWORD_MIN_LENGTH} characters`;
-  } else if (Buffer.byteLength(password, 'utf8') > PASSWORD_MAX_BYTES) {
-    errors.password = `Password must be at most ${PASSWORD_MAX_BYTES} bytes`;
-  }
+  validatePasswordValue(password, errors);
 
   if (Object.keys(errors).length > 0) {
     return { errors };
@@ -279,6 +284,121 @@ function validateService(body, { partial = false } = {}) {
   }
 
   return finish(errors, value, partial);
+}
+
+function validatePasswordChange(body) {
+  const { currentPassword, newPassword } = body || {};
+  const errors = {};
+
+  if (typeof currentPassword !== 'string' || currentPassword === '') {
+    errors.currentPassword = 'Current password is required';
+  }
+  validatePasswordValue(newPassword, errors, 'newPassword');
+  if (!errors.currentPassword && !errors.newPassword && newPassword === currentPassword) {
+    errors.newPassword = 'New password must be different from the current password';
+  }
+
+  if (Object.keys(errors).length > 0) {
+    return { errors };
+  }
+  return { value: { currentPassword, newPassword } };
+}
+
+const STUDY_LEVELS = ['school', 'diploma', 'undergraduate', 'postgraduate', 'phd', 'other'];
+const PROFILE_FIELDS = [
+  'fullName',
+  'phone',
+  'institution',
+  'studyLevel',
+  'fieldOfStudy',
+  'graduationYear',
+  'bio',
+  'avatarUrl',
+];
+const PROFILE_BIO_MAX_LENGTH = 1000;
+const PROFILE_PHONE_MAX_LENGTH = 30;
+const PROFILE_INSTITUTION_MAX_LENGTH = 200;
+const PROFILE_FIELD_OF_STUDY_MAX_LENGTH = 150;
+const GRADUATION_YEAR_MIN = 1950;
+const GRADUATION_YEAR_MAX = 2100;
+// Fields that exist on the account but are never editable through a profile request.
+const PROFILE_LOCKED_FIELDS = {
+  email: 'Email cannot be changed',
+  role: 'Role cannot be changed here',
+};
+
+// Profile update (own profile, or an Admin editing a user's profile). Every field is
+// optional; null or an empty string clears a clearable field. Unknown fields are
+// rejected so nothing (email, role, user id, password hash...) can be set by accident.
+function validateProfile(body) {
+  const input = body && typeof body === 'object' && !Array.isArray(body) ? body : {};
+  const errors = {};
+  const value = {};
+
+  for (const key of Object.keys(input)) {
+    if (!PROFILE_FIELDS.includes(key)) {
+      errors[key] = PROFILE_LOCKED_FIELDS[key] || 'This field cannot be set';
+    }
+  }
+
+  if (input.fullName !== undefined) {
+    if (typeof input.fullName !== 'string' || input.fullName.trim() === '') {
+      errors.fullName = 'Full name is required';
+    } else if (input.fullName.trim().length > FULL_NAME_MAX_LENGTH) {
+      errors.fullName = `Full name must be at most ${FULL_NAME_MAX_LENGTH} characters`;
+    } else {
+      value.fullName = input.fullName.trim();
+    }
+  }
+
+  if (input.phone !== undefined) {
+    optionalText(input, 'phone', 'Phone', PROFILE_PHONE_MAX_LENGTH, errors, value);
+    if (value.phone) {
+      const digits = value.phone.replace(/\D/g, '').length;
+      if (!PHONE_PATTERN.test(value.phone) || digits < 7 || digits > 15) {
+        errors.phone = 'Phone is invalid';
+      }
+    }
+  }
+  if (input.institution !== undefined) {
+    optionalText(input, 'institution', 'Institution', PROFILE_INSTITUTION_MAX_LENGTH, errors, value);
+  }
+  if (input.fieldOfStudy !== undefined) {
+    optionalText(input, 'fieldOfStudy', 'Field of study', PROFILE_FIELD_OF_STUDY_MAX_LENGTH, errors, value);
+  }
+  if (input.bio !== undefined) {
+    optionalText(input, 'bio', 'Bio', PROFILE_BIO_MAX_LENGTH, errors, value);
+  }
+
+  if (input.studyLevel !== undefined) {
+    if (input.studyLevel === null || input.studyLevel === '') {
+      value.studyLevel = null;
+    } else if (!STUDY_LEVELS.includes(input.studyLevel)) {
+      errors.studyLevel = `Study level must be one of: ${STUDY_LEVELS.join(', ')}`;
+    } else {
+      value.studyLevel = input.studyLevel;
+    }
+  }
+
+  if (input.graduationYear !== undefined) {
+    const raw = input.graduationYear;
+    if (raw === null || raw === '') {
+      value.graduationYear = null;
+    } else {
+      const year = typeof raw === 'string' && /^\d{1,4}$/.test(raw.trim()) ? Number(raw) : raw;
+      if (!Number.isInteger(year) || year < GRADUATION_YEAR_MIN || year > GRADUATION_YEAR_MAX) {
+        errors.graduationYear = `Graduation year must be between ${GRADUATION_YEAR_MIN} and ${GRADUATION_YEAR_MAX}`;
+      } else {
+        value.graduationYear = year;
+      }
+    }
+  }
+
+  if (input.avatarUrl !== undefined) {
+    optionalImageUrl(input, 'avatarUrl', 'Avatar URL', errors, value);
+  }
+
+  return finish(errors, value, true);
 }
 
 function validateRoleChange(body) {
@@ -550,12 +670,226 @@ function validateClass(body, { partial = false } = {}) {
   return finish(errors, value, partial);
 }
 
+const ANNOUNCEMENT_BODY_MAX_LENGTH = 3000;
+
+// courseId is only read when `allowCourseId` is set (Admin); a Trainer's course always
+// comes from the URL. null or a missing courseId means platform-wide.
+function validateAnnouncement(body, { allowCourseId = false } = {}) {
+  const input = body || {};
+  const errors = {};
+  const value = {};
+  requiredText(input, 'title', 'Title', TITLE_MAX_LENGTH, errors, value);
+  requiredText(input, 'body', 'Message', ANNOUNCEMENT_BODY_MAX_LENGTH, errors, value);
+  if (allowCourseId) {
+    if (input.courseId === undefined || input.courseId === null) {
+      value.courseId = null;
+    } else {
+      requiredId(input, 'courseId', 'courseId', errors, value);
+    }
+  }
+  return finish(errors, value, false);
+}
+
+// Query string for the notification list: limit 1-100 (default 20), offset >= 0, unread true/false.
+function validateNotificationQuery(query) {
+  const errors = {};
+  const value = { limit: 20, offset: 0, unread: false };
+  const whole = (raw) => (typeof raw === 'string' && /^\d{1,9}$/.test(raw) ? Number(raw) : null);
+  if (query.limit !== undefined) {
+    const limit = whole(query.limit);
+    if (limit === null || limit < 1 || limit > 100) errors.limit = 'limit must be a whole number from 1 to 100';
+    else value.limit = limit;
+  }
+  if (query.offset !== undefined) {
+    const offset = whole(query.offset);
+    if (offset === null) errors.offset = 'offset must be a whole number of 0 or more';
+    else value.offset = offset;
+  }
+  if (query.unread !== undefined) {
+    if (query.unread === 'true') value.unread = true;
+    else if (query.unread !== 'false') errors.unread = 'unread must be true or false';
+  }
+  return finish(errors, value, false);
+}
+
+// The host must follow "//" directly (so "http:///x" is not read as http://x).
+function requireUrlHost(value, field, label, errors) {
+  if (value[field] && !/^https?:\/\/[^\s/?#\\]/i.test(value[field])) {
+    delete value[field];
+    errors[field] = `${label} must be a valid http:// or https:// address`;
+  }
+}
+
+const FAQ_QUESTION_MAX_LENGTH = 500;
+const FAQ_ANSWER_MAX_LENGTH = 3000;
+const RESOURCE_DESCRIPTION_MAX_LENGTH = 1000;
+const RESOURCE_TYPES = ['video', 'pdf', 'document', 'presentation', 'external'];
+
+function validateFaq(body, { partial = false } = {}) {
+  const input = body || {};
+  const errors = {};
+  const value = {};
+  const has = (field) => !partial || input[field] !== undefined;
+  if (has('question')) requiredText(input, 'question', 'Question', FAQ_QUESTION_MAX_LENGTH, errors, value);
+  if (has('answer')) requiredText(input, 'answer', 'Answer', FAQ_ANSWER_MAX_LENGTH, errors, value);
+  if (input.displayOrder !== undefined) optionalDisplayOrder(input, errors, value);
+  return finish(errors, value, partial);
+}
+
+// moduleId / topicId: a valid id, or null to clear. Whether they belong to the course
+// is checked against the database by the service.
+function optionalLinkId(input, field, errors, value) {
+  if (input[field] === undefined) return;
+  if (input[field] === null || input[field] === '') {
+    value[field] = null;
+    return;
+  }
+  const id = parseId(input[field]);
+  if (id === null) errors[field] = `${field} must be a positive integer or null`;
+  else value[field] = id;
+}
+
+function validateResource(body, { partial = false } = {}) {
+  const input = body || {};
+  const errors = {};
+  const value = {};
+  const has = (field) => !partial || input[field] !== undefined;
+  if (has('title')) requiredText(input, 'title', 'Title', TITLE_MAX_LENGTH, errors, value);
+  if (input.description !== undefined) {
+    optionalText(input, 'description', 'Description', RESOURCE_DESCRIPTION_MAX_LENGTH, errors, value);
+  }
+  if (has('resourceType')) requiredChoice(input, 'resourceType', 'Type', RESOURCE_TYPES, errors, value);
+  if (has('url')) {
+    if (typeof input.url !== 'string' || input.url.trim() === '') {
+      errors.url = 'Address is required';
+    } else {
+      optionalImageUrl(input, 'url', 'Address', errors, value);
+      requireUrlHost(value, 'url', 'Address', errors);
+    }
+  }
+  optionalLinkId(input, 'moduleId', errors, value);
+  optionalLinkId(input, 'topicId', errors, value);
+  if (input.displayOrder !== undefined) optionalDisplayOrder(input, errors, value);
+  return finish(errors, value, partial);
+}
+
+// { ids: [...] } - the complete list of a course's FAQ ids in the wanted order.
+function validateReorder(body) {
+  const ids = body && body.ids;
+  if (!Array.isArray(ids) || ids.length === 0 || ids.length > 500) {
+    return { errors: { ids: 'ids must be a list of 1 to 500 ids' } };
+  }
+  const parsed = ids.map(parseId);
+  if (parsed.some((id) => id === null) || new Set(parsed).size !== parsed.length) {
+    return { errors: { ids: 'ids must be unique positive integers' } };
+  }
+  return { value: { ids: parsed } };
+}
+
+const ASSIGNMENT_INSTRUCTIONS_MAX_LENGTH = 5000;
+const SUBMISSION_TEXT_MAX_LENGTH = 5000;
+const FEEDBACK_MAX_LENGTH = 3000;
+const ASSIGNMENT_STATUSES = ['draft', 'published', 'closed'];
+
+function validateAssignment(body, { partial = false } = {}) {
+  const input = body || {};
+  const errors = {};
+  const value = {};
+  const has = (field) => !partial || input[field] !== undefined;
+  if (has('title')) requiredText(input, 'title', 'Title', TITLE_MAX_LENGTH, errors, value);
+  if (has('instructions')) {
+    requiredText(input, 'instructions', 'Instructions', ASSIGNMENT_INSTRUCTIONS_MAX_LENGTH, errors, value);
+  }
+  if (input.status !== undefined) requiredChoice(input, 'status', 'Status', ASSIGNMENT_STATUSES, errors, value);
+  // null or an empty string removes the due date.
+  if (input.dueAt !== undefined) {
+    const raw = input.dueAt;
+    if (raw === null || raw === '') {
+      value.dueAt = null;
+    } else if (typeof raw !== 'string' || !DATE_TIME_PATTERN.test(raw.trim()) || Number.isNaN(Date.parse(raw.trim()))) {
+      errors.dueAt = 'Due date must be an ISO 8601 value with a time zone, or null';
+    } else {
+      value.dueAt = new Date(raw.trim()).toISOString();
+    }
+  }
+  optionalLinkId(input, 'moduleId', errors, value);
+  optionalLinkId(input, 'topicId', errors, value);
+  if (input.displayOrder !== undefined) optionalDisplayOrder(input, errors, value);
+  return finish(errors, value, partial);
+}
+
+// A submission needs text, a link, or both. Blank values count as missing.
+function validateSubmission(body) {
+  const input = body || {};
+  const errors = {};
+  const value = {};
+  if (input.text !== undefined && input.text !== null) {
+    if (typeof input.text !== 'string') {
+      errors.text = 'Text must be a string';
+    } else if (input.text.trim().length > SUBMISSION_TEXT_MAX_LENGTH) {
+      errors.text = `Text must be at most ${SUBMISSION_TEXT_MAX_LENGTH} characters`;
+    } else if (input.text.trim() !== '') {
+      value.text = input.text.trim();
+    }
+  }
+  if (input.url !== undefined && input.url !== null) {
+    if (typeof input.url !== 'string') {
+      errors.url = 'Link must be a string';
+    } else if (input.url.trim() !== '') {
+      const urlValue = {};
+      optionalImageUrl({ url: input.url }, 'url', 'Link', errors, urlValue);
+      requireUrlHost(urlValue, 'url', 'Link', errors);
+      if (urlValue.url) value.url = urlValue.url;
+    }
+  }
+  if (Object.keys(errors).length === 0 && value.text === undefined && value.url === undefined) {
+    errors.text = 'Write an answer or add a link';
+  }
+  return finish(errors, value, false);
+}
+
+function validateFeedback(body) {
+  const input = body || {};
+  const errors = {};
+  const value = {};
+  requiredText(input, 'feedback', 'Feedback', FEEDBACK_MAX_LENGTH, errors, value);
+  return finish(errors, value, false);
+}
+
+function validateRevocation(body) {
+  const input = body || {};
+  const errors = {};
+  const value = {};
+  requiredText(input, 'reason', 'Reason', 500, errors, value);
+  return finish(errors, value, false);
+}
+
+// Query string filters for the Admin certificate list.
+function validateCertificateFilters(query) {
+  const errors = {};
+  const value = {};
+  for (const field of ['courseId', 'studentId']) {
+    if (query[field] !== undefined && query[field] !== '') {
+      const id = parseId(query[field]);
+      if (id === null) errors[field] = `${field} must be a positive integer`;
+      else value[field] = id;
+    }
+  }
+  if (query.status !== undefined && query.status !== '') {
+    if (['active', 'revoked'].includes(query.status)) value.status = query.status;
+    else errors.status = 'status must be active or revoked';
+  }
+  return finish(errors, value, false);
+}
+
 module.exports = {
   validateRegistration,
   validateLogin,
   parseId,
   validatePlatform,
   validateService,
+  validatePasswordChange,
+  validateProfile,
   validateRoleChange,
   validateFitnessLead,
   validateCourse,
@@ -563,4 +897,14 @@ module.exports = {
   validateTrainerAssignment,
   validateEnrolmentUpdate,
   validateClass,
+  validateAnnouncement,
+  validateNotificationQuery,
+  validateFaq,
+  validateResource,
+  validateReorder,
+  validateAssignment,
+  validateSubmission,
+  validateFeedback,
+  validateRevocation,
+  validateCertificateFilters,
 };

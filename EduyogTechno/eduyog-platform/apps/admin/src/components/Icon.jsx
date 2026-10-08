@@ -16,6 +16,8 @@ const PATHS = {
   trainers: 'M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM5 20v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1M16 4l2 2 3-3',
   enrolments: 'M9 5h10v15H5V9zM9 5v4H5M9 13h6M9 16h4',
   classes: 'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4',
+  announcements: 'M3 11v2a1 1 0 0 0 1 1h3l6 4V6L7 10H4a1 1 0 0 0-1 1zM16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11',
+  certificates: 'M12 15a6 6 0 1 0 0-12 6 6 0 0 0 0 12zM8.5 14l-1.5 7 5-3 5 3-1.5-7',
   back: 'M19 12H5M11 6l-6 6 6 6',
   activity: 'M3 12h4l3-8 4 16 3-8h4',
   alert: 'M12 4l9 16H3zM12 10v4M12 17v.5',

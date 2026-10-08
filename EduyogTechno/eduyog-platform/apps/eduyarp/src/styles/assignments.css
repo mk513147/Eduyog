@@ -1,0 +1,172 @@
+/* Assignments, submissions and feedback. Uses the existing Eduyarp tokens. */
+.asg-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.asg {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.asg--active {
+  border-color: #c7d2fe;
+  background: var(--indigo-50, #eef2ff);
+}
+
+.asg__main {
+  display: grid;
+  flex: 1 1 260px;
+  gap: 6px;
+  min-width: 0;
+}
+
+.asg__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+
+.asg__title {
+  font-weight: 700;
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+  text-decoration: none;
+}
+
+.asg__title:hover {
+  color: var(--indigo-600);
+  text-decoration: underline;
+}
+
+.asg__title--button {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+.asg__meta,
+.asg__preview {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.asg__preview {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.asg__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.asg-instructions {
+  margin: 4px 0 0;
+  max-width: 75ch;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.asg-form {
+  display: grid;
+  gap: 14px;
+  max-width: 760px;
+}
+
+.sub-list {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sub {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  padding: 14px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.sub--latest {
+  border-color: #c7d2fe;
+}
+
+.sub__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+}
+
+.sub__head time {
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.sub__text,
+.sub__link {
+  margin: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.sub__feedback {
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+  border-left: 3px solid var(--indigo-600);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-muted);
+}
+
+.sub__feedback-title {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.sub-detail {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
+.sub-detail__title {
+  margin: 0;
+  font-size: 1.05rem;
+  overflow-wrap: anywhere;
+}
+
+.sub-history summary {
+  cursor: pointer;
+  font-weight: 600;
+  margin-bottom: 10px;
+}

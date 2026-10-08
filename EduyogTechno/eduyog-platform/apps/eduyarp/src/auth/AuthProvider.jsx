@@ -58,9 +58,22 @@ export function AuthProvider({ children }) {
     [login],
   )
 
+  // Keeps the header in step after a profile save (the display name can change).
+  const updateUser = useCallback((changes) => {
+    setState((prev) => (prev.user ? { ...prev, user: { ...prev.user, ...changes } } : prev))
+  }, [])
+
   const value = useMemo(
-    () => ({ ...state, isStudent: state.user?.role === 'student', login, register, logout }),
-    [state, login, register, logout],
+    () => ({
+      ...state,
+      isStudent: state.user?.role === 'student',
+      isTrainer: state.user?.role === 'trainer',
+      login,
+      register,
+      logout,
+      updateUser,
+    }),
+    [state, login, register, logout, updateUser],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

@@ -8,6 +8,8 @@ const adminRoutes = require('./routes/admin.routes');
 const platformsRoutes = require('./routes/platforms.routes');
 const fitnessLeadsRoutes = require('./routes/fitnessLeads.routes');
 const eduyarpRoutes = require('./routes/eduyarp.routes');
+const trainerRoutes = require('./routes/trainer.routes');
+const meRoutes = require('./routes/me.routes');
 const { notFound, errorHandler } = require('./middleware/errorHandler');
 
 const app = express();
@@ -46,6 +48,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/platforms', platformsRoutes);
 app.use('/api/fitness-leads', fitnessLeadsRoutes);
+app.use('/api/me', meRoutes);
+app.use('/api/eduyarp/trainer', trainerRoutes);
 app.use('/api/eduyarp', eduyarpRoutes);
 
 app.use(notFound);

@@ -33,3 +33,14 @@ export function ClassStatusBadge({ status }) {
   const { label, tone } = CLASS_STATUS[status] ?? { label: status, tone: 'muted' }
   return <span className={`badge badge--${tone}`}>{label}</span>
 }
+
+const ASSIGNMENT_STATUS = {
+  draft: { label: 'Draft', tone: 'muted' },
+  published: { label: 'Open', tone: 'success' },
+  closed: { label: 'Closed', tone: 'danger' },
+}
+
+export function AssignmentStatusBadge({ status }) {
+  const { label, tone } = ASSIGNMENT_STATUS[status] ?? { label: status, tone: 'muted' }
+  return <span className={`badge badge--${tone}`}>{label}</span>
+}

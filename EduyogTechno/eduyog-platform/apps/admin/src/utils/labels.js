@@ -25,3 +25,24 @@ const feeFormatter = new Intl.NumberFormat('en-IN', {
 export function formatFee(fee) {
   return Number(fee) === 0 ? 'Free' : feeFormatter.format(fee)
 }
+
+export const ASSIGNMENT_STATUS_LABELS = { draft: 'Draft', published: 'Open', closed: 'Closed' }
+
+export const RESOURCE_TYPES = [
+  ['video', 'Video'],
+  ['pdf', 'PDF'],
+  ['document', 'Document'],
+  ['presentation', 'Presentation'],
+  ['external', 'External link'],
+]
+
+export const RESOURCE_TYPE_LABELS = Object.fromEntries(RESOURCE_TYPES)
+
+export const STUDY_LEVELS = [
+  ['school', 'School'],
+  ['diploma', 'Diploma'],
+  ['undergraduate', 'Undergraduate'],
+  ['postgraduate', 'Postgraduate'],
+  ['phd', 'PhD'],
+  ['other', 'Other'],
+]

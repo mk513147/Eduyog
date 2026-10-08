@@ -1,0 +1,307 @@
+/* Certificates: list, completion banner, the certificate itself and its print layout. */
+.cert-list {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cert-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+.cert-item__icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: var(--indigo-50, #eef2ff);
+  color: var(--indigo-600);
+}
+
+.cert-item__main {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+
+.cert-item__title {
+  font-weight: 700;
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+  text-decoration: none;
+}
+
+.cert-item__title:hover {
+  color: var(--indigo-600);
+  text-decoration: underline;
+}
+
+.cert-item__meta {
+  margin: 2px 0 0;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.cert-item__number {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+/* Shown on the learning page once every topic is done. */
+.completion {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  margin-bottom: 16px;
+  padding: 14px 18px;
+  border: 1px solid #a7f3d0;
+  border-radius: var(--radius-lg);
+  background: #ecfdf5;
+  color: #065f46;
+}
+
+.completion__text {
+  display: grid;
+  flex: 1 1 200px;
+}
+
+/* ---------- Certificate ---------- */
+.cert-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.cert-page {
+  display: grid;
+  gap: 16px;
+}
+
+.cert {
+  position: relative;
+  padding: 10px;
+  border-radius: var(--radius-lg);
+  background: #fff;
+  box-shadow: var(--shadow-lg);
+  color: #111827;
+}
+
+.cert__frame {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: clamp(20px, 5vw, 56px) clamp(16px, 5vw, 64px);
+  overflow: hidden;
+  border: 3px double #4f46e5;
+  text-align: center;
+}
+
+.cert__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+}
+
+.cert__mark {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #4f46e5;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.cert__org,
+.cert__org-sub,
+.cert__line {
+  margin: 0;
+}
+
+.cert__org {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.cert__org-sub {
+  color: #4b5563;
+  font-size: 13px;
+}
+
+.cert__title {
+  margin: 14px 0 0;
+  font-size: clamp(24px, 5vw, 40px);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #3730a3;
+}
+
+.cert__line {
+  color: #374151;
+}
+
+.cert__line--small {
+  font-size: 14px;
+}
+
+.cert__name {
+  margin: 4px 0;
+  max-width: 100%;
+  font-size: clamp(26px, 6vw, 44px);
+  font-weight: 800;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+  border-bottom: 2px solid #c7d2fe;
+  padding: 0 clamp(8px, 4vw, 40px) 6px;
+}
+
+.cert__course {
+  margin: 4px 0;
+  max-width: 100%;
+  font-size: clamp(20px, 4vw, 30px);
+  font-weight: 700;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.cert__meta {
+  display: grid;
+  gap: 12px 32px;
+  width: 100%;
+  margin: 20px 0 0;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+.cert__meta dt {
+  color: #6b7280;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.cert__meta dd {
+  margin: 2px 0 0;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.cert__number {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
+.cert__revoked-banner {
+  margin: 0;
+  padding: 4px 14px;
+  border: 2px solid #b91c1c;
+  border-radius: 6px;
+  color: #b91c1c;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.cert--revoked .cert__frame {
+  border-color: #b91c1c;
+}
+
+.cert__watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: rgba(185, 28, 28, 0.12);
+  font-size: clamp(48px, 16vw, 150px);
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  pointer-events: none;
+  transform: translate(-50%, -50%) rotate(-18deg);
+  user-select: none;
+}
+
+/* ---------- Printing: only the certificate, on one landscape page ---------- */
+@page {
+  size: A4 landscape;
+  margin: 10mm;
+}
+
+@media print {
+  .no-print,
+  .header,
+  .footer,
+  .skip-link {
+    display: none !important;
+  }
+
+  html,
+  body,
+  .site,
+  .main {
+    background: #fff !important;
+  }
+
+  .container {
+    max-width: none;
+    padding: 0;
+  }
+
+  .page,
+  .main {
+    padding: 0 !important;
+  }
+
+  .cert {
+    padding: 0;
+    box-shadow: none;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .cert__frame {
+    min-height: 175mm;
+    align-content: center;
+    padding: 12mm 18mm;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .cert__title {
+    font-size: 34px;
+  }
+
+  .cert__name {
+    font-size: 40px;
+  }
+
+  .cert__course {
+    font-size: 26px;
+  }
+
+  .cert__mark,
+  .cert__revoked-banner,
+  .cert__watermark {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+/* The footer link row wraps instead of widening the page on phones. */
+.footer__links {
+  flex-wrap: wrap;
+}

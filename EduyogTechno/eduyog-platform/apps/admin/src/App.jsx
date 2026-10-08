@@ -8,9 +8,11 @@ import OverviewPage from './pages/OverviewPage'
 import PlatformsPage from './pages/PlatformsPage'
 import ServicesPage from './pages/ServicesPage'
 import UsersPage from './pages/UsersPage'
+import CertificatesPage from './pages/eduyarp/CertificatesPage'
 import ClassesPage from './pages/eduyarp/ClassesPage'
 import CourseDetailPage from './pages/eduyarp/CourseDetailPage'
 import CoursesPage from './pages/eduyarp/CoursesPage'
+import AnnouncementsPage from './pages/eduyarp/AnnouncementsPage'
 import EnrolmentsPage from './pages/eduyarp/EnrolmentsPage'
 import TrainersPage from './pages/eduyarp/TrainersPage'
 import { Redirect } from './router/Redirect'
@@ -26,6 +28,8 @@ const PROTECTED_ROUTES = {
   '/eduyarp/trainers': TrainersPage,
   '/eduyarp/enrolments': EnrolmentsPage,
   '/eduyarp/classes': ClassesPage,
+  '/eduyarp/announcements': AnnouncementsPage,
+  '/eduyarp/certificates': CertificatesPage,
 }
 
 // Routes with an id segment, e.g. /eduyarp/courses/12.

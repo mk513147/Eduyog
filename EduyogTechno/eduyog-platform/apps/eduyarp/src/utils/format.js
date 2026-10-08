@@ -43,3 +43,27 @@ export function splitLines(text) {
     .map((line) => line.trim())
     .filter(Boolean)
 }
+
+const relativeFormatter = new Intl.RelativeTimeFormat(undefined, { numeric: 'auto' })
+
+// "5 minutes ago", "yesterday"; older than a week falls back to the date.
+export function formatRelative(value) {
+  if (!value) return ''
+  const seconds = Math.round((new Date(value).getTime() - Date.now()) / 1000)
+  const abs = Math.abs(seconds)
+  if (abs < 45) return 'just now'
+  if (abs < 3600) return relativeFormatter.format(Math.round(seconds / 60), 'minute')
+  if (abs < 86400) return relativeFormatter.format(Math.round(seconds / 3600), 'hour')
+  if (abs < 7 * 86400) return relativeFormatter.format(Math.round(seconds / 86400), 'day')
+  return shortDateFormatter.format(new Date(value))
+}
+
+export function formatDateTime(value) {
+  return value ? `${shortDateFormatter.format(new Date(value))}, ${timeFormatter.format(new Date(value))}` : '—'
+}
+
+const longDateFormatter = new Intl.DateTimeFormat(undefined, { day: 'numeric', month: 'long', year: 'numeric' })
+
+export function formatLongDate(value) {
+  return value ? longDateFormatter.format(new Date(value)) : '—'
+}

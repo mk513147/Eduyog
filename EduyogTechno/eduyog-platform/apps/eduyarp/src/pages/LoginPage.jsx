@@ -24,10 +24,16 @@ export default function LoginPage() {
     setError(null)
     try {
       const user = await login(form.email, form.password)
-      // Only Students have a dashboard; other roles return to where they were.
-      navigate(user.role === 'student' ? next : safeNextPath(query.get('next'), '/courses'), {
-        replace: true,
-      })
+      // Students return to where they were (default: dashboard); Trainers land on
+      // their dashboard unless they were heading for a Trainer page or their profile;
+      // other roles return to where they were.
+      const requested = query.get('next')
+      let destination
+      if (user.role === 'student') destination = next
+      else if (user.role === 'trainer')
+        destination = /^\/(trainer|profile)(\/|$)/.test(requested ?? '') ? safeNextPath(requested, '/trainer') : '/trainer'
+      else destination = safeNextPath(requested, '/courses')
+      navigate(destination, { replace: true })
     } catch (err) {
       setError(err.status === 400 ? 'Please enter your email and password.' : err.message)
       setBusy(false)
