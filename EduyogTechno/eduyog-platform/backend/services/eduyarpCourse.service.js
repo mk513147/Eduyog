@@ -4,7 +4,7 @@ const { PG_ERRORS, buildSetClause } = require('../utils/db');
 const { parseVideoUrl } = require('../utils/videoUrl');
 
 const COURSE_COLUMNS = `c.id, c.title, c.slug, c.description, c.learning_objectives, c.duration,
-  c.level, c.fee, c.status, c.created_at, c.updated_at`;
+  c.level, c.fee, c.status, c.cover_image_url, c.icon_url, c.created_at, c.updated_at`;
 
 const WRITABLE_COLUMNS = {
   title: 'title',
@@ -15,6 +15,8 @@ const WRITABLE_COLUMNS = {
   level: 'level',
   fee: 'fee',
   status: 'status',
+  coverImageUrl: 'cover_image_url',
+  iconUrl: 'icon_url',
 };
 
 function toCourse(row) {
@@ -29,6 +31,9 @@ function toCourse(row) {
     // NUMERIC(10,2) arrives as a string; the range fits a JS number exactly.
     fee: Number(row.fee),
     status: row.status,
+    // Optional externally hosted image URLs; null means "use the default visual".
+    coverImageUrl: row.cover_image_url,
+    iconUrl: row.icon_url,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };

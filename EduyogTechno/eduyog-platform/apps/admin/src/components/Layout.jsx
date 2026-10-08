@@ -7,7 +7,7 @@ const NAV_GROUPS = [
   {
     label: null,
     items: [
-      { to: '/', label: 'Overview', icon: 'overview' },
+      { to: '/', label: 'Dashboard', icon: 'overview' },
       { to: '/platforms', label: 'Platforms', icon: 'platforms' },
       { to: '/services', label: 'Services', icon: 'services' },
       { to: '/users', label: 'Users', icon: 'users' },

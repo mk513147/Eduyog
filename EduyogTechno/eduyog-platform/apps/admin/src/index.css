@@ -1228,3 +1228,68 @@ a {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* ---------- Course media fields (optional cover image and icon URLs) ---------- */
+.media-fieldset {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+  margin: 0;
+  padding: 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-muted);
+}
+
+.media-fieldset__legend {
+  padding: 0 6px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.media-field {
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+}
+
+.media-field > .field {
+  width: 100%;
+}
+
+.media-preview {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.media-preview--cover {
+  width: min(100%, 320px);
+  aspect-ratio: 16 / 7;
+}
+
+.media-preview--icon {
+  width: 64px;
+  height: 64px;
+}
+
+.media-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.media-preview--icon img {
+  object-fit: contain;
+}
+
+.media-preview__fallback {
+  padding: 4px;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  text-align: center;
+}
+

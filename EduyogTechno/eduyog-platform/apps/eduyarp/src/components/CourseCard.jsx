@@ -1,23 +1,17 @@
 import { Link } from '../router/Link'
+import { coverStyle } from '../utils/courseVisual'
 import { formatFee } from '../utils/format'
 import { CourseStatusBadge, LevelBadge } from './Badges'
+import { CourseArt } from './CourseArt'
+import { CourseIcon } from './CourseIcon'
 import { Icon } from './Icon'
-
-// Generated cover: a stable hue per course id, so no imagery is invented.
-function coverStyle(id) {
-  const hue = (Number(id) * 47 + 230) % 360
-  return {
-    '--cover-a': `hsl(${hue} 78% 52%)`,
-    '--cover-b': `hsl(${(hue + 48) % 360} 80% 38%)`,
-  }
-}
 
 export function CourseCard({ course }) {
   return (
     <article className="course-card">
       <div className="course-card__cover" style={coverStyle(course.id)} aria-hidden="true">
-        <Icon name="code" size={26} />
-        <span className="course-card__cover-label">{course.title.slice(0, 2).toUpperCase()}</span>
+        <CourseArt course={course} />
+        <CourseIcon course={course} size="lg" />
       </div>
       <div className="course-card__body">
         <div className="course-card__badges">

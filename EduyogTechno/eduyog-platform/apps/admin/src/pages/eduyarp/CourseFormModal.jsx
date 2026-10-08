@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { eduyarpApi } from '../../api/endpoints'
 import { SelectField, TextAreaField, TextField } from '../../components/Fields'
+import { ImageUrlField } from '../../components/ImageUrlField'
 import { Modal } from '../../components/Modal'
 import { Alert, Spinner } from '../../components/States'
 import { splitApiError } from '../../utils/errors'
 import { slugify } from '../../utils/format'
+import { checkImageUrl } from '../../utils/imageUrl'
 import { COURSE_LEVELS, COURSE_STATUS_LABELS, LEVEL_LABELS } from '../../utils/labels'
 
 const FIELDS = [
@@ -16,6 +18,8 @@ const FIELDS = [
   'level',
   'fee',
   'status',
+  'coverImageUrl',
+  'iconUrl',
 ]
 
 // course: an existing course to edit, or null to create one.
@@ -30,6 +34,8 @@ export function CourseFormModal({ course, onClose, onSaved }) {
     level: course?.level ?? 'beginner',
     fee: course ? String(course.fee) : '0',
     status: course?.status ?? 'draft',
+    coverImageUrl: course?.coverImageUrl ?? '',
+    iconUrl: course?.iconUrl ?? '',
   })
   // While creating, the slug follows the title until it is edited by hand.
   const [slugTouched, setSlugTouched] = useState(isEdit)
@@ -48,6 +54,15 @@ export function CourseFormModal({ course, onClose, onSaved }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
+    const mediaErrors = {}
+    for (const field of ['coverImageUrl', 'iconUrl']) {
+      const problem = checkImageUrl(form[field])
+      if (problem) mediaErrors[field] = problem
+    }
+    if (Object.keys(mediaErrors).length > 0) {
+      setFieldErrors(mediaErrors)
+      return
+    }
     setBusy(true)
     setFormError(null)
     setFieldErrors({})
@@ -174,6 +189,31 @@ export function CourseFormModal({ course, onClose, onSaved }) {
             ))}
           </SelectField>
         </div>
+        <fieldset className="media-fieldset">
+          <legend className="media-fieldset__legend">Course visuals (optional)</legend>
+          <p className="field__hint">
+            Both fields are optional. Without them the course uses the default Eduyarp visual and icon.
+            Use images hosted online; files are not uploaded here.
+          </p>
+          <ImageUrlField
+            label="Cover image URL"
+            variant="cover"
+            value={form.coverImageUrl}
+            onChange={(value) => update('coverImageUrl', value)}
+            error={fieldErrors.coverImageUrl}
+            hint="Optional. Used as the visual cover for this course."
+            clearLabel="Remove cover image"
+          />
+          <ImageUrlField
+            label="Course icon URL"
+            variant="icon"
+            value={form.iconUrl}
+            onChange={(value) => update('iconUrl', value)}
+            error={fieldErrors.iconUrl}
+            hint="Optional. Use a small square icon, or leave empty to use the default Eduyarp icon."
+            clearLabel="Use default icon"
+          />
+        </fieldset>
       </form>
     </Modal>
   )

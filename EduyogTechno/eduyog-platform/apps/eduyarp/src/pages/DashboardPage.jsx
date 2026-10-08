@@ -1,6 +1,7 @@
 import { studentApi } from '../api/endpoints'
 import { useAuth } from '../auth/useAuth'
 import { ClassStatusBadge, CourseStatusBadge, EnrolmentStatusBadge, LevelBadge } from '../components/Badges'
+import { CourseIcon } from '../components/CourseIcon'
 import { Icon } from '../components/Icon'
 import { Reveal } from '../components/Reveal'
 import { ProgressBar } from '../components/ProgressBar'
@@ -32,15 +33,19 @@ function MyCourses({ resource }) {
     <ul className="my-courses">
       {courses.map((course) => (
         <li key={course.id} className="my-course card">
-          <div className="my-course__badges">
-            <LevelBadge level={course.level} />
-            <EnrolmentStatusBadge status={course.enrolment.status} />
-            {course.status !== 'published' && <CourseStatusBadge status={course.status} />}
+          <div className="my-course__top">
+            <CourseIcon course={course} />
+            <div className="my-course__badges">
+              <LevelBadge level={course.level} />
+              <EnrolmentStatusBadge status={course.enrolment.status} />
+              {course.status !== 'published' && <CourseStatusBadge status={course.status} />}
+            </div>
           </div>
           <h3 className="my-course__title">{course.title}</h3>
+          {course.description && <p className="my-course__text line-clamp-2">{course.description}</p>}
           <ProgressBar progress={course.enrolment.progress} size="sm" />
           <Link to={`/my-courses/${course.id}`} className="btn btn--secondary btn--block">
-            {course.enrolment.progress.completedTopics === 0 ? 'Start course' : 'Continue'}
+            {course.enrolment.progress.completedTopics === 0 ? 'Start learning' : 'Continue learning'}
             <Icon name="arrowRight" size={16} />
           </Link>
         </li>

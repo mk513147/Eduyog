@@ -100,7 +100,7 @@ async function enrol(studentId, courseId) {
 
 const STUDENT_COURSE_SELECT = `
   SELECT c.id, c.title, c.slug, c.description, c.learning_objectives, c.duration, c.level,
-         c.fee, c.status, c.created_at, c.updated_at,
+         c.fee, c.status, c.cover_image_url, c.icon_url, c.created_at, c.updated_at,
          e.id AS enrolment_id, e.status AS enrolment_status, e.enrolled_at,
          ${PROGRESS_COLUMNS}
   FROM enrolments e

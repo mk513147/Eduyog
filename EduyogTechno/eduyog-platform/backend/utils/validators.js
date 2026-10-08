@@ -1,6 +1,7 @@
 const { parseVideoUrl } = require('./videoUrl');
 
 const VIDEO_URL_MAX_LENGTH = 2048;
+const IMAGE_URL_MAX_LENGTH = 2048;
 const EMAIL_MAX_LENGTH = 254;
 const FULL_NAME_MAX_LENGTH = 150;
 const PASSWORD_MIN_LENGTH = 8;
@@ -138,6 +139,43 @@ function optionalBoolean(input, field, label, errors, value) {
   } else {
     value[field] = input[field];
   }
+}
+
+// Optional externally hosted image URL: a string, null or '' (cleared to null).
+// Only http(s) is accepted, with a host and no embedded credentials or whitespace,
+// so javascript:, data:, file:, blob: and malformed values are rejected.
+function optionalImageUrl(input, field, label, errors, value) {
+  const raw = input[field];
+  if (raw === null) {
+    value[field] = null;
+    return;
+  }
+  if (typeof raw !== 'string') {
+    errors[field] = `${label} must be a string or null`;
+    return;
+  }
+  const url = raw.trim();
+  if (url === '') {
+    value[field] = null;
+    return;
+  }
+  if (url.length > IMAGE_URL_MAX_LENGTH) {
+    errors[field] = `${label} must be at most ${IMAGE_URL_MAX_LENGTH} characters`;
+    return;
+  }
+  let parsed = null;
+  if (/^https?:\/\//i.test(url) && !/\s/.test(url)) {
+    try {
+      parsed = new URL(url);
+    } catch {
+      parsed = null;
+    }
+  }
+  if (!parsed || !parsed.hostname || parsed.username || parsed.password) {
+    errors[field] = `${label} must be a valid http:// or https:// address without a username or password`;
+    return;
+  }
+  value[field] = url;
 }
 
 // Matches the platforms_url_format constraint: http(s)://, no whitespace.
@@ -417,6 +455,13 @@ function validateCourse(body, { partial = false } = {}) {
 
   if (input.status !== undefined) {
     requiredChoice(input, 'status', 'Status', COURSE_STATUSES, errors, value);
+  }
+
+  if (input.coverImageUrl !== undefined) {
+    optionalImageUrl(input, 'coverImageUrl', 'Cover image URL', errors, value);
+  }
+  if (input.iconUrl !== undefined) {
+    optionalImageUrl(input, 'iconUrl', 'Course icon URL', errors, value);
   }
 
   return finish(errors, value, partial);

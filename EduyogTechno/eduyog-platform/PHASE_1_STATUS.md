@@ -1,452 +1,465 @@
-# Eduyog Techno Solution — Phase 1 Status
+# Eduyog Phase 1 — Project Status
 
-Last audited: 2026-10-03 (repository audit of the `master` working tree).
-
-Evidence labels used in this document:
-
-- **Inspected** — confirmed by reading the code/config in this repository.
-- **Run** — executed during the audit (builds, lint, syntax checks).
-- **Reported** — results from earlier test runs that are *not* reproducible from the repository (see section 12).
-- **Not verified** — requires a deployment environment that is not part of the repository.
+This document describes the current state of the Eduyog Phase 1 platform: what it contains, how the parts fit together, how it is run and managed, what has been verified, and what remains before a production deployment.
 
 ---
 
-## 1. Executive Summary
+## 1. Purpose
 
-Phase 1 is a working prototype for company confirmation. It delivers:
+Eduyog Techno Solution Pvt. Ltd. brings education services, professional training, international-student career support and fitness-business services together under one brand. **Phase 1 is a working prototype for company confirmation.** It covers six pieces:
 
-- A public marketing site (Eduyog) that links to the education platforms.
-- Static sites for Saritex and StudentAQ, linked through the Admin-managed platform list.
-- A React Fitness site that stores business enquiries in PostgreSQL.
-- **Eduyarp**, a basic LMS: course catalogue, enrolment, modules/topics, topic completion, progress, class schedule, and Trainer assignment.
-- A React Admin panel for platforms, services, users/roles, Fitness leads, and Eduyarp management.
-- A Node.js/Express API with JWT authentication and Student / Trainer / Admin role-based access.
-
-| Level of evidence | Status |
+| Piece | What it is |
 |---|---|
-| Implemented | All Phase 1 scope items below (code inspected). |
-| Build / lint / syntax | Passed in this audit: Eduyarp, Admin, Fitness builds; Eduyarp and Admin lint; syntax check of every backend `.js` file. |
-| Automated tests | **Reported**: Eduyarp API tests 116/116 and browser acceptance 33/33 against temporary databases. The test code is **not in the repository** (backend `npm test` is a placeholder), so these cannot be re-run from this repo. |
-| Manual local testing | **Reported**: full local journey incl. role change, cancellation, re-enrolment, Fitness enquiry → Admin, and running Admin + Eduyarp + Fitness together. |
-| Production | **Not production-tested.** No deployment configuration exists in the repository. See section 16 and the blockers listed in section 16.1. |
+| **Eduyog** | The public company website and entry point to the other platforms. |
+| **Saritex** | Existing static website for academic assignment, essay and thesis support. |
+| **StudentAQ** | Existing static website for international-student career and interview support. |
+| **Eduyarp** | A basic learning platform (LMS): course catalogue, enrolment, learning, progress, live-class schedule. |
+| **Fitness** | A website for fitness and wellness services with a business enquiry form. |
+| **Admin** | An Admin-only console to manage users, platforms, services, Fitness leads and everything in Eduyarp. |
 
-Phase 1 should be described as **feature-complete for its defined scope and locally verified**, with deployment configuration still to be done by the team (section 16).
+Some larger features from the original requirements are **intentionally deferred** (see section 15): a full Trainer dashboard, file/material uploads, assignments, certificates, payments, notifications, attendance and similar. Phase 1 is complete for its defined scope, locally verified, and not yet production-tested or deployed.
 
 ---
 
-## 2. Architecture
+## 2. System Architecture
+
+```
+Browser / Static Websites
+        │
+        ├── Eduyog        (static HTML/CSS/JS, calls the API for platform links)
+        ├── Saritex       (static, no API)
+        └── StudentAQ     (static, no API; enquiry form posts to Google Forms)
+        │
+        ▼
+React Applications (Vite)
+        │
+        ├── Eduyarp       (students; public catalogue)
+        ├── Fitness       (public site + enquiry form)
+        └── Admin         (Admin accounts only)
+        │
+        ▼
+Node.js + Express API  (one backend shared by all React apps and the Eduyog site)
+        │
+        ▼
+PostgreSQL
+```
+
+- **Use the API:** Eduyarp, Fitness, Admin (all of it) and the Eduyog website (only `GET /api/platforms`, to attach "Learn more" links to the platform cards).
+- **Do not use the API:** Saritex and StudentAQ. Saritex uses its own contact links; StudentAQ uses WhatsApp/e-mail links and a Google Form (section 5).
+- **Backend layering:** routes → controllers → services → PostgreSQL (`pg` pool). Middleware handles authentication, role checks, rate limiting, CORS, security headers and errors.
+- There is no server-side rendering and no monorepo tooling; each app is built and deployed on its own.
+
+---
+
+## 3. Repository Structure
 
 ```
 eduyog-platform/
-├── websites/   Static sites: eduyog, saritex, studentaq (HTML/CSS/JS)
-├── apps/       React + Vite apps: fitness, eduyarp, admin
-├── backend/    Node.js + Express API (single backend shared by all apps)
-├── database/   PostgreSQL schema migrations and demo seed
-└── assets/     Images and media (shared + per site/app)
+├── websites/
+│   ├── eduyog/        Main company website
+│   ├── saritex/       Saritex website
+│   └── studentaq/     StudentAQ website
+│
+├── apps/
+│   ├── admin/         Admin console (React + Vite)
+│   ├── eduyarp/       Learning platform (React + Vite)
+│   └── fitness/       Fitness website (React + Vite)
+│
+├── backend/           Node.js + Express API
+├── database/          Ordered SQL migrations and development seed data
+└── assets/            Shared images; screenshots used by the Eduyog website
 ```
 
-| Part | Role |
+| Directory | Role |
 |---|---|
-| `websites/eduyog` | Public company site. Fetches `GET /api/platforms` to attach "Learn more" links to the three education cards. |
-| `websites/saritex` | Existing static academic-support site. Own contact flow (WhatsApp, email, third-party form). Does not call the backend. |
-| `websites/studentaq` | Existing static study-abroad site. Uses Google Forms. Does not call the backend. |
-| `apps/fitness` | Public Fitness business site with an enquiry form → `POST /api/fitness-leads`. |
-| `apps/eduyarp` | Student-facing LMS (catalogue, enrolment, learning view, dashboard). |
-| `apps/admin` | Admin panel; the only place roles are assigned and Eduyarp content is managed. |
-| `backend/` | Layered: routes → controllers → services → PostgreSQL (`pg` pool). Middleware: `authenticate`, `requireAdmin`, `requireRole`, `errorHandler`. |
-| `database/` | Sequential SQL files `001`–`005` plus a development-only demo seed. |
+| `websites/` | Static sites: plain HTML, CSS and JavaScript, served as files. |
+| `apps/` | The three React applications. Each has its own `package.json`, build and `.env`. |
+| `backend/` | The API: `routes/`, `controllers/`, `services/`, `middleware/`, `config/`, `utils/`, `scripts/`. |
+| `database/schema/` | Ordered SQL migrations (section 7). |
+| `database/seed/` | Development/demo data only (section 12). |
+| `assets/` | Project images. The Eduyog site serves its own copies from `websites/eduyog/images/`. |
 
-Browser apps talk to one backend; there is no server-side rendering or monorepo tooling.
+---
 
-## 3. Technology Stack
-
-Inspected from `package.json` files.
+## 4. Technology Stack
 
 | Layer | Technology |
 |---|---|
-| Static sites | HTML, CSS, JavaScript |
-| Apps | React 19 + Vite 8 (JavaScript, no TypeScript). Client routing is custom (History API on `pathname`), no router library. |
+| Static sites | HTML, CSS, JavaScript (no framework, no build step) |
+| React apps | React 19, Vite 8, JavaScript (no TypeScript). Client routing is custom (History API), with no router library. |
+| Animation / icons / type | **Eduyarp and Fitness:** Motion, Lucide icons, Inter (bundled via Fontsource). **Admin:** none of these (its own small icon set). **Eduyog:** CSS animation and inline SVG icons, Inter from Google Fonts. **StudentAQ:** CSS animation and inline SVG icons, Inter bundled locally. |
 | Backend | Node.js (CommonJS), Express 5, `helmet`, `cors`, `express-rate-limit`, `dotenv`, `pg` |
-| Auth | `jsonwebtoken` (HS256 access tokens), `bcryptjs` (12 rounds) |
-| Database | PostgreSQL 13+ (per migration headers) |
-| Lint | ESLint 10 (Admin, Eduyarp only; Fitness and backend have no lint script) |
+| Authentication | `jsonwebtoken` (HS256 access tokens), `bcryptjs` (12 rounds) |
+| Database | PostgreSQL 13+ |
+| Lint | ESLint, in Admin and Eduyarp (Fitness and the backend have no lint script) |
 
-Not used (project rule): Next.js, NestJS, Prisma, Turborepo.
-
----
-
-## 4. Applications
-
-### Eduyog
-Public company website. Static. Reads the API base from `<meta name="eduyog-api-base">` in `index.html` (falls back to `script.js` default). **Both currently contain `http://localhost:5000/api` and must be changed for production** (section 16).
-
-### Saritex
-Static site under `websites/saritex`. Integration is via the Admin → Platforms record (deployed URL stored in the database, not in this repo). The site itself uses WhatsApp links and a third-party form action. Not modified in Phase 1 beyond import. Deployed URL: **not recorded in the repository**; configured in Admin.
-
-### StudentAQ
-Static site under `websites/studentaq`, using Google Forms. Same integration model as Saritex. Deployed URL: **not recorded in the repository**; configured in Admin.
-
-### Fitness
-React app (dev port 5174). Landing page with About, Services, Contact and a business enquiry form (business name, contact name, email, business type, location, services offered, marketing requirements, website links, marketing objectives, additional requirements). Submissions go to `POST /api/fitness-leads` (public, rate-limited to 10 per hour per client) and appear in Admin → Fitness Leads.
-
-### Eduyarp
-React app (dev port 5175). Public catalogue and course detail; Student registration/login; Student dashboard (My Courses, progress, upcoming classes); course learning page with module/topic list and "mark complete".
-
-### Admin
-React app (dev port 5173). Admin-only. Pages: Overview, Platforms, Services, Users (role change), Fitness Leads, Eduyarp Courses (+ course detail with modules, topics, trainers), Eduyarp Trainers, Eduyarp Enrolments, Eduyarp Classes.
+**Intentionally not used:** Next.js, NestJS, Prisma, Turborepo. No UI component library (such as shadcn or Chakra) and no CSS framework is used.
 
 ---
 
-## 5. Eduyarp Phase 1 Features
+## 5. Application Responsibilities
 
-| Feature | Status |
+### Eduyog (`websites/eduyog`)
+The company's public landing page. It explains the two business verticals (Education and Fitness), presents the platforms, and links visitors on.
+- Sections: hero, a strip of real counts (2 verticals, 4 platforms, 1 brand), About, Education platform cards, an Eduyarp showcase, a Fitness section, and a closing call to action.
+- The three Education cards (Saritex, Eduyarp, StudentAQ) get a "Learn more" link only when `GET /api/platforms` returns an active platform with a matching slug and a valid http(s) URL; otherwise the card says "Website coming soon". The Fitness card links to the page's own Fitness section.
+- Product screenshots (Eduyarp and Fitness, taken from demo data) are in `websites/eduyog/images/`.
+- Contact details are a placeholder ("Contact details coming soon") until the company confirms real ones.
+- The API base URL is read from `<meta name="eduyog-api-base">` in `index.html`.
+
+### Saritex (`websites/saritex`)
+An existing static academic-support website with its own pages (about, services, blogs, reviews, contact). It does not call the backend. It is connected to the platform only through its record in Admin → Platforms.
+
+### StudentAQ (`websites/studentaq`)
+A static multi-page career-support website for students looking for work in the UK and Dubai (home, services, destinations, about, contact, privacy, 404).
+- Content lives in `assets/js/data.js`; small scripts render the pages from it. Changing text, services or FAQs means editing that file.
+- Contact is by WhatsApp and e-mail links, and an enquiry form that submits to a **Google Form**. The form is connected by setting `googleForm.formId` and the field entry IDs in `data.js`. **These are currently empty**, so the form shows its "not configured" state until they are filled in.
+- The site has its own `README.md` with its content and deployment guide. It does not use the backend.
+
+### Eduyarp (`apps/eduyarp`)
+The learning platform (students and the public).
+- **Public:** landing page, course catalogue (published courses only) and course detail pages.
+- **Accounts:** registration and login create **Student** accounts.
+- **Enrolment, dashboard and learning:** a Student enrols in a published course, sees their courses, progress and upcoming live classes on a dashboard, and studies on a learning page with a course outline (modules and topics), previous/next navigation, an optional video, and a "Mark complete" action.
+- **Course visuals:** each course card, detail page and learning header shows the course's own cover image and icon if the Admin set them, otherwise the default gradient and icon (section 10).
+- **Topic videos:** YouTube and Vimeo only (section 9).
+- The four temporary demo courses use local SVG artwork matched by slug (`apps/eduyarp/src/utils/courseVisual.js`); this mapping is temporary and can be deleted at handover.
+- Not included: Trainer UI, payments, uploads, assignments, certificates (section 15).
+
+### Fitness (`apps/fitness`)
+A single-page website for corporate wellness, fitness programs and employee fitness initiatives, with an enquiry form (business name, contact person, e-mail, phone, business type, location, services offered, marketing requirements, website links, marketing objectives, additional requirements). Submissions go to `POST /api/fitness-leads` (public, rate-limited) and appear in Admin → Fitness Leads.
+
+### Admin (`apps/admin`)
+The management console. Only accounts with the Admin role can sign in.
+
+| Area | What Admin can do |
 |---|---|
-| Public course catalogue (published only) | ✅ Implemented |
-| Published course detail by slug | ✅ Implemented |
-| Student registration / login (existing auth) | ✅ Implemented |
-| Student dashboard, My Courses | ✅ Implemented |
-| Modules and topics (ordered by `display_order`) | ✅ Implemented |
-| Topic completion + progress % | ✅ Implemented |
-| Enrolment (published courses only) | ✅ Implemented |
-| Enrolment cancellation on role change; re-enrolment | ✅ Implemented (migration 004) |
-| Class schedule + upcoming classes for Students | ✅ Implemented |
-| Admin course / module / topic CRUD | ✅ Implemented |
-| Optional external video per topic (YouTube / Vimeo) | ✅ Implemented (migration 005; **not yet run in a browser**, API-tested against a temporary DB) |
-| Admin Trainer assignment | ✅ Implemented |
-| Admin enrolment visibility (incl. cancelled) | ✅ Implemented |
-| Admin class management | ✅ Implemented |
-| Trainer read-only view of an assigned course (API) | ✅ Implemented (API only, no Trainer UI) |
-| Un-marking a completed topic | ⚠️ Limitation: not supported |
-| Progress tied to student+topic, not enrolment | ⚠️ Limitation (accepted design) |
-| Pagination on lists | ⚠️ Limitation: none |
-| Trainer dashboard UI, assignments, uploads, certificates, notifications, payments, attendance, reviews, messaging, video, Zoom/Meet API | ❌ Out of scope |
+| Dashboard | See the platform overview (below). |
+| Platforms, Services | Create, edit, activate/deactivate and delete the records shown on the Eduyog site. |
+| Users | See all users and change their role (Student, Trainer, Admin). |
+| Fitness Leads | Read business enquiries from the Fitness site. |
+| Eduyarp → Courses | Create, edit, publish/unpublish, archive and delete courses, including the optional cover image URL and icon URL; manage modules, topics (with optional video URLs) and trainer assignments on the course page. |
+| Eduyarp → Trainers | See Trainers and their assigned courses. |
+| Eduyarp → Enrolments | Search and filter all enrolments; cancel an active enrolment. |
+| Eduyarp → Classes | Schedule, edit and delete live classes (the Trainer must be assigned to the course). |
 
-## 6. Eduyarp User Journey
+#### Admin dashboard
+The first page after sign-in (sidebar: Dashboard) summarises the platform on one screen. **Every figure is derived in the browser from lists the existing Admin API already returns; nothing is hard-coded, there are no invented trends, and no dedicated dashboard endpoint exists.** The calculations live in `apps/admin/src/utils/dashboard.js`. It shows:
+- **Four headline numbers:** total users (with the student/trainer/admin split), active (published) courses, active enrolments (with the number of students learning) and Fitness leads (with the count from the last 30 days).
+- **Enrolment status:** a donut of active, completed and cancelled enrolments with exact counts and percentages.
+- **Students by course:** horizontal bars of current students per course (active and completed; cancelled enrolments are not counted).
+- **Recent activity:** one chronological feed built from real timestamps: user registrations, enrolments, Fitness enquiries and newly created courses.
+- **Upcoming classes:** the next five scheduled classes by day and time, with course and Trainer.
+- **Course health:** which published courses have no Trainer or no upcoming class, followed by up to four notable courses with their trainer count, student count and next class.
+- **Fitness enquiries:** enquiries per week over the last eight weeks and the three most recent businesses.
+- **Shortcuts** to the Courses, Users, Classes, Enrolments and Fitness Leads pages, and a link to Platforms and Services.
 
-**Admin** (Admin app)
-1. Sign in with an Admin account (first Admin created with `npm run setup:admin`).
-2. Eduyarp → Courses → create course (starts as `draft`).
-3. Open course → add modules → add topics.
-4. Users → change a registered Student's role to Trainer.
-5. Course detail → assign the Trainer.
-6. Eduyarp → Classes → schedule a class (Trainer must be assigned to the course).
-7. Set course status to `published`.
-
-**Student** (Eduyarp app)
-1. Register (creates a Student) and sign in.
-2. Browse published courses; open a course.
-3. Enrol.
-4. Dashboard → My Courses → open the course.
-5. View modules/topics; mark topics complete; progress updates.
-6. Upcoming classes appear on the dashboard (from the start of the current day onward).
+The charts are small inline SVG/CSS components (no chart library), with exact values in tooltips and in accompanying text. Each card has its own data source: while it loads it shows a compact skeleton, if its request fails only that card shows "Unable to load …" with a Retry button, and with no data it shows a plain message such as "No enrolment activity yet." or "No classes scheduled." A fresh development database can be filled with demonstration data using the seed in section 12; those records are fictional, not production data.
 
 ---
 
-## 7. Authentication and RBAC
+## 6. Eduyarp Data Model
 
-- `POST /api/auth/register` always creates a **Student** (role is not accepted from the client).
-- `authenticate` verifies the HS256 JWT (`Authorization: Bearer`), then **loads the user from the database on every request**, so role changes and deleted accounts take effect immediately. The role in `req.user` comes from the database, not the token.
-- Student routes use `requireRole('student')` and always scope by `req.user.id`; the client never supplies a `student_id`.
-- Trainer route uses `requireRole('trainer')` and then checks the `course_trainers` table (403 if not assigned).
-- All `/api/admin/*` routes use `authenticate` + `requireAdmin` (401 / 403).
-- Last-Admin protection: `changeUserRole` locks admin rows and refuses to demote the only Admin (409).
-- Public routes return published courses only; a Student asking for a course they are not currently enrolled in gets 404.
-
-### Role transitions (single DB transaction with the role update)
-
-| Change | Effect on Eduyarp enrolments |
+| Table | Meaning |
 |---|---|
-| Student → Trainer | `active` → `cancelled` |
-| Student → Admin | `active` → `cancelled` |
-| Trainer/Admin → Student | Nothing restored |
-| Any | `completed` and already `cancelled` unchanged; topic progress never deleted |
+| `users` | All accounts. `role` is `student`, `trainer` or `admin`. |
+| `courses` | A course: title, unique `slug`, description, learning objectives, duration, `level`, `fee` (INR, display only), `status` (`draft`, `published`, `archived`), and the optional media fields **`cover_image_url`** and **`icon_url`**. |
+| `course_modules` | Ordered sections of a course. |
+| `course_topics` | Ordered topics inside a module; includes the optional **`video_url`**. |
+| `course_trainers` | Which Trainers are assigned to which courses. |
+| `enrolments` | A Student's enrolment in a course; `status` is `active`, `completed` or `cancelled`. |
+| `topic_progress` | Which topics a Student has completed. |
+| `classes` | Scheduled live classes: course, Trainer, title, date/time, optional meeting link, status. |
 
-If cancellation fails, the role change rolls back.
+In plain language:
+- A **Course** has **Modules**, and each Module has **Topics**.
+- A **Course** can have several **Trainers**.
+- A **Student** has **Enrolments** (one current enrolment per course; cancelled ones are kept as history).
+- A **Student + Topic** has a **Topic progress** record once completed.
+- A **Course** has **Classes**, each taught by one of its assigned Trainers.
 
-## 8. Enrolment Lifecycle
+Key rules enforced in the database: unique course slug; level, status and fee checks; only one `active`/`completed` enrolment per student and course (a partial unique index, so re-enrolment after cancellation works); a course with any enrolment cannot be deleted (archive it instead); `meeting_link`, `cover_image_url` and `icon_url` must be http(s) URLs. The application additionally requires that a class's Trainer is assigned to the class's course.
 
-| Status | Access | Notes |
+---
+
+## 7. Migrations
+
+Files in `database/schema/` are applied **in order, once each**, with `psql`. There is no migration runner. Each file runs in a single transaction and is deliberately **not** idempotent: running one twice fails. Never edit a migration that has been applied; add a new one.
+
+| File | What it does |
+|---|---|
+| `001_initial_schema.sql` | Initial application schema: `users` (roles `student`, `admin`), `platforms`, `services`, `fitness_leads`, the `set_updated_at()` trigger, last-Admin index. |
+| `002_add_fitness_lead_fields.sql` | Adds the business-enquiry fields to `fitness_leads` (type, location, services, marketing requirements, links, objectives). |
+| `003_eduyarp.sql` | Eduyarp schema: adds the `trainer` role and creates `courses`, `course_modules`, `course_topics`, `course_trainers`, `enrolments`, `topic_progress`, `classes`. |
+| `004_eduyarp_enrolment_status.sql` | Adds the `cancelled` enrolment status and the partial unique index that allows re-enrolment after cancellation. |
+| `005_eduyarp_topic_video.sql` | Adds the nullable `course_topics.video_url` (stores the validated original YouTube/Vimeo URL). |
+| `006_eduyarp_course_media.sql` | Adds the nullable `courses.cover_image_url` and `courses.icon_url` (http(s) only, at most 2048 characters). Existing courses keep `NULL` and fall back to the default visual. |
+
+There is no migration after 006. To bring an existing database up to date, apply only the files it is missing, for example:
+
+```
+psql -h localhost -U <db_user> -d <db_name> -f database/schema/006_eduyarp_course_media.sql
+```
+
+Migrations 001–006 apply cleanly in order on an empty database (verified on a temporary database). No migration has been applied to any production database.
+
+---
+
+## 8. Authentication and Roles
+
+- **Registration** (`POST /api/auth/register`) always creates a **Student**; the client cannot choose a role. Only an Admin can change roles (Admin → Users).
+- **Sessions:** the API issues a signed JWT (default lifetime 1 hour). On **every request** the backend re-loads the user from the database, so role changes and deleted accounts take effect immediately. There are no refresh tokens.
+- **Student** routes always act on the signed-in Student's own data; a Student can only see courses they currently have an active or completed enrolment in.
+- **Trainer** access is limited to courses the Trainer is assigned to (one read-only API route exists; there is no Trainer user interface).
+- **Admin** routes (`/api/admin/*`) require the Admin role.
+- **Last-Admin protection:** the only remaining Admin cannot be demoted.
+- The first Admin is created once with `npm run setup:admin` in `backend/` (it refuses to run if an Admin already exists).
+
+### Role changes and enrolments
+
+| Change | Effect on enrolments |
+|---|---|
+| Student → Trainer or Admin | Active enrolments become `cancelled` (in the same transaction as the role change). |
+| Trainer or Admin → Student | Nothing is restored. |
+| Any change | `completed` and already `cancelled` enrolments are unchanged; topic progress is never deleted. |
+
+### Enrolment lifecycle
+
+| Status | Course access | Notes |
 |---|---|---|
-| `active` | Yes | Default on enrol. |
-| `completed` | Yes | Set automatically when all topics are done; reverts to `active` if a topic is added (re-derived on curriculum change). |
-| `cancelled` | No | History only; visible to Admin; API returns 404 to the Student. |
+| `active` | Yes | Set on enrolment. |
+| `completed` | Yes | Set automatically when every topic is done; returns to `active` if a topic is added. |
+| `cancelled` | No | Kept as history and visible to Admin. The Student no longer sees the course, its classes, or its videos. |
 
-- A partial unique index allows one `active`/`completed` enrolment per student+course and any number of `cancelled` rows, so a Student can **re-enrol** after cancellation (status is re-derived immediately from existing progress).
-- `topic_progress` is keyed by `(student_id, topic_id)`; progress therefore **survives cancellation and re-enrolment** (accepted Phase 1 design).
-- Courses with any enrolment (including cancelled) cannot be deleted (`ON DELETE RESTRICT` → 409); archive them instead.
+A cancelled Student can enrol again; a new active enrolment is created and earlier topic progress is kept. Admin can also cancel an active enrolment directly (Admin → Eduyarp → Enrolments); completed and already-cancelled enrolments cannot be cancelled, and enrolments are never deleted.
 
 ---
 
-## 9. Database
+## 9. Eduyarp Learning Flow
 
-Apply in this order on a fresh database: **001 → 002 → 003 → 004 → 005**. Each file runs in one transaction and is intentionally **not idempotent**: running a file twice fails (004 and 005 must not be run twice). The user's local database already has 004 applied; nothing in the repository indicates any migration has been applied to production.
+```
+Register → Login → Browse courses → Course detail → Enrol → Dashboard
+   → Learning page → Select module/topic → Watch optional video
+   → Mark topic complete → Progress updates
+```
+
+- Courses can be browsed without an account; enrolling requires a Student account.
+- The learning page shows the course outline with each topic marked completed, current or available, an optional video, the topic text, and Previous/Next buttons.
+- **Videos never complete a topic automatically.** The Student always clicks "Mark complete". There is no watch tracking.
+- **Supported video providers:** YouTube (`youtube.com/watch?v=…`, `youtu.be/…`, `youtube.com/embed/…`) and Vimeo (`vimeo.com/<id>`, `player.vimeo.com/video/<id>`). The backend validates the host and the video id and builds the embed address itself (YouTube videos use `youtube-nocookie.com`). Other providers, raw iframe HTML and `javascript:`/`data:` URLs are rejected, so only YouTube and Vimeo can ever appear as an iframe source.
+- Videos follow normal course access: the public catalogue never includes them, cancelled enrolments lose them, completed enrolments keep them. Videos stay hosted by their provider; nothing is uploaded or stored.
+
+---
+
+## 10. Admin Course Management
+
+```
+Create course → Edit course → Add cover image URL → Add icon URL
+   → Add modules → Add topics → Add topic video → Assign trainers
+   → Schedule classes → Publish / unpublish → Archive / delete (where allowed)
+```
+
+- A new course starts as `draft`. Only `published` courses appear to the public and can be enrolled in.
+- **Course media (optional):** the course form has *Cover image URL* and *Course icon URL*. They are externally hosted http(s) image addresses; **no files are uploaded or stored**. The form shows a live preview (loaded after typing pauses), a neutral "Image unavailable" box if an image cannot load, and a button to remove the cover (*Remove cover image*) or return to the default icon (*Use default icon*); clearing a field saves `NULL`.
+- **Validation:** the backend trims the value, turns an empty string into `NULL`, accepts only `http:` and `https:` with a host, and rejects `javascript:`, `data:`, `file:`, `blob:`, malformed addresses, addresses containing a username or password, and anything longer than 2048 characters. The form repeats the check, but the backend is authoritative.
+- **Fallbacks:** no cover → the existing gradient visual (or, for the four temporary demo courses, their local artwork); no icon → the default course icon chosen from the title; an image that fails to load falls back the same way. Courses never depend on these fields.
+- A course with enrolments cannot be deleted (archive it).
+
+---
+
+## 11. API Reference
+
+Base path `/api`. Errors use `{ "error": { "message", "details?" } }`. Course objects include `coverImageUrl` and `iconUrl`; topic objects (for Admin, assigned Trainers and enrolled Students only) include `videoUrl` and `videoEmbedUrl`.
+
+| Area | Endpoints |
+|---|---|
+| Health | `GET /api/health` |
+| Auth | `POST /api/auth/register`, `POST /api/auth/login` (20 per 15 min per client), `GET /api/auth/me` |
+| Public platforms | `GET /api/platforms` (active only) |
+| Fitness | `POST /api/fitness-leads` (public, 10 per hour per client) |
+| Public Eduyarp | `GET /api/eduyarp/courses`, `GET /api/eduyarp/courses/:slug` (published only) |
+| Student | `POST /api/eduyarp/courses/:courseId/enrol`, `GET /api/eduyarp/me/courses`, `GET /api/eduyarp/me/courses/:courseId`, `GET /api/eduyarp/me/schedule`, `POST /api/eduyarp/topics/:topicId/complete` |
+| Trainer | `GET /api/eduyarp/trainer/courses/:courseId` (must be assigned) |
+| Admin platform data | `/api/admin/platforms`, `/api/admin/services` (list, create, get, update, delete); `GET /api/admin/users`, `PATCH /api/admin/users/:id/role`; `GET /api/admin/fitness-leads[/:id]` |
+| Admin Eduyarp | `/api/admin/eduyarp/…` — courses (list, create, get, update, delete); modules and topics (create under parent, update, delete); trainers (`GET /trainers`, assign and unassign on a course); `GET /enrolments`, `PATCH /enrolments/:id` (`{"status":"cancelled"}` only); classes (list, create, update, delete) |
+
+A general limit of 1000 requests per 15 minutes per client applies to `/api`.
+
+---
+
+## 12. Seed Data (development only)
+
+Seeds live in `database/seed/` and are **never** run by any script or migration. Do not run them against production.
 
 | File | Purpose |
 |---|---|
-| `001_initial_schema.sql` | `users` (roles `student`,`admin`), `platforms`, `services`, `fitness_leads`, `set_updated_at()` trigger function, last-Admin partial index. |
-| `002_add_fitness_lead_fields.sql` | Adds business_type, location, services_offered, marketing_requirements, website_links, marketing_objectives to `fitness_leads` (nullable, length checks). |
-| `003_eduyarp.sql` | Adds `trainer` to `users_role_valid`; creates the Eduyarp tables. |
-| `005_eduyarp_topic_video.sql` | Adds nullable `course_topics.video_url` (TEXT, max 2048). Stores the validated original URL only. |
-| `004_eduyarp_enrolment_status.sql` | Adds `cancelled` status; replaces the plain unique constraint with a partial unique index; adds `enrolments_student_idx`. |
+| `eduyarp_demo.sql` | Four sample courses (titles marked `[Demo]`) with modules and topics. Refuses to run if any course exists. |
+| `eduyarp_demo_catalog.sql` | **Temporary demo catalogue:** Data Science, Artificial Intelligence, Prompt Engineering and Software Development (published, Beginner, one module and three topics each), with sample **third-party YouTube videos** on the topics. Re-runnable: it creates only courses whose slug is free and sets a topic video only if the topic has none. |
+| `admin_dashboard_demo.sql` | Fictional demonstration data so the Admin dashboard looks populated: 5 Trainers and 12 Students (demo accounts that cannot log in), trainer assignments, 13 enrolments with consistent topic progress (active, completed and one cancelled), 6 upcoming classes, 7 Fitness leads, and any missing platforms/services. Re-runnable; it never updates or deletes existing records and never overwrites existing platform URLs or course media. It creates no Admin account. |
 
-### Eduyarp tables (Inspected)
+Run, in this order, on a development database that already has the schema:
 
-| Table | PK | Foreign keys / key constraints |
-|---|---|---|
-| `courses` | `id` | `slug` UNIQUE + format check; `level` ∈ beginner/intermediate/advanced; `status` ∈ draft/published/archived; `fee >= 0` (INR, no payments); index on `status` |
-| `course_modules` | `id` | `course_id → courses` CASCADE; index `(course_id, display_order, id)` |
-| `course_topics` | `id` | `module_id → course_modules` CASCADE; index `(module_id, display_order, id)` |
-| `course_trainers` | `(course_id, trainer_id)` | `course_id → courses` CASCADE; `trainer_id → users` CASCADE; index on `trainer_id` |
-| `enrolments` | `id` | `course_id → courses` RESTRICT; `student_id → users` RESTRICT; `status` ∈ active/completed/cancelled; **partial unique index `enrolments_student_course_key (student_id, course_id) WHERE status IN ('active','completed')`**; indexes on `course_id`, `student_id` |
-| `topic_progress` | `id` | `student_id → users` CASCADE; `topic_id → course_topics` CASCADE; UNIQUE `(student_id, topic_id)`; check `completed = (completed_at IS NOT NULL)` |
-| `classes` | `id` | `course_id → courses` CASCADE; `trainer_id → users` RESTRICT; `status` ∈ scheduled/completed/cancelled; `meeting_link` must be http(s) URL; indexes `(course_id, scheduled_at)`, `trainer_id` |
+```
+psql -h localhost -U <db_user> -d <dev_db> -f database/seed/eduyarp_demo_catalog.sql
+psql -h localhost -U <db_user> -d <dev_db> -f database/seed/admin_dashboard_demo.sql
+```
 
-`users.role` ∈ `student`, `trainer`, `admin`. Application code (not the database) requires that a class's trainer is assigned to the class's course and that assigned Trainers have the `trainer` role.
-
-Note: `users.role` check and `enrolments` status check constraints are replaced by `DROP CONSTRAINT` + `ADD CONSTRAINT`; this relies on the default constraint names from 001/003, which is correct for databases built from these files.
+The demo courses, their local artwork, the sample videos and the dashboard data are **demonstration content, not production content**. They can be replaced or deleted through Admin during handover; the sample videos belong to their original creators and are only linked, never copied.
 
 ---
 
-## 10. API Reference
+## 13. Testing Status
 
-Inspected from `backend/routes/*.js`. Base path `/api`. Errors use `{ "error": { "message", "details?" } }`.
+There is no automated test suite stored in the repository (`npm test` in the backend is a placeholder). The checks below were run by hand or with throw-away scripts against **temporary databases and local servers**; the scripts are not part of the repository.
 
-### Health
-- `GET /api/health`
-
-### Auth
-- `POST /api/auth/register` (limited: 20 / 15 min per client)
-- `POST /api/auth/login` (same limiter)
-- `GET /api/auth/me` (authenticated)
-
-### Platforms
-- Public: `GET /api/platforms` (active platforms)
-- Admin: `GET|POST /api/admin/platforms`, `GET|PATCH|DELETE /api/admin/platforms/:id`
-- Admin services: `GET|POST /api/admin/services`, `GET|PATCH|DELETE /api/admin/services/:id`
-
-### Users (Admin)
-- `GET /api/admin/users`
-- `PATCH /api/admin/users/:id/role`
-
-### Fitness
-- Public: `POST /api/fitness-leads` (10 / hour per client)
-- Admin: `GET /api/admin/fitness-leads`, `GET /api/admin/fitness-leads/:id`
-
-### Eduyarp — Public
-- `GET /api/eduyarp/courses`
-- `GET /api/eduyarp/courses/:slug`
-
-### Eduyarp — Student
-- `POST /api/eduyarp/courses/:courseId/enrol`
-- `GET /api/eduyarp/me/courses`
-- `GET /api/eduyarp/me/courses/:courseId`
-- `GET /api/eduyarp/me/schedule`
-- `POST /api/eduyarp/topics/:topicId/complete`
-
-### Eduyarp — Trainer (read-only)
-- `GET /api/eduyarp/trainer/courses/:courseId` (must be assigned)
-
-### Eduyarp — Admin (`/api/admin/eduyarp`)
-- Courses: `GET /courses`, `POST /courses`, `GET|PATCH|DELETE /courses/:id`
-- Modules: `POST /courses/:courseId/modules`, `PATCH|DELETE /modules/:id`
-- Topics: `POST /modules/:moduleId/topics`, `PATCH|DELETE /topics/:id` (optional `videoUrl`: YouTube/Vimeo URL, or `null`/empty to remove; other providers, HTML and `javascript:`/`data:` URLs return 400)
-- Trainers: `GET /trainers`, `POST /courses/:courseId/trainers`, `DELETE /courses/:courseId/trainers/:trainerId`
-- Enrolments: `GET /enrolments`
-- Classes: `GET /classes`, `POST /classes`, `PATCH|DELETE /classes/:id`
-
-The list above matches the expected endpoint set exactly; no additional or missing Eduyarp routes were found.
-
-## 11. Frontend Routes
-
-Client routing uses real URL paths (not hash), so production hosting **must rewrite unknown paths to `index.html`** (SPA fallback).
-
-**Eduyarp** — `/`, `/courses` (catalogue); `/courses/:slug`; `/login`, `/register` (signed-out only); `/dashboard` (Student); `/my-courses/:courseId` (Student). Non-Student accounts see a "This area is for students" page.
-
-**Admin** (all require Admin except `/login`) — `/`, `/platforms`, `/services`, `/users`, `/fitness-leads`, `/eduyarp/courses`, `/eduyarp/courses/:id`, `/eduyarp/trainers`, `/eduyarp/enrolments`, `/eduyarp/classes`.
-
-**Fitness** — single page (sections: hero, about, services, contact/enquiry form).
-
-**Eduyog** — static `index.html` (single page).
+| Area | Checks | Result |
+|---|---|---|
+| Lint | Admin and Eduyarp `npm run lint` | Verified: clean |
+| Builds | Admin, Eduyarp, Fitness `npm run build` | Verified: succeed |
+| Backend | `node --check` on every backend `.js` file | Verified: pass |
+| Migrations | 001–006 applied in order on a fresh database; 005 and 006 fail if run twice; 006 constraints reject non-http(s) values | Verified |
+| Seeds | Catalogue and dashboard seeds run twice with no duplicates; existing data, platform URLs and Admin-set videos/media untouched; progress consistent with enrolment status | Verified |
+| API | Course media create/change/remove, trimming, rejection of unsafe or malformed URLs, role restrictions, media in public/student/Admin responses; topic video validation and access rules; enrolment cancel rules (404/409); role-change cancellation | Verified |
+| Browser (Chrome) | Admin course form (preview, "Image unavailable", remove/default, validation); Admin dashboard (KPIs, both charts, feed, schedule, course health and Fitness figures equal the database; shortcuts and links; empty data; failed and slow requests stay local); every Admin page loads without console errors; Eduyarp landing, catalogue, detail, dashboard and learning pages with custom, partial, missing and unreachable media; student journey (enrol, videos on every demo topic, mark complete, progress); Fitness enquiry submit; mobile menus; StudentAQ pages, menu, links, form validation and submission request path | Verified |
+| Responsive | No horizontal overflow at 390, 768, 1024, 1280 and 1440 px on the Admin dashboard, Eduyarp course grids and landing page, and (at 390–1440 px) the StudentAQ pages | Verified |
+| Regression | Student ↔ Trainer role changes and enrolment cancellation, trainer assignment, class scheduling rule, publish/unpublish, course delete rules | Verified |
+| Not yet verified | Real devices; screen readers; browsers other than Chrome; a production-like deployment; the StudentAQ Google Form against a real form; playback of videos (the right embed and attributes are verified, not playback itself) | Not verified |
 
 ---
 
-## 12. Testing
+## 14. Current Limitations
 
-| Check | Result | Evidence |
+| Item | Status | Notes |
 |---|---|---|
-| `node --check` on every backend `.js` file | Passed | **Run** in this audit |
-| `apps/eduyarp`: `npm run build`, `npm run lint` | Passed | **Run** |
-| `apps/admin`: `npm run build`, `npm run lint` | Passed | **Run** |
-| `apps/fitness`: `npm run build` | Passed (no lint script) | **Run** |
-| Eduyarp API tests | 116/116 | **Reported** (earlier run, temporary databases; test code not in repo) |
-| Browser acceptance journey | 33/33 | **Reported** (earlier run, temporary databases; test code not in repo) |
-| Manual local integration (Admin + Eduyarp + Fitness together, role change → cancellation, re-enrolment, progress preserved, Fitness enquiry → Admin) | Passed | **Reported** |
-| Running API/database in this audit | Not performed | No database was touched. |
+| Rate limit not environment-specific | Open | `backend/server.js` allows 1000 requests per 15 minutes in **every** environment; choose a stricter production value. |
+| Client IP behind a proxy | Open | `trust proxy` is not set. Behind a proxy all clients can appear to share one address, so the rate limiters (global, login 20/15 min, enquiries 10/hour) act on the proxy. |
+| Production database TLS | Open | `config/database.js` has no SSL option; add one if the hosted PostgreSQL requires TLS. |
+| Localhost API fallbacks | Open | The Eduyog site (`index.html` meta tag and `script.js`) and the Admin and Eduyarp configs fall back to `http://localhost:5000/api`. Always set the production API URL. Fitness has no fallback in a production build. |
+| SPA fallback | Open | Admin and Eduyarp use path routing; the host must serve `index.html` for unknown paths. |
+| StudentAQ Google Form | Open | `googleForm.formId` and field entry IDs in `data.js` are empty, so the form is not connected yet. |
+| Company contact details | Open | The Eduyog contact section is a placeholder until real details are supplied. |
+| Platform URLs | Open | Saritex, StudentAQ, Eduyarp and Fitness URLs live in the database platform records, not in the repository. They must be entered or checked in production Admin. |
+| Course images are external URLs | By design | Only the address is stored. Availability and licensing depend on where the image is hosted. There is no upload or media storage. |
+| Temporary demo content | Open | Demo courses, their artwork mapping, sample videos and dashboard data must be reviewed or removed before launch. |
+| Admin dashboard queries | Accepted | It loads seven existing list endpoints (no pagination) and calculates in the browser rather than using a dedicated summary endpoint; fine at Phase 1 scale, to be replaced by an aggregate endpoint if data grows. |
+| No pagination | Accepted | List endpoints return everything. Enrolment search and filters run in the browser on the loaded list. |
+| Sessions | Accepted | JWT access token only (about 1 hour); no refresh token and no server-side logout invalidation. |
+| Progress model | Accepted | Progress belongs to student + topic, so it survives cancellation and re-enrolment; completed topics cannot be un-marked. |
+| No Trainer interface | Deferred | Trainers have one read-only API route and no screens. |
+| Eduyog fonts | Minor | The Eduyog website loads Inter from Google Fonts (an external request). |
+| Automated tests | Open | None are stored in the repository. |
 
-The repository has no test files. Re-running the reported suites requires the original test harness.
+---
 
-## 13. Local Development
+## 15. Phase 1 Scope
 
-Prerequisites: Node.js, PostgreSQL. Copy `backend/.env.example` to `backend/.env` and fill in local values.
+### Implemented in Phase 1
+- Eduyog, Saritex and StudentAQ websites; Fitness, Eduyarp and Admin applications; one shared API and database.
+- Registration, login, three roles, Admin role management, last-Admin protection.
+- Eduyarp: catalogue, course pages, enrolment, dashboard, learning page, modules and topics, optional YouTube/Vimeo topic videos, topic completion and progress, enrolment cancellation and re-enrolment, trainer assignment, live-class schedule, optional course cover image and icon (by URL).
+- Admin: platforms, services, users and roles, Fitness leads, full Eduyarp management, enrolment search/filter/cancel, and an operational Dashboard.
+- Fitness business enquiries stored and visible to Admin.
+
+### Deferred / future phase
+Full Trainer dashboard; file and material uploads and cloud media storage; assignments, submissions and trainer feedback; certificates; notifications and e-mail/SMS/WhatsApp automation; payments (fees are display-only); attendance; reviews and ratings; messaging; meeting-platform integration (class links are plain URLs); advanced analytics and recommendations; a content management system; a server-side activity/audit log; refresh tokens.
+
+---
+
+## 16. Production Checklist
+
+### Before deployment
+- [ ] Production PostgreSQL created (with TLS configured if required)
+- [ ] Migrations 001–006 applied in order, once each
+- [ ] Initial Admin created (`npm run setup:admin`)
+- [ ] `NODE_ENV=production`, `JWT_SECRET` (32+ characters) and `FRONTEND_URL` (every deployed frontend origin) configured
+- [ ] `VITE_API_BASE_URL` (Admin, Eduyarp) and `VITE_API_URL` (Fitness) set for production builds
+- [ ] Eduyog `eduyog-api-base` meta tag and `script.js` default no longer point to localhost
+- [ ] Production rate limits chosen and applied
+- [ ] `trust proxy` set correctly for the hosting setup
+- [ ] SPA fallback configured for Admin and Eduyarp
+- [ ] HTTPS configured; database backup strategy in place
+- [ ] Demo data reviewed or removed (demo courses, artwork mapping, sample videos, dashboard seed)
+- [ ] Real company contact information added to the Eduyog site
+- [ ] Platform URLs for Saritex, StudentAQ, Eduyarp and Fitness entered in Admin and the links verified
+- [ ] StudentAQ Google Form connected (`formId` and entry IDs) and one real submission tested
+- [ ] Real course media added where wanted
+- [ ] Fitness enquiry tested end to end
+- [ ] Eduyarp student journey tested (register, enrol, learn, complete, progress)
+- [ ] Admin journey tested (course, module, topic, trainer, class, publish, role change)
+- [ ] Real-device and screen-reader spot checks
+
+### Smoke test after deployment
+Admin: sign in, create a course, add a module and topic, assign a Trainer, schedule a class, publish. Student: register, enrol, open the course, mark a topic complete, check progress. Role change: Student → Trainer and confirm the enrolment shows `cancelled`. Fitness: submit an enquiry and see it in Admin. Eduyog: confirm the platform links open.
+
+---
+
+## 17. How the Company Uses the System
+
+### Add a course (no code change needed)
+Admin → Eduyarp → Courses → **Add course**. Enter the title, slug (web address), description, level, fee, status, and optionally a **cover image URL** and **icon URL**. Then open the course and:
+1. Add **modules**, then **topics** inside each module.
+2. Optionally add a **YouTube or Vimeo URL** to a topic.
+3. **Assign a Trainer** (first change the user's role to Trainer in Admin → Users).
+4. Schedule **classes** in Admin → Eduyarp → Classes (the Trainer must be assigned to the course).
+5. Set the status to **Published**.
+
+### Common tasks
+- **Make someone a Trainer or Admin:** Admin → Users → change the role (a Student's active enrolments are cancelled).
+- **Cancel an enrolment:** Admin → Eduyarp → Enrolments → find it (search or filters) → Cancel.
+- **Remove a cover image or icon:** edit the course and use the remove / default-icon button, then save.
+- **Change a platform link on the Eduyog site:** Admin → Platforms.
+- **Read Fitness enquiries:** Admin → Fitness Leads.
+- **Edit the StudentAQ site text:** `websites/studentaq/assets/js/data.js`.
+
+---
+
+## 18. Important Files
+
+| File / directory | Purpose |
+|---|---|
+| `backend/server.js` | Starts the Express server; CORS, security headers, rate limits, route mounting |
+| `backend/routes/` | API route definitions |
+| `backend/controllers/` | Request handling |
+| `backend/services/` | Business logic and database queries |
+| `backend/middleware/` | Authentication and role checks, error handling |
+| `backend/utils/` | Input validation (`validators.js`), video URL parsing (`videoUrl.js`), database helpers |
+| `backend/scripts/setup-admin.js` | Creates the first Admin account |
+| `database/schema/` | Ordered SQL migrations |
+| `database/seed/` | Development and demo data |
+| `apps/admin/` | Admin console; `src/pages/OverviewPage.jsx` is the dashboard, `src/utils/dashboard.js` its calculations |
+| `apps/eduyarp/` | Learning platform; `src/pages/` holds the screens, `src/components/learn/` the learning workspace |
+| `apps/eduyarp/src/utils/courseVisual.js` | Course icon matching and the **temporary** demo-artwork mapping |
+| `apps/fitness/` | Fitness website and enquiry form |
+| `websites/eduyog/` | Main marketing website (`index.html`, `styles.css`, `script.js`, `images/`) |
+| `websites/saritex/` | Saritex website |
+| `websites/studentaq/` | StudentAQ website (`assets/js/data.js` holds its content) |
+
+---
+
+## 19. Local Development
+
+Prerequisites: Node.js and PostgreSQL. Copy `backend/.env.example` to `backend/.env` and fill in local values.
 
 ```bash
 # Backend (http://localhost:5000)
-cd backend
-npm install
-npm run dev            # node --watch server.js   (npm start for plain node)
+cd backend && npm install && npm run dev        # npm start for plain node
+npm run setup:admin                              # one-off: create the first Admin
 
-# Create the first Admin (one-off; refuses if an Admin exists)
-npm run setup:admin
-
-# Admin (http://localhost:5173)
-cd apps/admin && npm install && npm run dev
-
-# Fitness (http://localhost:5174)
-cd apps/fitness && npm install && npm run dev
-
-# Eduyarp (http://localhost:5175)
-cd apps/eduyarp && npm install && npm run dev
+# Admin     (http://localhost:5173)  cd apps/admin    && npm install && npm run dev
+# Fitness   (http://localhost:5174)  cd apps/fitness  && npm install && npm run dev
+# Eduyarp   (http://localhost:5175)  cd apps/eduyarp  && npm install && npm run dev
 ```
 
-Other scripts: `npm run build`, `npm run preview` (all apps); `npm run lint` (Admin, Eduyarp). Ports are fixed (`strictPort`). The Eduyog and other static sites are opened as plain files or via any static server (note: a static server origin such as `http://localhost:5500` must be in `FRONTEND_URL` for the Eduyog page to call the API).
+Ports are fixed. The static sites open as plain files or from any static server (a static server's origin, for example `http://localhost:5500`, must be listed in `FRONTEND_URL` for the Eduyog page to call the API). StudentAQ can be served with `python3 -m http.server 5180` from `websites/studentaq`.
 
-## 14. Database Setup
+### Environment variables (names only)
 
-No migration runner exists; apply files with `psql`, in order, once each:
-
-```bash
-psql -h localhost -U <db_user> -d <db_name> -f database/schema/001_initial_schema.sql
-psql -h localhost -U <db_user> -d <db_name> -f database/schema/002_add_fitness_lead_fields.sql
-psql -h localhost -U <db_user> -d <db_name> -f database/schema/003_eduyarp.sql
-psql -h localhost -U <db_user> -d <db_name> -f database/schema/004_eduyarp_enrolment_status.sql
-```
-
-An existing database that already has 001–004 needs only 005:
-
-```
-psql -h localhost -U <db_user> -d <db_name> -f database/schema/005_eduyarp_topic_video.sql
-```
-
-An existing database that already has 001–003 needs only 004. Do **not** re-run any file.
-
-**DEVELOPMENT ONLY — demo seed:** `database/seed/eduyarp_demo.sql` inserts four demo published courses (titles marked `[Demo]`). It aborts if any course exists. Never run it against production.
-
-## 15. Environment Variables
-
-Names only. Source: `backend/.env.example`, `backend/config/env.js`, app `.env.example` files.
-
-**Backend (`backend/.env`; the file at the project root is a reference list only — the backend does not read it)**
-
-| Variable | Required | Notes |
+| Where | Variable | Notes |
 |---|---|---|
-| `JWT_SECRET` | Yes (all envs) | ≥ 32 chars; placeholder rejected at startup |
-| `FRONTEND_URL` | Yes in production | Comma-separated exact origins, no path / trailing slash; startup fails otherwise. Dev default: `http://localhost:5173,5174,5175` |
-| `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` | Yes in practice | Unset values fall back to `pg`/`PG*` defaults |
-| `NODE_ENV` | Recommended | `development` (default), `production`, `test` |
-| `PORT` | Optional | Default 5000 |
-| `JWT_EXPIRES_IN` | Optional | e.g. `1h` (default) |
-
-**Frontends (build-time, `VITE_*`, public)**
-
-| App | Variable | Notes |
-|---|---|---|
-| Admin | `VITE_API_BASE_URL` | Includes `/api`. **Falls back silently to `http://localhost:5000/api`** if unset, even in a production build |
-| Eduyarp | `VITE_API_BASE_URL` | Same behaviour |
-| Fitness | `VITE_API_URL` | Origin without `/api`; production build has no fallback (enquiries fail with an error if unset) |
-| Fitness | `VITE_EDUYOG_URL` | Optional; "Back to Eduyog" link hidden if empty |
-
-Development-specific: localhost defaults above. Production-specific: `NODE_ENV=production`, `FRONTEND_URL`, all `VITE_*` values.
-
----
-
-## 16. Deployment Checklist
-
-Status key: **VERIFIED** (inspected/run in this audit), **NEEDS USER ACTION**, **N/A**.
-
-### 16.1 Production readiness
-
-| Item | Status | Detail |
-|---|---|---|
-| Backend syntax | VERIFIED | `node --check` passes for all files |
-| Frontend builds | VERIFIED | Eduyarp, Admin, Fitness build; Eduyarp and Admin lint clean |
-| Migrations 001–004 present and ordered | VERIFIED | Files inspected; each wrapped in a transaction |
-| Migrations applied to production DB | NEEDS USER ACTION | Not applied; no production DB known |
-| Database connection | NEEDS USER ACTION | Pool reads `DB_*`; **no SSL option is configured** in `config/database.js`. If the hosted PostgreSQL requires TLS, this needs a code/config change |
-| JWT secret | VERIFIED (logic) / NEEDS USER ACTION (value) | Startup rejects missing, placeholder, or < 32-char secrets. Set a production value |
-| CORS | VERIFIED (logic) / NEEDS USER ACTION (value) | Exact-origin allow-list from `FRONTEND_URL`; required and validated in production; unlisted origins get no CORS headers. List every deployed frontend origin: Admin, Eduyarp, Fitness, Eduyog |
-| Frontend API URLs | NEEDS USER ACTION | Set `VITE_API_BASE_URL` (Admin, Eduyarp), `VITE_API_URL` (Fitness) and edit the Eduyog meta tag (see 16.2) |
-| Production rate limit | **ISSUE — see 16.2** | Global limit is 1000 / 15 min in **all** environments; there is no separate stricter production value |
-| NODE_ENV | NEEDS USER ACTION | Must be set to `production`; this is what makes `FRONTEND_URL` mandatory |
-| PORT | NEEDS USER ACTION | Defaults to 5000; most hosts inject their own |
-| HTTPS | NEEDS USER ACTION | App serves plain HTTP and relies on a TLS-terminating host/proxy; `helmet()` is enabled; no HSTS/redirect logic of its own |
-| Reverse proxy / client IP | NEEDS USER ACTION | `trust proxy` is not set. Behind a proxy all clients may share one IP, making the rate limiters (global, login 20/15 min, enquiries 10/h) act on the proxy address |
-| SPA fallback hosting | NEEDS USER ACTION | Admin and Eduyarp use path routing; host must rewrite unknown paths to `index.html` |
-| Error handling | VERIFIED | Central handler; unexpected errors return generic 500 and are logged |
-| Auth configuration | VERIFIED | HS256 pinned on verify; bcrypt 12 rounds; DB-loaded user per request |
-| Seed usage | VERIFIED | Demo seed is separate, guarded, and not run by any script |
-| First Admin | NEEDS USER ACTION | Run `npm run setup:admin` against the production DB |
-| Hosting provider | NEEDS USER ACTION | No provider information in the repository; none assumed |
-| Saritex / StudentAQ URLs | NEEDS USER ACTION | URLs live in the database platform records; re-enter/verify in production Admin |
-
-### 16.2 Findings that must be addressed before deployment
-
-1. **Rate limiter has no production/development distinction** — `backend/server.js` sets `limit: 1000` per 15 minutes for every environment. Development works as intended, but production is not stricter than development. Decide on a production value (the original value was 100) and apply it via `NODE_ENV` or an environment variable. This audit did not change code.
-2. **Eduyog site hardcodes the API base** — `websites/eduyog/index.html` (`<meta name="eduyog-api-base">`) and the `DEFAULT_API_BASE` in `websites/eduyog/script.js` are `http://localhost:5000/api`. Update the meta tag at deploy time. Without it, platform links will not load in production.
-3. **Admin/Eduyarp API URL fallback** — `apps/admin/src/config.js` and `apps/eduyarp/src/config.js` fall back to `http://localhost:5000/api` in production builds if `VITE_API_BASE_URL` is unset. Always set it for production builds.
-
-### 16.3 Steps
-
-**Database**
-- Create the production database; run 001–004 in order (once each); verify tables and the `enrolments_student_course_key` partial index; do not run the demo seed.
-
-**Backend**
-- Set `NODE_ENV=production`, `FRONTEND_URL`, `JWT_SECRET`, `DB_*`, `PORT` (if needed); address 16.2(1); start with `npm start`; verify `GET /api/health` returns `{"status":"ok"}`; create the first Admin.
-
-**Frontends**
-- Set the API URL variables; `npm run build` in each app; deploy `dist/`; configure SPA fallback; update the Eduyog meta tag; verify deep links (e.g. `/eduyarp/courses`, `/my-courses/1`).
-
-**Smoke test**
-- Admin: login → create course → add module/topic → assign Trainer → schedule class → publish.
-- Student: register → login → enrol → complete topic → verify progress → verify schedule.
-- Role transition: Student → Trainer, verify enrolment shows `cancelled` in Admin and the Student's course access is gone.
-- Fitness: submit enquiry → verify it appears in Admin → Fitness Leads.
-- Existing platforms: verify Saritex and StudentAQ links open from the Eduyog site.
-
----
-
-## 16.2 Topic videos (Phase 1.1)
-
-- Admin can add an optional external video URL to a topic (Admin topic form → "Video URL (optional)"); leaving it empty removes the video.
-- Only YouTube (`watch?v=`, `youtu.be/`, `/embed/`) and Vimeo (`vimeo.com/<id>`, `player.vimeo.com/video/<id>`) are accepted. The backend (`backend/utils/videoUrl.js`) validates host and video id and derives the embed URL (`youtube-nocookie.com/embed/<id>` or `player.vimeo.com/video/<id>`); the database stores only the original URL. No raw HTML or arbitrary iframe sources.
-- API: topics carry `videoUrl` and `videoEmbedUrl` for Admin, assigned Trainer and enrolled Student responses. The public catalogue never includes them. Access follows existing rules (cancelled enrolments get no access; completed keep it).
-- Students watch the video inside the topic on the learning page. Watching does **not** mark a topic complete; the Student still clicks "Mark complete". No watch tracking.
-- No video hosting, uploads or storage exist.
-
-## 16.3 Admin enrolment management
-
-- Admin → Eduyarp → Enrolments has a search box (student name, email, course title; case-insensitive, partial), a status filter (All / Active / Completed / Cancelled), a course filter (courses present in the loaded data, unique, sorted by title) and "Clear filters". Filters combine (AND). Filtering is client-side on the already-loaded list: no extra API requests while typing, no pagination or server-side search.
-- Active enrolments have a **Cancel** action with a confirmation dialog ("Keep enrolment" / "Cancel enrolment"). Completed and cancelled rows show no action.
-- API: `PATCH /api/admin/eduyarp/enrolments/:id` with `{"status":"cancelled"}` (Admin only). Single conditional update (`status = 'active'`); 404 if not found, 409 if the enrolment is completed or already cancelled, 400 for any other body. Topic progress and other enrolments are untouched. No migration.
-- Cancelled enrolments remain as historical records; there is no permanent enrolment deletion. A student can enrol again, creating a new active row.
-- Verified by a scripted API run against a temporary database and a unit run of the filter functions; browser/UI behaviour (including mobile layout) has not been run in a browser.
-
-## 17. Known Limitations
-
-- No full Trainer Dashboard (Trainer API is one read-only endpoint; no Trainer UI).
-- No materials / file uploads, assignments, certificates, payments, notifications, attendance, reviews, messaging, video infrastructure.
-- No pagination on list endpoints.
-- Completed topics cannot be unmarked.
-- Progress belongs to student + topic, not to an enrolment; it is retained on re-enrolment.
-- Cancelled enrolments remain as history; a course with any enrolment (even cancelled) cannot be deleted and must be archived.
-- No automated tests are stored in the repository.
-- JWT access token only (default 1 h); no refresh tokens or logout invalidation on the server.
-- `backend/.env.example` and the root `.env.example` differ (root file is a reference list and is not read by the backend).
-- Root `README.md` still states "Directory structure only. No application code has been written yet." and is out of date.
-
-## 18. Explicitly Out of Scope
-
-Full Trainer Dashboard; assignments and submissions; trainer feedback; file/material uploads; cloud storage; certificates; notifications; payments; attendance; reviews/ratings; messaging/chat; video hosting; Zoom/Google Meet integration; advanced analytics; recommendation engine; email/SMS/WhatsApp automation; full CMS; SEO management; website ZIP upload.
-
-## 19. Phase 2 Candidates
-
-Only items already named as out-of-scope by the Phase 1 requirements: Trainer Dashboard, assignments and feedback, material uploads with cloud storage, certificates, notifications, payments, attendance, reviews, and meeting-platform integration. No work on these has been started.
+| Backend | `JWT_SECRET` | Required, 32+ characters |
+| Backend | `FRONTEND_URL` | Comma-separated exact origins; required in production |
+| Backend | `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` | PostgreSQL connection |
+| Backend | `NODE_ENV`, `PORT`, `JWT_EXPIRES_IN` | Optional (defaults: development, 5000, 1h) |
+| Admin, Eduyarp | `VITE_API_BASE_URL` | Includes `/api`; build-time |
+| Fitness | `VITE_API_URL` | API origin without `/api`; build-time |
+| Fitness | `VITE_EDUYOG_URL` | Optional "Back to Eduyog" link |

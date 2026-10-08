@@ -17,6 +17,9 @@ const PATHS = {
   enrolments: 'M9 5h10v15H5V9zM9 5v4H5M9 13h6M9 16h4',
   classes: 'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4',
   back: 'M19 12H5M11 6l-6 6 6 6',
+  activity: 'M3 12h4l3-8 4 16 3-8h4',
+  alert: 'M12 4l9 16H3zM12 10v4M12 17v.5',
+  arrow: 'M5 12h14M13 6l6 6-6 6',
 }
 
 export function Icon({ name, size = 18 }) {

@@ -89,7 +89,7 @@ export default function LandingPage() {
   usePageTitle('Learn skills that move you forward')
   const { status, isStudent } = useAuth()
   const { data: courses } = useResource(coursesApi.list)
-  const featured = courses?.slice(0, 3) ?? []
+  const featured = courses?.slice(0, 4) ?? []
 
   return (
     <>
@@ -184,7 +184,7 @@ export default function LandingPage() {
                 See all courses <Icon name="arrowRight" size={16} />
               </Link>
             </Reveal>
-            <Stagger as="ul" className="course-grid">
+            <Stagger as="ul" className={`course-grid${featured.length === 4 ? ' course-grid--four' : ''}`}>
               {featured.map((course) => (
                 <RevealItem as="li" key={course.id}>
                   <CourseCard course={course} />

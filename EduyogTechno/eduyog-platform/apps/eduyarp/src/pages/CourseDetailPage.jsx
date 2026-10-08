@@ -2,6 +2,8 @@ import { useCallback, useState } from 'react'
 import { coursesApi, studentApi } from '../api/endpoints'
 import { useAuth } from '../auth/useAuth'
 import { CourseStatusBadge, LevelBadge } from '../components/Badges'
+import { CourseArt } from '../components/CourseArt'
+import { CourseIcon } from '../components/CourseIcon'
 import { Icon } from '../components/Icon'
 import { Reveal } from '../components/Reveal'
 import { Alert, ErrorState, LoadingState, Spinner } from '../components/States'
@@ -136,6 +138,7 @@ export default function CourseDetailPage({ params }) {
   return (
     <>
       <section className="course-hero">
+        <CourseArt course={course} className="course-art--hero" eager />
         <div className="container course-hero__inner">
           <Link to="/courses" className="back-link">
             <Icon name="arrowLeft" size={16} /> All courses
@@ -147,8 +150,17 @@ export default function CourseDetailPage({ params }) {
               {course.duration || 'Flexible duration'}
             </span>
           </div>
-          <h1 className="course-hero__title">{course.title}</h1>
+          <div className="course-hero__head">
+            <CourseIcon course={course} size="lg" />
+            <h1 className="course-hero__title">{course.title}</h1>
+          </div>
           {course.description && <p className="course-hero__text">{course.description}</p>}
+          {course.trainers.length > 0 && (
+            <p className="meta meta--light course-hero__trainers">
+              <Icon name="user" size={16} />
+              {course.trainers.length === 1 ? 'Trainer' : 'Trainers'}: {course.trainers.map((t) => t.fullName).join(', ')}
+            </p>
+          )}
           <ul className="course-hero__stats">
             <li>
               <Icon name="layers" size={16} /> {course.modules.length}{' '}

@@ -1,0 +1,766 @@
+/* Eduyarp — learning workspace and course icons. Loaded after premium.css and built on the same
+   tokens (tokens.css). Layout: video + topic details beside a course-content outline on desktop;
+   stacked (header, video, topic, then a collapsible outline) below 1024px. */
+
+/* ---------- Course icon tile ---------- */
+
+.course-icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  border-radius: 14px;
+  color: #fff;
+  background:
+    radial-gradient(circle at 85% 0%, rgba(255, 255, 255, 0.35), transparent 55%),
+    linear-gradient(135deg, var(--cover-a, #6366f1), var(--cover-b, #4338ca));
+  box-shadow: var(--shadow-xs);
+}
+
+.course-icon--md {
+  width: 46px;
+  height: 46px;
+}
+
+.course-icon--lg {
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+}
+
+/* On the catalogue card's gradient cover the tile is a translucent glass chip. */
+.course-card__cover {
+  justify-content: flex-start;
+}
+
+.course-card__cover .course-icon {
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ---------- Dashboard course card ---------- */
+
+.my-course__top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.my-course__text {
+  color: var(--slate-600);
+  font-size: 14px;
+}
+
+/* ---------- Course detail hero ---------- */
+
+.course-hero__head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 14px;
+}
+
+.course-hero__head .course-hero__title {
+  margin-top: 0;
+}
+
+.course-hero .course-icon {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+}
+
+.course-hero__trainers {
+  margin-top: 12px;
+}
+
+/* ---------- Learning page header ---------- */
+
+.learn {
+  padding: 20px 0 72px;
+}
+
+.learn-head {
+  display: grid;
+  gap: 12px;
+  padding: 14px 18px 18px;
+  border-radius: var(--radius-xl);
+  background: var(--gradient-ink);
+  color: #fff;
+  box-shadow: var(--shadow-md);
+}
+
+.learn-head__links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 20px;
+}
+
+.learn-head__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  color: #c7d2fe;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.learn-head__link:hover {
+  color: #fff;
+}
+
+.learn-head__link--quiet {
+  color: #a5b0ff;
+  font-weight: 500;
+}
+
+.learn-head__row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 12px 14px;
+}
+
+.learn-head__titles {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.learn-head__title {
+  color: #fff;
+  font-size: clamp(1.15rem, 1.2vw + 0.95rem, 1.6rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.learn-head__progress {
+  grid-column: 1 / -1;
+}
+
+.learn-head .progress__label,
+.learn-head .progress__meta {
+  color: #cbd3ff;
+}
+
+.learn-head .progress__value {
+  color: #fff;
+}
+
+.learn-head .progress__track {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+@media (min-width: 800px) {
+  .learn-head__row {
+    grid-template-columns: auto minmax(0, 1fr) minmax(220px, 300px);
+  }
+
+  .learn-head__progress {
+    grid-column: auto;
+  }
+}
+
+/* ---------- Workspace grid ---------- */
+
+.learn-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.learn-main {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
+@media (min-width: 1024px) {
+  .learn-grid {
+    grid-template-columns: minmax(0, 1.65fr) minmax(300px, 0.85fr);
+    gap: 24px;
+  }
+}
+
+/* ---------- Player (always 16:9, never taller) ---------- */
+
+.learn-player-wrap {
+  /* Clears the sticky site header when scrolled into view. */
+  scroll-margin-top: 84px;
+}
+
+.learn-player {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-lg);
+  background: #000;
+  box-shadow: var(--shadow-md);
+}
+
+.learn-player iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.learn-player--empty {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  aspect-ratio: auto;
+  padding: 18px 20px;
+  border-style: dashed;
+  border-color: var(--slate-300);
+  background: var(--slate-100);
+  box-shadow: none;
+  color: var(--slate-600);
+}
+
+.learn-player__empty-icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #fff;
+  color: var(--slate-600);
+  box-shadow: var(--shadow-xs);
+}
+
+.learn-player__empty-title {
+  color: var(--slate-950);
+  font-weight: 700;
+}
+
+.learn-player__empty-text {
+  font-size: 14px;
+}
+
+/* ---------- Topic details ---------- */
+
+.learn-topic {
+  padding: clamp(18px, 3vw, 28px);
+}
+
+.learn-topic__where {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+  margin-bottom: 8px;
+  color: var(--indigo-600);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.learn-topic__titlerow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px 14px;
+}
+
+.learn-topic__title {
+  flex: 1 1 260px;
+  min-width: 0;
+  font-size: clamp(1.25rem, 1vw + 1rem, 1.6rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+}
+
+.learn-topic__status {
+  flex: none;
+  gap: 4px;
+}
+
+.learn-topic__text {
+  max-width: 68ch;
+  margin-top: 12px;
+  color: var(--slate-600);
+  font-size: 16px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.learn-topic__note {
+  margin-top: 10px;
+  color: var(--slate-600);
+  font-size: 13px;
+}
+
+.learn-done {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  color: #047857;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.learn-empty {
+  padding: 24px;
+}
+
+/* Previous / Mark complete / Next. Phones: Mark complete on its own row, then Previous | Next. */
+.learn-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--slate-200);
+}
+
+.learn-actions .btn {
+  min-height: 46px;
+}
+
+.learn-actions__complete {
+  grid-column: 1 / -1;
+  order: -1;
+}
+
+@media (min-width: 640px) {
+  .learn-actions {
+    grid-template-columns: auto 1fr auto auto;
+  }
+
+  .learn-actions__prev {
+    grid-column: 1;
+  }
+
+  .learn-actions__complete {
+    grid-column: 3;
+    order: 0;
+  }
+
+  .learn-actions__next {
+    grid-column: 4;
+  }
+}
+
+/* ---------- Course content (outline) ---------- */
+
+.learn-outline {
+  min-width: 0;
+}
+
+/* Below 1024px the outline sits under the lesson and is opened/closed with this button. */
+.learn-outline__toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 60px;
+  padding: 12px 16px;
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-lg);
+  background: #fff;
+  box-shadow: var(--shadow-xs);
+  color: var(--slate-950);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+
+.learn-outline__toggle:hover {
+  border-color: #c7d2fe;
+  box-shadow: var(--shadow-sm);
+}
+
+.learn-outline__toggle-icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: var(--indigo-50);
+  color: var(--indigo-600);
+}
+
+.learn-outline__toggle-text {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  line-height: 1.3;
+}
+
+.learn-outline__toggle-text span {
+  color: var(--slate-600);
+  font-size: 13px;
+}
+
+.learn-outline__chev {
+  flex: none;
+  color: var(--slate-600);
+  transition: transform var(--t-base) var(--ease-out);
+}
+
+.learn-outline__toggle[aria-expanded='true'] .learn-outline__chev {
+  transform: rotate(180deg);
+}
+
+.learn-outline__panel {
+  margin-top: 10px;
+  padding: 6px;
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-lg);
+  background: #fff;
+  box-shadow: var(--shadow-xs);
+}
+
+.learn-outline__panel.is-collapsed {
+  display: none;
+}
+
+.learn-outline__head {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .learn-outline__panel {
+    max-height: min(70vh, 520px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+}
+
+@media (min-width: 1024px) {
+  .learn-outline {
+    position: sticky;
+    top: 84px;
+  }
+
+  .learn-outline__toggle {
+    display: none;
+  }
+
+  /* Always visible on desktop; it scrolls on its own only when taller than the screen. */
+  .learn-outline__panel,
+  .learn-outline__panel.is-collapsed {
+    display: block;
+    max-height: calc(100vh - 104px);
+    margin-top: 0;
+    padding: 16px 10px 10px;
+    overflow-y: auto;
+  }
+
+  .learn-outline__head {
+    display: block;
+    padding: 0 8px 12px;
+  }
+}
+
+.learn-outline__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.learn-outline__title svg {
+  color: var(--indigo-600);
+}
+
+.learn-outline__sub {
+  margin-top: 2px;
+  color: var(--slate-600);
+  font-size: 13px;
+}
+
+.outline {
+  display: grid;
+  gap: 4px;
+}
+
+.outline__heading {
+  margin: 0;
+  font-size: inherit;
+  letter-spacing: normal;
+}
+
+.outline__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 52px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--slate-950);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--t-fast);
+}
+
+.outline__head:hover {
+  background: var(--slate-50);
+}
+
+.outline__module-icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: var(--slate-100);
+  color: var(--indigo-600);
+}
+
+.outline__titles {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.outline__number {
+  color: var(--indigo-600);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.outline__name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.outline__count {
+  flex: none;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--indigo-50);
+  color: var(--indigo-600);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.outline__chev {
+  flex: none;
+  color: var(--slate-600);
+  transition: transform var(--t-base) var(--ease-out);
+}
+
+.outline__head[aria-expanded='true'] .outline__chev {
+  transform: rotate(180deg);
+}
+
+.outline__panel {
+  overflow: hidden;
+}
+
+.outline__topics {
+  display: grid;
+  gap: 2px;
+  margin-left: 24px;
+  padding: 2px 0 8px 12px;
+  border-left: 2px solid var(--slate-200);
+}
+
+.outline__empty {
+  padding: 2px 12px 12px 38px;
+  color: var(--slate-600);
+  font-size: 13px;
+}
+
+.outline-topic {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+  width: 100%;
+  min-height: 46px;
+  padding: 10px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--slate-950);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background var(--t-fast),
+    border-color var(--t-fast);
+}
+
+.outline-topic:hover {
+  background: var(--slate-50);
+}
+
+.outline-topic__icon {
+  display: grid;
+  place-items: center;
+  margin-top: 1px;
+  color: var(--slate-500);
+}
+
+.outline-topic__body {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.outline-topic__title {
+  font-size: 0.94rem;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.outline-topic__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 10px;
+  color: var(--slate-600);
+  font-size: 12px;
+}
+
+.outline-topic__video {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.outline-topic.is-done .outline-topic__icon {
+  color: var(--teal-600);
+}
+
+.outline-topic.is-done .outline-topic__title {
+  color: var(--slate-600);
+}
+
+/* The current topic: accent fill + left bar + bolder title + the words "Currently viewing". */
+.outline-topic.is-current {
+  border-color: #c7d2fe;
+  background: var(--indigo-50);
+  box-shadow: inset 3px 0 0 var(--indigo-600);
+}
+
+.outline-topic.is-current .outline-topic__icon {
+  color: var(--indigo-600);
+}
+
+.outline-topic.is-current .outline-topic__title {
+  color: var(--ink-900);
+  font-weight: 700;
+}
+
+.outline-topic__now {
+  color: var(--indigo-600);
+  font-weight: 700;
+}
+
+.learn-outline__toggle:focus-visible,
+.outline__head:focus-visible,
+.outline-topic:focus-visible {
+  outline: 2px solid var(--indigo-500);
+  outline-offset: 2px;
+}
+
+/* ---------- Course cover artwork (temporary demo art; see utils/courseVisual.js) ---------- */
+.course-art {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: right center;
+  pointer-events: none;
+}
+
+.course-card__cover {
+  overflow: hidden;
+}
+
+/* Keep the icon above the artwork. */
+.course-card__cover .course-icon {
+  z-index: 2;
+}
+
+/* The art is a backdrop on the right of the detail hero and the learning header. */
+.course-hero,
+.learn-head {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.course-art--hero,
+.course-art--head {
+  left: auto;
+  width: min(54%, 640px);
+  opacity: 0.55;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 55%);
+  mask-image: linear-gradient(90deg, transparent 0%, #000 55%);
+}
+
+.course-art--head {
+  width: min(46%, 520px);
+  opacity: 0.45;
+}
+
+.course-hero .container,
+.learn-head > :not(.course-art) {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 760px) {
+  .course-art--hero,
+  .course-art--head {
+    width: 100%;
+    opacity: 0.22;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
+
+/* ---------- Custom course icon (Admin-supplied URL) ---------- */
+.course-icon--image {
+  overflow: hidden;
+  background: #fff;
+  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.1);
+}
+
+.course-card__cover .course-icon--image,
+.course-hero .course-icon--image {
+  background: #fff;
+  box-shadow: 0 6px 16px -8px rgba(0, 0, 0, 0.5);
+}
+
+.course-icon--image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 6px;
+  object-fit: contain;
+}
