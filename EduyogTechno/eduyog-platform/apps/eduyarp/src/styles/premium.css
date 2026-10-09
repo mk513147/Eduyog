@@ -342,11 +342,19 @@ h3 {
   position: relative;
   overflow: hidden;
   padding: clamp(48px, 8vw, 104px) 0 clamp(56px, 9vw, 120px);
-  background: var(--gradient-ink);
+  background:
+  linear-gradient(
+    90deg,
+    rgba(11, 18, 48, 0.92) 0%,
+    rgba(11, 18, 48, 0.72) 55%,
+    rgba(11, 18, 48, 0.45) 100%
+  ),
+  url('/images/hero-image.jpg') center / cover no-repeat;
   color: #fff;
 }
 
 .landing-hero::before {
+  display: none;
   content: '';
   position: absolute;
   inset: 0;

@@ -131,14 +131,21 @@ h3 {
 /* ---------- Hero ---------- */
 
 .hero {
+  position: relative;
   background:
-    radial-gradient(900px 480px at 88% -10%, rgba(249, 115, 22, 0.28), transparent 60%),
-    radial-gradient(900px 520px at 0% 110%, rgba(20, 184, 166, 0.34), transparent 60%),
-    var(--color-ink);
+    linear-gradient(
+      90deg,
+      rgba(7, 26, 28, 0.92) 0%,
+      rgba(7, 26, 28, 0.72) 55%,
+      rgba(7, 26, 28, 0.45) 100%
+    ),
+    url('/images/hero-image.jpg') center / cover no-repeat;
+
   padding: clamp(56px, 9vw, 120px) 0 clamp(64px, 10vw, 130px);
 }
 
 .hero__rings {
+  display:none;
   position: absolute;
   top: 50%;
   right: -10%;
