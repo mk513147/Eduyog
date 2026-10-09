@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useAuth } from '../auth/useAuth'
 import { Link } from '../router/Link'
+import { BrandLogo } from './BrandLogo'
 import { Icon } from './Icon'
 
 const NAV_GROUPS = [
@@ -50,14 +51,14 @@ export function Layout({ children }) {
           <Icon name={menuOpen ? 'close' : 'menu'} />
         </button>
         <span className="brand brand--compact">
-          <span className="brand__mark" aria-hidden="true">E</span>
+          <BrandLogo />
           Eduyog Admin
         </span>
       </header>
 
       <aside id="sidebar" className={`sidebar${menuOpen ? ' sidebar--open' : ''}`}>
         <div className="brand">
-          <span className="brand__mark" aria-hidden="true">E</span>
+          <BrandLogo />
           <span>
             <span className="brand__name">Eduyog</span>
             <span className="brand__sub">Admin Console</span>

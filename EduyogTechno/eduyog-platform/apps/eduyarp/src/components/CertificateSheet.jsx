@@ -1,3 +1,4 @@
+import { BrandLogo } from './BrandLogo'
 import { formatLongDate } from '../utils/format'
 
 // The printable certificate. Everything shown comes from the issued record (the name and course
@@ -8,9 +9,7 @@ export function CertificateSheet({ certificate }) {
     <article className={`cert${revoked ? ' cert--revoked' : ''}`} aria-label={`Certificate ${certificate.certificateNumber}`}>
       <div className="cert__frame">
         <header className="cert__brand">
-          <span className="cert__mark" aria-hidden="true">
-            E
-          </span>
+          <BrandLogo size={56} className="cert__logo" />
           <div>
             <p className="cert__org">Eduyarp by Eduyog</p>
             <p className="cert__org-sub">Eduyog Techno Solution Pvt. Ltd.</p>

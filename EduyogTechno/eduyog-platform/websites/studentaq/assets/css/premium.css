@@ -237,7 +237,15 @@ h4 {
 .hero {
   background: var(--gradient-ink);
   color: #d6e4f5;
-  padding-block: clamp(48px, 7vw, 96px) clamp(72px, 9vw, 120px);
+  /* Top padding trimmed: the grid below used to centre the text against the much taller
+     image + plan-card column, which pushed the text a further ~100px down. */
+  padding-block: clamp(28px, 4vw, 56px) clamp(72px, 9vw, 120px);
+}
+
+@media (min-width: 1024px) {
+  .hero__grid {
+    align-items: start;
+  }
 }
 
 .hero .pattern {

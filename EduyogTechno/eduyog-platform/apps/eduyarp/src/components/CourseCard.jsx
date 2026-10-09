@@ -1,6 +1,5 @@
 import { Link } from '../router/Link'
 import { coverStyle } from '../utils/courseVisual'
-import { formatFee } from '../utils/format'
 import { CourseStatusBadge, LevelBadge } from './Badges'
 import { CourseArt } from './CourseArt'
 import { CourseIcon } from './CourseIcon'
@@ -29,7 +28,6 @@ export function CourseCard({ course }) {
             <Icon name="clock" size={16} />
             {course.duration || 'Flexible'}
           </span>
-          <span className="course-card__fee">{formatFee(course.fee)}</span>
         </div>
         <span className="course-card__cta" aria-hidden="true">
           View course <Icon name="arrowRight" size={16} />

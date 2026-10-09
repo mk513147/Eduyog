@@ -1,24 +1,32 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 /**
  * Loads data with `loader` (a stable function returning a promise) and
- * exposes { data, error, loading, reload }. reload() refetches; existing
- * data stays visible while it does. With { refetchOnFocus: true } the data is
+ * exposes { data, error, loading, reload }. reload() refetches and returns a promise that
+ * resolves once that fetch has finished (successfully or not); existing
+ * data stays visible while it does, and also when a refetch fails. With { refetchOnFocus: true } the data is
  * also refetched when the tab/window becomes active again (no polling), so
  * changes made by other apps show up without a browser refresh.
  */
 export function useResource(loader, { refetchOnFocus = false } = {}) {
   const [state, setState] = useState({ data: null, error: null, loading: true })
   const [version, setVersion] = useState(0)
+  // Resolvers of reload() promises, settled when the next fetch finishes.
+  const waiters = useRef([])
+  const settle = () => waiters.current.splice(0).forEach((resolve) => resolve())
 
   useEffect(() => {
     let cancelled = false
     loader().then(
       (data) => {
-        if (!cancelled) setState({ data, error: null, loading: false })
+        if (cancelled) return
+        setState({ data, error: null, loading: false })
+        settle()
       },
       (error) => {
-        if (!cancelled) setState((prev) => ({ data: prev.data, error, loading: false }))
+        if (cancelled) return
+        setState((prev) => ({ data: prev.data, error, loading: false }))
+        settle()
       },
     )
     return () => {
@@ -26,9 +34,20 @@ export function useResource(loader, { refetchOnFocus = false } = {}) {
     }
   }, [loader, version])
 
-  const reload = useCallback(() => {
-    setState((prev) => ({ ...prev, error: null, loading: prev.data === null }))
-    setVersion((v) => v + 1)
+  const reload = useCallback(
+    () =>
+      new Promise((resolve) => {
+        waiters.current.push(resolve)
+        setState((prev) => ({ ...prev, error: null, loading: prev.data === null }))
+        setVersion((v) => v + 1)
+      }),
+    [],
+  )
+
+  // Never leave a caller waiting after the page is gone.
+  useEffect(() => {
+    const pending = waiters
+    return () => pending.current.splice(0).forEach((resolve) => resolve())
   }, [])
 
   useEffect(() => {

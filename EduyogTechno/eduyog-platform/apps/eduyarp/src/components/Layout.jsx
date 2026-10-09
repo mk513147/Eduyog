@@ -4,6 +4,7 @@ import { NotificationBell } from '../notifications/NotificationBell'
 import { Link } from '../router/Link'
 import { useRouter } from '../router/useRouter'
 import { loginPath } from '../router/match'
+import { BrandLogo } from './BrandLogo'
 import { Icon } from './Icon'
 
 export function Layout({ children }) {
@@ -44,9 +45,7 @@ export function Layout({ children }) {
       <header className={`header${scrolled ? ' header--scrolled' : ''}${menuOpen ? ' header--open' : ''}`}>
         <div className="container header__inner">
           <Link to="/" className="brand" onClick={closeMenu}>
-            <span className="brand__mark" aria-hidden="true">
-              E
-            </span>
+            <BrandLogo />
             <span>
               <span className="brand__name">Eduyarp</span>
               <span className="brand__sub">by Eduyog</span>
@@ -123,9 +122,7 @@ export function Layout({ children }) {
       <footer className="footer">
         <div className="container footer__inner">
           <div className="footer__brand">
-            <span className="brand__mark" aria-hidden="true">
-              E
-            </span>
+            <BrandLogo />
             <p>
               <strong>Eduyarp</strong>
               <span>Professional training and technical classes by Eduyog Techno Solution Pvt. Ltd.</span>

@@ -118,16 +118,9 @@
   text-align: left;
 }
 
-.cert__mark {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: #4f46e5;
-  color: #fff;
-  font-size: 22px;
-  font-weight: 800;
+.cert__logo {
+  width: 56px;
+  height: 56px;
 }
 
 .cert__org,
@@ -293,7 +286,7 @@
     font-size: 26px;
   }
 
-  .cert__mark,
+  .cert__logo,
   .cert__revoked-banner,
   .cert__watermark {
     -webkit-print-color-adjust: exact;

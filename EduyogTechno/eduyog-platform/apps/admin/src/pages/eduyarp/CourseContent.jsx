@@ -3,6 +3,7 @@ import { eduyarpApi } from '../../api/endpoints'
 import { ConfirmDialog } from '../../components/ConfirmDialog'
 import { Icon } from '../../components/Icon'
 import { Alert, EmptyState, ErrorState, LoadingState } from '../../components/States'
+import { useAutoRefresh } from '../../hooks/useAutoRefresh'
 import { useResource } from '../../hooks/useResource'
 import { useToast } from '../../toast/useToast'
 import { formatDateTime } from '../../utils/format'
@@ -16,6 +17,7 @@ function AssignmentsCard({ course }) {
   const toast = useToast()
   const loader = useCallback(() => eduyarpApi.assignments.list(course.id), [course.id])
   const { data: assignments, error, loading, reload } = useResource(loader)
+  useAutoRefresh(reload, { enabled: Boolean(assignments) })
   const [form, setForm] = useState(null) // { assignment } ; null assignment = new
   const [viewing, setViewing] = useState(null)
   const [deleting, setDeleting] = useState(null)
@@ -276,6 +278,7 @@ function ResourcesCard({ course }) {
   const toast = useToast()
   const loader = useCallback(() => eduyarpApi.resources.list(course.id), [course.id])
   const { data: resources, error, loading, reload } = useResource(loader)
+  useAutoRefresh(reload, { enabled: Boolean(resources) })
   const [form, setForm] = useState(null)
   const [deleting, setDeleting] = useState(null)
   const [deleteBusy, setDeleteBusy] = useState(false)

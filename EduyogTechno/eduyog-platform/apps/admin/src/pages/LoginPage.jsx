@@ -1,3 +1,4 @@
+import { BrandLogo } from '../components/BrandLogo'
 import { useEffect, useState } from 'react'
 import { useAuth } from '../auth/useAuth'
 import { Alert, Spinner } from '../components/States'
@@ -32,7 +33,7 @@ export default function LoginPage() {
     <div className="login">
       <div className="login__panel">
         <div className="brand brand--login">
-          <span className="brand__mark" aria-hidden="true">E</span>
+          <BrandLogo size={44} />
           <span>
             <span className="brand__name">Eduyog Techno Solution</span>
             <span className="brand__sub">Admin Console</span>

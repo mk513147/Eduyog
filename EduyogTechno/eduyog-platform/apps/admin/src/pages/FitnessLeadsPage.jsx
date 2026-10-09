@@ -3,6 +3,7 @@ import { leadsApi } from '../api/endpoints'
 import { Modal } from '../components/Modal'
 import { PageHeader } from '../components/PageHeader'
 import { Alert, EmptyState, ErrorState, LoadingState } from '../components/States'
+import { useAutoRefresh } from '../hooks/useAutoRefresh'
 import { useResource } from '../hooks/useResource'
 import { formatDateTime } from '../utils/format'
 
@@ -55,7 +56,8 @@ function LeadDetailModal({ leadId, onClose }) {
 }
 
 export default function FitnessLeadsPage() {
-  const { data: leads, error, loading, reload } = useResource(leadsApi.list, { refetchOnFocus: true })
+  const { data: leads, error, loading, reload } = useResource(leadsApi.list)
+  useAutoRefresh(reload, { enabled: Boolean(leads) })
   const [selectedId, setSelectedId] = useState(null)
 
   let content

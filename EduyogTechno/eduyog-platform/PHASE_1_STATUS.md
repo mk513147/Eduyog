@@ -104,8 +104,8 @@ The company's public landing page. It explains the two business verticals (Educa
 - Sections: hero, a strip of real counts (2 verticals, 4 platforms, 1 brand), About, Education platform cards, an Eduyarp showcase, a Fitness section, and a closing call to action.
 - The three Education cards (Saritex, Eduyarp, StudentAQ) get a "Learn more" link only when `GET /api/platforms` returns an active platform with a matching slug and a valid http(s) URL; otherwise the card says "Website coming soon". The Fitness card links to the page's own Fitness section.
 - Product screenshots (Eduyarp and Fitness, taken from demo data) are in `websites/eduyog/images/`.
-- Contact details are a placeholder ("Contact details coming soon") until the company confirms real ones.
-- The API base URL is read from `<meta name="eduyog-api-base">` in `index.html`.
+- Contact: the official e-mail `eduyogtechnology@gmail.com` is shown in the contact section and footer (a `mailto:` link) and a floating WhatsApp button uses the number from the StudentAQ site. No phone number or address is shown until the company confirms them.
+- The API base URL is read from `<meta name="eduyog-api-base">` in `index.html`. It is empty in the repository: set it to the deployed API (`https://…/api`, http(s) only) before publishing. While it is empty a deployed page makes no API call and the platform cards show "Website coming soon". Only when the page is opened from localhost or a file does it use `http://localhost:5000/api`.
 
 ### Saritex (`websites/saritex`)
 An existing static academic-support website with its own pages (about, services, blogs, reviews, contact). It does not call the backend. It is connected to the platform only through its record in Admin → Platforms.
@@ -398,7 +398,7 @@ The backend has an automated suite (`npm test` in `backend/`, Node's built-in te
 | Rate limit not environment-specific | Open | `backend/server.js` allows 1000 requests per 15 minutes in **every** environment; choose a stricter production value. |
 | Client IP behind a proxy | Open | `trust proxy` is not set. Behind a proxy all clients can appear to share one address, so the rate limiters (global, login 20/15 min, enquiries 10/hour) act on the proxy. |
 | Production database TLS | Open | `config/database.js` has no SSL option; add one if the hosted PostgreSQL requires TLS. |
-| Localhost API fallbacks | Open | The Eduyog site (`index.html` meta tag and `script.js`) and the Admin and Eduyarp configs fall back to `http://localhost:5000/api`. Always set the production API URL. Fitness has no fallback in a production build. |
+| Localhost API fallbacks | Partly open | The Eduyog site no longer falls back to localhost on a deployed host (see section 5). The Admin and Eduyarp configs still fall back to `http://localhost:5000/api`: always set `VITE_API_BASE_URL`. Fitness has no fallback in a production build. The two "Become a Partner" links in the Eduyog site still point to `http://localhost:5174/` and need the deployed Fitness address. |
 | SPA fallback | Open | Admin and Eduyarp use path routing; the host must serve `index.html` for unknown paths. |
 | StudentAQ Google Form | Open | `googleForm.formId` and field entry IDs in `data.js` are empty, so the form is not connected yet. |
 | Company contact details | Open | The Eduyog contact section is a placeholder until real details are supplied. |
@@ -458,7 +458,7 @@ Grading, marks, quizzes and messaging; e-mail/SMS/WhatsApp/push notifications; f
 - [ ] Initial Admin created (`npm run setup:admin`)
 - [ ] `NODE_ENV=production`, `JWT_SECRET` (32+ characters) and `FRONTEND_URL` (every deployed frontend origin) configured
 - [ ] `VITE_API_BASE_URL` (Admin, Eduyarp) and `VITE_API_URL` (Fitness) set for production builds
-- [ ] Eduyog `eduyog-api-base` meta tag and `script.js` default no longer point to localhost
+- [ ] Eduyog `eduyog-api-base` meta tag set to the deployed API, and the "Become a Partner" links set to the deployed Fitness site
 - [ ] Production rate limits chosen and applied
 - [ ] `trust proxy` set correctly for the hosting setup
 - [ ] SPA fallback configured for Admin and Eduyarp

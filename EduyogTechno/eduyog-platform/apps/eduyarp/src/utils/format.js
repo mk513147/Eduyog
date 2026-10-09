@@ -1,10 +1,3 @@
-// Course fees are stored in INR.
-const feeFormatter = new Intl.NumberFormat('en-IN', {
-  style: 'currency',
-  currency: 'INR',
-  maximumFractionDigits: 2,
-  minimumFractionDigits: 0,
-})
 const dateFormatter = new Intl.DateTimeFormat(undefined, {
   weekday: 'short',
   day: 'numeric',
@@ -13,10 +6,6 @@ const dateFormatter = new Intl.DateTimeFormat(undefined, {
 })
 const shortDateFormatter = new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' })
 const timeFormatter = new Intl.DateTimeFormat(undefined, { hour: 'numeric', minute: '2-digit' })
-
-export function formatFee(fee) {
-  return Number(fee) === 0 ? 'Free' : feeFormatter.format(fee)
-}
 
 export function formatDate(value) {
   return value ? dateFormatter.format(new Date(value)) : '—'

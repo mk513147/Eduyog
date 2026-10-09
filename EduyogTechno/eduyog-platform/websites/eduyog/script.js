@@ -2,14 +2,27 @@
 (function () {
   'use strict';
 
-  var DEFAULT_API_BASE = 'http://localhost:5000/api';
+  // Used ONLY when the page itself is opened locally (localhost or a file) and no API address is
+  // configured. A deployed site never falls back to it: set <meta name="eduyog-api-base"> instead.
+  var LOCAL_DEV_API_BASE = 'http://localhost:5000/api';
   var REQUEST_TIMEOUT_MS = 10000;
   var MOBILE_NAV_QUERY = '(max-width: 1080px)';
 
+  function isLocalPage() {
+    var host = window.location.hostname;
+    return window.location.protocol === 'file:' || host === 'localhost' || host === '127.0.0.1' || host === '[::1]';
+  }
+
+  // Returns the backend API address (no trailing slash), or null when none is configured. The
+  // address comes from <meta name="eduyog-api-base"> and must be an http(s) URL.
   function getApiBase() {
     var meta = document.querySelector('meta[name="eduyog-api-base"]');
-    var value = meta && meta.getAttribute('content');
-    return (value || DEFAULT_API_BASE).replace(/\/+$/, '');
+    var value = ((meta && meta.getAttribute('content')) || '').trim();
+    if (value) {
+      if (/^https?:\/\/[^\s/?#]/i.test(value)) return value.replace(/\/+$/, '');
+      if (window.console) console.warn('[eduyog] The eduyog-api-base meta value is not an http(s) URL and was ignored.');
+    }
+    return isLocalPage() ? LOCAL_DEV_API_BASE : null;
   }
 
   // ---------------------------------------------------------------------
@@ -181,6 +194,15 @@
     if (!statusEl || cards.length === 0) return;
     if (activeRequest) activeRequest.abort();
 
+    var apiBase = getApiBase();
+    if (!apiBase) {
+      // Not configured for this deployment: show the cards without links instead of calling an
+      // address that does not exist. The rest of the page is unaffected.
+      if (window.console) console.warn('[eduyog] No API address configured (meta eduyog-api-base); platform links are not loaded.');
+      renderPlatforms([]);
+      return;
+    }
+
     var controller = typeof AbortController === 'function' ? new AbortController() : null;
     activeRequest = controller;
     var timer = controller
@@ -191,7 +213,7 @@
 
     renderLoading();
 
-    fetch(getApiBase() + '/platforms', {
+    fetch(apiBase + '/platforms', {
       method: 'GET',
       headers: { Accept: 'application/json' },
       // Public endpoint: no credentials, cookies or tokens are sent.

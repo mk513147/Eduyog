@@ -603,10 +603,6 @@ a {
   border-top: 1px solid var(--color-border);
 }
 
-.course-card__fee {
-  font-weight: 700;
-  font-size: 16px;
-}
 
 /* ---------- Course details ---------- */
 
@@ -784,11 +780,6 @@ a {
   box-shadow: var(--shadow-md);
 }
 
-.enrol__fee {
-  font-size: 30px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-}
 
 .enrol__facts {
   display: grid;
@@ -1201,4 +1192,13 @@ a {
     transition: none !important;
     animation-duration: 0.01ms !important;
   }
+}
+
+/* Eduyog logo (shared SVG). */
+.brand__logo {
+  display: block;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
 }

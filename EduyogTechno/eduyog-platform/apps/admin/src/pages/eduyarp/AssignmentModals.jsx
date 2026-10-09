@@ -3,6 +3,7 @@ import { eduyarpApi } from '../../api/endpoints'
 import { SelectField, TextAreaField, TextField } from '../../components/Fields'
 import { Modal } from '../../components/Modal'
 import { Alert, EmptyState, ErrorState, LoadingState, Spinner } from '../../components/States'
+import { useAutoRefresh } from '../../hooks/useAutoRefresh'
 import { useResource } from '../../hooks/useResource'
 import { splitApiError } from '../../utils/errors'
 import { formatDateTime } from '../../utils/format'
@@ -162,6 +163,7 @@ function SubmissionDetail({ submissionId }) {
 export function SubmissionsModal({ assignment, onClose }) {
   const loader = useCallback(() => eduyarpApi.assignments.submissions(assignment.id), [assignment.id])
   const { data, error, loading, reload } = useResource(loader)
+  useAutoRefresh(reload, { enabled: Boolean(data) })
   const [openId, setOpenId] = useState(null)
 
   return (

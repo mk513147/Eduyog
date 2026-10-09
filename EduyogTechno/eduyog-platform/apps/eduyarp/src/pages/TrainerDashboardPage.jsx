@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { trainerApi } from '../api/endpoints'
 import { useAuth } from '../auth/useAuth'
 import { ClassStatusBadge, CourseStatusBadge, LevelBadge } from '../components/Badges'
@@ -110,6 +111,45 @@ export default function TrainerDashboardPage() {
   const { user } = useAuth()
   const courses = useResource(trainerApi.courses)
   const schedule = useResource(trainerApi.schedule)
+  // useResource's reload callbacks are stable; the effect depends on them rather than on the
+  // whole resource objects (which change on every render and would restart the polling).
+  const reloadCourses = courses.reload
+  const reloadSchedule = schedule.reload
+
+  useEffect(() => {
+  let intervalId
+
+  const refresh = () => {
+    if (document.visibilityState !== 'visible') return
+
+    reloadCourses()
+    reloadSchedule()
+  }
+
+  const startPolling = () => {
+    clearInterval(intervalId)
+
+    if (document.visibilityState !== 'visible') return
+
+    intervalId = setInterval(refresh, 30_000)
+  }
+
+  const handleVisibilityChange = () => {
+    if (document.visibilityState === 'visible') {
+      refresh()
+    }
+
+    startPolling()
+  }
+
+  startPolling()
+  document.addEventListener('visibilitychange', handleVisibilityChange)
+
+  return () => {
+    clearInterval(intervalId)
+    document.removeEventListener('visibilitychange', handleVisibilityChange)
+  }
+}, [reloadCourses, reloadSchedule])
 
   let body
   if (courses.loading) body = <LoadingState label="Loading your courses…" />

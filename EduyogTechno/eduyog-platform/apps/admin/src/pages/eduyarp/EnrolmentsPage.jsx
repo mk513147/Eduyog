@@ -4,6 +4,7 @@ import { EnrolmentStatusBadge } from '../../components/Badge'
 import { ConfirmDialog } from '../../components/ConfirmDialog'
 import { PageHeader } from '../../components/PageHeader'
 import { Alert, EmptyState, ErrorState, LoadingState } from '../../components/States'
+import { useAutoRefresh } from '../../hooks/useAutoRefresh'
 import { useResource } from '../../hooks/useResource'
 import { Link } from '../../router/Link'
 import { useToast } from '../../toast/useToast'
@@ -18,6 +19,7 @@ const STATUS_OPTIONS = [
 
 export default function EnrolmentsPage() {
   const { data: enrolments, error, loading, reload } = useResource(eduyarpApi.enrolments.list)
+  useAutoRefresh(reload, { enabled: Boolean(enrolments) })
   const toast = useToast()
   const [filters, setFilters] = useState(EMPTY_FILTERS)
   const setFilter = (field, value) => setFilters((prev) => ({ ...prev, [field]: value }))

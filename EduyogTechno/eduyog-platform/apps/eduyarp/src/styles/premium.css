@@ -826,11 +826,6 @@ h3 {
   border-top: 1px dashed var(--slate-200);
 }
 
-.course-card__fee {
-  font-size: 1.05rem;
-  font-weight: 800;
-  color: var(--ink-900);
-}
 
 .course-card__cta {
   display: inline-flex;
@@ -926,11 +921,6 @@ h3 {
   border-top: 4px solid var(--indigo-600);
 }
 
-.enrol__fee {
-  font-size: 2rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-}
 
 .curriculum {
   display: grid;

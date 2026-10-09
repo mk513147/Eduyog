@@ -1,3 +1,4 @@
+import { BrandLogo } from './BrandLogo'
 import { useEffect, useState } from 'react'
 import { EDUYOG_URL } from '../config'
 import { NAV_ITEMS } from '../content'
@@ -33,7 +34,7 @@ export function Navbar() {
     <header className={`navbar${menuOpen ? ' navbar--open' : ''}`}>
       <div className="container navbar__inner">
         <a className="brand" href="#home" aria-label="Eduyog Fitness home" onClick={closeMenu}>
-          <span className="brand__mark" aria-hidden="true">E</span>
+          <BrandLogo />
           <span className="brand__name">
             Eduyog <span>Fitness</span>
           </span>

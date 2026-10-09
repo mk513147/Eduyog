@@ -5,6 +5,7 @@ import { ConfirmDialog } from '../../components/ConfirmDialog'
 import { Icon } from '../../components/Icon'
 import { PageHeader } from '../../components/PageHeader'
 import { Alert, EmptyState, ErrorState, LoadingState, Spinner } from '../../components/States'
+import { useAutoRefresh } from '../../hooks/useAutoRefresh'
 import { useResource } from '../../hooks/useResource'
 import { Link } from '../../router/Link'
 import { useToast } from '../../toast/useToast'
@@ -128,6 +129,7 @@ function TrainersCard({ course, onChanged }) {
 export default function CourseDetailPage({ params }) {
   const loader = useCallback(() => eduyarpApi.courses.get(params.id), [params.id])
   const { data: course, error, loading, reload } = useResource(loader)
+  useAutoRefresh(reload, { enabled: Boolean(course) })
   const toast = useToast()
   const [editing, setEditing] = useState(false)
   const [changingStatus, setChangingStatus] = useState(false)

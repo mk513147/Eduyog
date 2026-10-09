@@ -2,12 +2,14 @@ import { eduyarpApi } from '../../api/endpoints'
 import { CourseStatusBadge } from '../../components/Badge'
 import { PageHeader } from '../../components/PageHeader'
 import { Alert, EmptyState, ErrorState, LoadingState } from '../../components/States'
+import { useAutoRefresh } from '../../hooks/useAutoRefresh'
 import { useResource } from '../../hooks/useResource'
 import { Link } from '../../router/Link'
 import { formatDate } from '../../utils/format'
 
 export default function TrainersPage() {
   const { data: trainers, error, loading, reload } = useResource(eduyarpApi.trainers.list)
+  useAutoRefresh(reload, { enabled: Boolean(trainers) })
 
   let content
   if (loading) content = <LoadingState label="Loading trainers…" />

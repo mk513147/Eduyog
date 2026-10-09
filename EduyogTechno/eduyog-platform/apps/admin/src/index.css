@@ -1411,3 +1411,17 @@ a {
 .content-item .row-actions {
   flex-wrap: wrap;
 }
+
+/* Eduyog logo (shared SVG). The disc is white, so it reads on the dark sidebar and on light pages. */
+.brand__logo {
+  display: block;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.brand--compact .brand__logo {
+  width: 32px;
+  height: 32px;
+}

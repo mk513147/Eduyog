@@ -6,6 +6,7 @@ import { CourseBars, StatusDonut, WeekColumns } from '../components/dashboard/Ch
 import { Kpi, Panel } from '../components/dashboard/Panel'
 import { Icon } from '../components/Icon'
 import { PageHeader } from '../components/PageHeader'
+import { useAutoRefresh } from '../hooks/useAutoRefresh'
 import { useResource } from '../hooks/useResource'
 import { Link } from '../router/Link'
 import {
@@ -89,6 +90,9 @@ export default function OverviewPage() {
   const leads = useResource(leadsApi.list)
   const platforms = useResource(platformsApi.list)
   const services = useResource(servicesApi.list)
+  // The numbers on this page come from these five lists; each is re-fetched in the background.
+  // (Platforms and services only change from their own pages.)
+  useAutoRefresh(() => Promise.all([users, courses, enrolments, classes, leads].filter((r) => r.data).map((r) => r.reload())))
 
   return (
     <>

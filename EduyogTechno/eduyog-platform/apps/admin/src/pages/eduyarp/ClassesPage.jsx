@@ -5,6 +5,7 @@ import { ConfirmDialog } from '../../components/ConfirmDialog'
 import { Icon } from '../../components/Icon'
 import { PageHeader } from '../../components/PageHeader'
 import { Alert, EmptyState, ErrorState, LoadingState } from '../../components/States'
+import { useAutoRefresh } from '../../hooks/useAutoRefresh'
 import { useResource } from '../../hooks/useResource'
 import { Link } from '../../router/Link'
 import { useToast } from '../../toast/useToast'
@@ -13,6 +14,7 @@ import { ClassFormModal } from './ClassFormModal'
 
 export default function ClassesPage() {
   const { data: classes, error, loading, reload } = useResource(eduyarpApi.classes.list)
+  useAutoRefresh(reload, { enabled: Boolean(classes) })
   const courses = useResource(eduyarpApi.courses.list, { refetchOnFocus: true })
   const toast = useToast()
   // null = closed, { cls: null } = create, { cls } = edit

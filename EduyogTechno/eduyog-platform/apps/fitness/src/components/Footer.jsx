@@ -1,3 +1,4 @@
+import { BrandLogo } from './BrandLogo'
 import { EDUYOG_URL } from '../config'
 import { NAV_ITEMS } from '../content'
 import { Icon } from './Icon'
@@ -9,7 +10,7 @@ export function Footer() {
         <div className="footer__grid">
           <div className="footer__brand">
             <a className="brand brand--light" href="#home" aria-label="Eduyog Fitness home">
-              <span className="brand__mark" aria-hidden="true">E</span>
+              <BrandLogo />
               <span className="brand__name">
                 Eduyog <span>Fitness</span>
               </span>

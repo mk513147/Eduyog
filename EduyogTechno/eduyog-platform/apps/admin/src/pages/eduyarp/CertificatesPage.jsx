@@ -4,6 +4,7 @@ import { TextAreaField } from '../../components/Fields'
 import { Modal } from '../../components/Modal'
 import { PageHeader } from '../../components/PageHeader'
 import { Alert, EmptyState, ErrorState, LoadingState, Spinner } from '../../components/States'
+import { useAutoRefresh } from '../../hooks/useAutoRefresh'
 import { useResource } from '../../hooks/useResource'
 import { useToast } from '../../toast/useToast'
 import { formatDateTime } from '../../utils/format'
@@ -135,7 +136,8 @@ function RevokeModal({ certificate: c, onClose, onRevoked }) {
 
 export default function CertificatesPage() {
   const loader = useCallback(() => eduyarpApi.certificates.list(), [])
-  const { data: certificates, error, loading, reload } = useResource(loader, { refetchOnFocus: true })
+  const { data: certificates, error, loading, reload } = useResource(loader)
+  useAutoRefresh(reload, { enabled: Boolean(certificates) })
   const toast = useToast()
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState('')

@@ -5,6 +5,7 @@ import { RoleBadge } from '../components/Badge'
 import { ConfirmDialog } from '../components/ConfirmDialog'
 import { PageHeader } from '../components/PageHeader'
 import { Alert, EmptyState, ErrorState, LoadingState } from '../components/States'
+import { useAutoRefresh } from '../hooks/useAutoRefresh'
 import { useResource } from '../hooks/useResource'
 import { useToast } from '../toast/useToast'
 import { formatDate } from '../utils/format'
@@ -15,7 +16,8 @@ const ROLE_ARTICLES = { student: 'a Student', trainer: 'a Trainer', admin: 'an A
 
 export default function UsersPage() {
   const { user: currentUser } = useAuth()
-  const { data: users, error, loading, reload } = useResource(usersApi.list, { refetchOnFocus: true })
+  const { data: users, error, loading, reload } = useResource(usersApi.list)
+  useAutoRefresh(reload, { enabled: Boolean(users) })
   const toast = useToast()
   // { user, role } while confirming a role change.
   const [pending, setPending] = useState(null)

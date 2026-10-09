@@ -12,7 +12,7 @@ import { useResource } from '../hooks/useResource'
 import { Link } from '../router/Link'
 import { loginPath } from '../router/match'
 import { useRouter } from '../router/useRouter'
-import { formatFee, LEVEL_LABELS, splitLines } from '../utils/format'
+import { LEVEL_LABELS, splitLines } from '../utils/format'
 import NotFoundPage from './NotFoundPage'
 
 // Enrolment for a signed-in Student. Knows whether they are already enrolled
@@ -95,7 +95,6 @@ function EnrolPanel({ course }) {
       <h2 id="enrol-title" className="visually-hidden">
         Enrolment
       </h2>
-      <p className="enrol__fee">{formatFee(course.fee)}</p>
       <dl className="enrol__facts">
         <div>
           <dt>Level</dt>
