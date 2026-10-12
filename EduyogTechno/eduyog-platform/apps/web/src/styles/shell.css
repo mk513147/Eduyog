@@ -1,0 +1,44 @@
+/* Shell-only additions (not part of the original homepage stylesheet). Scoped like eduyog-site.css
+   and built from its tokens. */
+
+.eduyog-site {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.eduyog-site > main {
+  flex: 1 0 auto;
+}
+
+.eduyog-site main:focus {
+  outline: none;
+}
+
+.eduyog-site .not-found {
+  display: grid;
+  justify-items: start;
+  gap: 16px;
+  padding-block: clamp(72px, 12vw, 160px);
+}
+
+.eduyog-site .not-found__code {
+  margin: 0;
+  color: var(--brand-teal-dark);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.eduyog-site .not-found__title {
+  color: var(--ink-900);
+  font-size: clamp(2rem, 3vw + 0.8rem, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.eduyog-site .not-found__text {
+  max-width: 44ch;
+  color: var(--text-muted);
+}

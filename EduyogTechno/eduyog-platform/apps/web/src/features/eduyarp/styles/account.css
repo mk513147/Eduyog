@@ -1,0 +1,556 @@
+/* Source: apps/eduyarp/src/styles/account.css. Generated from the original Eduyarp app and scoped under .eduyarp-site. */
+
+/* Profile, account settings and the Trainer area. Uses the existing Eduyarp tokens. */
+
+/* ---------- Header link to the profile ---------- */
+
+.eduyarp-site a.nav__user {
+  padding: 4px 10px 4px 4px;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: background-color var(--t-fast, 160ms) ease;
+}
+
+.eduyarp-site a.nav__user:hover {
+  background: var(--indigo-50, #eef2ff);
+}
+
+/* ---------- Alerts ---------- */
+
+.eduyarp-site .alert--success {
+  border-color: #a7f3d0;
+  background: #ecfdf5;
+  color: #065f46;
+}
+
+/* ---------- Forms (profile and password) ---------- */
+
+.eduyarp-site .form__row {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 640px) {
+  .eduyarp-site .form__row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+.eduyarp-site .form__group {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+  margin: 0;
+  padding: 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.eduyarp-site .form__legend {
+  padding: 0 6px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.eduyarp-site .form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.eduyarp-site .input--textarea {
+  min-height: 96px;
+  resize: vertical;
+  font: inherit;
+}
+
+.eduyarp-site select.input {
+  appearance: auto;
+}
+
+.eduyarp-site .input[readonly] {
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
+  cursor: default;
+}
+
+.eduyarp-site .field__hint {
+  margin-top: 4px;
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+/* ---------- Profile page ---------- */
+
+.eduyarp-site .profile-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.eduyarp-site .profile-head .page__title {
+  margin-top: 2px;
+  overflow-wrap: anywhere;
+}
+
+.eduyarp-site .profile-grid {
+  display: grid;
+  gap: 24px;
+  align-items: start;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 960px) {
+  .eduyarp-site .profile-grid {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  }
+
+}
+
+.eduyarp-site .profile-note {
+  margin: -8px 0 16px;
+}
+
+.eduyarp-site .profile-avatar {
+  position: relative;
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--gradient-brand);
+  color: #fff;
+  font-weight: 700;
+}
+
+.eduyarp-site .profile-avatar--md {
+  width: 44px;
+  height: 44px;
+  font-size: 18px;
+}
+
+.eduyarp-site .profile-avatar--lg {
+  width: 72px;
+  height: 72px;
+  font-size: 28px;
+  box-shadow: var(--shadow-md);
+}
+
+.eduyarp-site .profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.eduyarp-site .avatar-field {
+  display: grid;
+  gap: 12px;
+}
+
+.eduyarp-site .avatar-field__preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ---------- Trainer area ---------- */
+
+.eduyarp-site .t-summary {
+  display: grid;
+  gap: 12px;
+  margin: 0 0 24px;
+  padding: 0;
+  list-style: none;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.eduyarp-site .t-summary__item {
+  display: grid;
+  gap: 2px;
+  padding: 14px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+.eduyarp-site .t-summary__icon {
+  color: var(--indigo-600);
+}
+
+.eduyarp-site .t-summary__value {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.eduyarp-site .t-summary__label {
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+@media (max-width: 520px) {
+  .eduyarp-site .t-summary {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .eduyarp-site .t-summary__item {
+    grid-template-columns: auto auto 1fr;
+    align-items: center;
+    gap: 10px;
+  }
+
+}
+
+.eduyarp-site .t-layout {
+  display: grid;
+  gap: 24px;
+  align-items: start;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 1000px) {
+  .eduyarp-site .t-layout {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  }
+
+}
+
+.eduyarp-site .t-courses,
+.eduyarp-site .t-students,
+.eduyarp-site .t-classes {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.eduyarp-site .t-course {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 20px;
+  padding: 16px 18px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  transition: border-color var(--t-fast, 160ms) ease, box-shadow var(--t-fast, 160ms) ease;
+}
+
+.eduyarp-site .t-course:hover {
+  border-color: #c7d2fe;
+  box-shadow: var(--shadow-md);
+}
+
+.eduyarp-site .t-course__main {
+  display: grid;
+  flex: 1 1 220px;
+  gap: 8px;
+  min-width: 0;
+}
+
+.eduyarp-site .t-course__title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+  text-decoration: none;
+}
+
+.eduyarp-site .t-course__title:hover {
+  color: var(--indigo-600);
+  text-decoration: underline;
+}
+
+.eduyarp-site .t-course__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.eduyarp-site .t-course__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  margin: 0;
+}
+
+.eduyarp-site .t-course__facts dt {
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+.eduyarp-site .t-course__facts dd {
+  margin: 0;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.eduyarp-site .t-head {
+  display: grid;
+  gap: 10px;
+  margin: 16px 0 24px;
+}
+
+.eduyarp-site .t-head .page__title {
+  overflow-wrap: anywhere;
+}
+
+.eduyarp-site .t-head__text {
+  max-width: 70ch;
+  color: var(--color-text-muted);
+}
+
+.eduyarp-site .t-head__progress {
+  max-width: 460px;
+  margin-top: 6px;
+}
+
+.eduyarp-site .t-grid {
+  display: grid;
+  gap: 24px;
+  align-items: start;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 1000px) {
+  .eduyarp-site .t-grid {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  }
+
+  .eduyarp-site .t-grid__wide {
+    grid-column: 1 / -1;
+  }
+
+}
+
+/* Students: a row on wide screens, a stacked card on phones. */
+
+.eduyarp-site .t-student {
+  display: grid;
+  gap: 10px 16px;
+  align-items: center;
+  padding: 14px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 720px) {
+  .eduyarp-site .t-student {
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) minmax(120px, 0.9fr) auto;
+  }
+
+}
+
+.eduyarp-site .t-student__who {
+  display: grid;
+  min-width: 0;
+}
+
+.eduyarp-site .t-student__name {
+  font-weight: 700;
+  color: var(--color-text);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.eduyarp-site .t-student__name:hover {
+  color: var(--indigo-600);
+  text-decoration: underline;
+}
+
+.eduyarp-site .t-student__email {
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.eduyarp-site .t-student__status {
+  display: grid;
+  gap: 4px;
+  justify-items: start;
+}
+
+/* Classes */
+
+.eduyarp-site .t-class {
+  display: grid;
+  gap: 8px 14px;
+  align-items: center;
+  padding: 12px 0;
+  border-top: 1px solid var(--color-border);
+  grid-template-columns: 112px minmax(0, 1fr);
+}
+
+.eduyarp-site .t-class:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.eduyarp-site .t-class__when {
+  display: grid;
+}
+
+.eduyarp-site .t-class__date {
+  color: var(--indigo-600);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.eduyarp-site .t-class__time {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.eduyarp-site .t-class__what {
+  display: grid;
+  min-width: 0;
+}
+
+.eduyarp-site .t-class__course {
+  font-weight: 700;
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+  text-decoration: none;
+}
+
+.eduyarp-site a.t-class__course:hover {
+  color: var(--indigo-600);
+  text-decoration: underline;
+}
+
+.eduyarp-site .t-class__title {
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.eduyarp-site .t-class__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  grid-column: 1 / -1;
+}
+
+/* Read-only curriculum and per-topic progress */
+
+.eduyarp-site .t-outline {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.eduyarp-site .t-outline__module {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-muted);
+}
+
+.eduyarp-site .t-outline__summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  padding: 12px 14px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.eduyarp-site .t-outline__summary::-webkit-details-marker {
+  display: none;
+}
+
+.eduyarp-site .t-outline__summary--static {
+  cursor: default;
+}
+
+.eduyarp-site .t-outline__title {
+  flex: 1;
+  min-width: 140px;
+  font-weight: 700;
+}
+
+.eduyarp-site details[open] > .t-outline__summary .acc__chev {
+  transform: rotate(180deg);
+}
+
+.eduyarp-site .t-outline__topics,
+.eduyarp-site .t-topics {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0 14px 12px;
+  list-style: none;
+}
+
+.eduyarp-site .t-outline__topics li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  border-top: 1px dashed var(--color-border);
+}
+
+.eduyarp-site .t-outline__tag {
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--indigo-50, #eef2ff);
+  color: var(--indigo-600);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.eduyarp-site .t-outline > li > details > .curriculum__text,
+.eduyarp-site .t-outline .curriculum__text {
+  padding: 0 14px 6px;
+}
+
+.eduyarp-site .t-topic {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-top: 1px dashed var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.eduyarp-site .t-topic--done {
+  color: var(--color-text);
+}
+
+.eduyarp-site .t-topic--done svg {
+  color: var(--teal-600, #0d9488);
+}
+
+.eduyarp-site .t-topic__title {
+  overflow-wrap: anywhere;
+}
+
+.eduyarp-site .t-topic__state {
+  font-size: 12.5px;
+  color: var(--color-text-muted);
+  text-align: right;
+}
+
+@media (max-width: 520px) {
+  .eduyarp-site .t-topic {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .eduyarp-site .t-topic__state {
+    grid-column: 2;
+    text-align: left;
+  }
+
+}

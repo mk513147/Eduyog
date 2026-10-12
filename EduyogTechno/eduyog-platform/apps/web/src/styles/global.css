@@ -1,0 +1,32 @@
+/* The only unscoped rules in the shell. Everything visual lives under .eduyog-site
+   (eduyog-site.css, shell.css) so future features can bring their own CSS without collisions. */
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+/* Anchor targets sit below the sticky public header (72px + 12px, as on the original site). */
+html:has(.eduyog-site) {
+  scroll-padding-top: 84px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:has(.eduyog-site) {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Loading / failure message for lazy-loaded routes (RouteBoundary.jsx). Uses no feature tokens. */
+.eduyog-route-message {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 96px 16px;
+  color: #475569;
+  font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  text-align: center;
+}

@@ -1,0 +1,1177 @@
+/* Source: apps/eduyarp/src/styles/premium.css. Generated from the original Eduyarp app and scoped under .eduyarp-site. */
+
+/* Eduyarp — premium visual layer. Loaded after index.css; overrides its tokens and
+   components and adds the landing page. Uses the shared tokens in tokens.css. */
+
+.eduyarp-site {
+  --color-bg: var(--slate-50);
+  --color-surface: #fff;
+  --color-surface-muted: var(--slate-50);
+  --color-border: var(--slate-200);
+  --color-border-strong: var(--slate-300);
+  --color-text: var(--slate-950);
+  --color-text-muted: var(--slate-600);
+  --color-ink: var(--ink-900);
+  --color-ink-soft: var(--ink-800);
+  --color-on-ink: #dbe2ff;
+  --color-on-ink-muted: #a5b0ff;
+  --color-focus: #4f46e5;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  font-feature-settings: 'cv11', 'ss01';
+}
+
+.eduyarp-site {
+  background: var(--color-bg);
+}
+
+.eduyarp-site h1,
+.eduyarp-site h2,
+.eduyarp-site h3 {
+  letter-spacing: -0.02em;
+  line-height: 1.18;
+  text-wrap: balance;
+}
+
+.eduyarp-site :focus-visible {
+  outline: 2px solid var(--indigo-500);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.eduyarp-site .container {
+  padding: 0 var(--gutter);
+  max-width: var(--container);
+}
+
+.eduyarp-site .text-gradient {
+  background: linear-gradient(100deg, #a5b4fc 0%, #67e8f9 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.eduyarp-site .eyebrow {
+  color: var(--indigo-600);
+  letter-spacing: 0.12em;
+}
+
+.eduyarp-site .eyebrow--light {
+  color: #a5b4fc;
+}
+
+/* ---------- Buttons ---------- */
+
+.eduyarp-site .btn {
+  border-radius: 999px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  transition:
+    background-color var(--t-fast) var(--ease-out),
+    border-color var(--t-fast) var(--ease-out),
+    color var(--t-fast) var(--ease-out),
+    transform var(--t-fast) var(--ease-out),
+    box-shadow var(--t-base) var(--ease-out);
+}
+
+.eduyarp-site .btn:active:not(:disabled) {
+  transform: translateY(1px) scale(0.99);
+}
+
+.eduyarp-site .btn--primary {
+  background: var(--indigo-600);
+  box-shadow: 0 6px 18px -8px rgba(79, 70, 229, 0.65);
+}
+
+.eduyarp-site .btn--primary:hover:not(:disabled) {
+  background: #4338ca;
+  box-shadow: 0 10px 24px -8px rgba(79, 70, 229, 0.7);
+  transform: translateY(-1px);
+}
+
+.eduyarp-site .btn--secondary {
+  border-color: var(--slate-300);
+}
+
+.eduyarp-site .btn--secondary:hover:not(:disabled) {
+  border-color: var(--indigo-500);
+  background: var(--indigo-50);
+  color: var(--indigo-600);
+}
+
+.eduyarp-site .btn--ghost:hover:not(:disabled) {
+  background: var(--indigo-50);
+  color: var(--indigo-600);
+}
+
+.eduyarp-site .btn--light {
+  background: #fff;
+  color: var(--ink-900);
+  box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.5);
+}
+
+.eduyarp-site .btn--light:hover:not(:disabled) {
+  background: #eef2ff;
+  transform: translateY(-1px);
+}
+
+.eduyarp-site .btn--outline-light {
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+
+.eduyarp-site .btn--outline-light:hover:not(:disabled) {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.eduyarp-site .btn svg {
+  transition: transform var(--t-fast) var(--ease-out);
+}
+
+.eduyarp-site .btn:hover svg:last-child:not(:first-child) {
+  transform: translateX(2px);
+}
+
+.eduyarp-site .btn--lg {
+  min-height: 52px;
+  padding: 12px 26px;
+}
+
+/* ---------- Badges ---------- */
+
+.eduyarp-site .badge {
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+/* ---------- Header / footer ---------- */
+
+.eduyarp-site .header {
+  border-bottom: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: saturate(1.6) blur(14px);
+  transition:
+    border-color var(--t-base) var(--ease-out),
+    box-shadow var(--t-base) var(--ease-out);
+}
+
+.eduyarp-site .header--scrolled,
+.eduyarp-site .header--open {
+  border-bottom-color: var(--slate-200);
+  box-shadow: 0 8px 24px -18px rgba(11, 18, 48, 0.35);
+}
+
+.eduyarp-site .header__inner {
+  min-height: 68px;
+}
+
+.eduyarp-site .brand__mark {
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  background: var(--gradient-brand);
+  box-shadow: 0 6px 16px -6px rgba(79, 70, 229, 0.7);
+}
+
+.eduyarp-site .brand__name {
+  letter-spacing: -0.02em;
+}
+
+.eduyarp-site .nav--open {
+  animation: eduyarp-nav-in var(--t-base) var(--ease-out);
+}
+
+@keyframes eduyarp-nav-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+.eduyarp-site .nav__link {
+  position: relative;
+  border-radius: 999px;
+  color: var(--slate-600);
+  transition: color var(--t-fast), background-color var(--t-fast);
+}
+
+.eduyarp-site .nav__link:hover,
+.eduyarp-site .nav__link[aria-current='page'] {
+  background: var(--indigo-50);
+  color: var(--indigo-600);
+}
+
+.eduyarp-site .avatar {
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--gradient-brand);
+  color: #fff;
+  font-weight: 700;
+}
+
+.eduyarp-site .avatar--sm {
+  width: 26px;
+  height: 26px;
+  font-size: 12px;
+}
+
+.eduyarp-site .nav__user {
+  color: var(--slate-950);
+  font-weight: 600;
+}
+
+.eduyarp-site .footer {
+  margin-top: 0;
+  padding: 40px 0;
+  border-top: 0;
+  background: var(--ink-950);
+  color: #94a0d4;
+}
+
+.eduyarp-site .footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.eduyarp-site .footer__brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: 520px;
+}
+
+.eduyarp-site .footer__brand p {
+  display: grid;
+  gap: 2px;
+  font-size: 14px;
+}
+
+.eduyarp-site .footer__brand strong {
+  color: #fff;
+}
+
+.eduyarp-site .footer__links {
+  display: flex;
+  gap: 20px;
+}
+
+.eduyarp-site .footer__links a {
+  color: #c7d0ff;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.eduyarp-site .footer__links a:hover {
+  color: #fff;
+}
+
+/* ---------- Sections ---------- */
+
+.eduyarp-site .section {
+  padding: 56px 0 0;
+}
+
+.eduyarp-site .section:last-child {
+  padding-bottom: 72px;
+}
+
+.eduyarp-site .section--lg {
+  padding: var(--section-space) 0;
+}
+
+.eduyarp-site .section--lg:last-child {
+  padding-bottom: var(--section-space);
+}
+
+.eduyarp-site .section--tint {
+  background: linear-gradient(180deg, #eef1ff 0%, var(--slate-50) 100%);
+}
+
+.eduyarp-site .section__title {
+  font-size: 1.5rem;
+}
+
+.eduyarp-site .section-head {
+  max-width: 680px;
+  margin: 0 auto 48px;
+  text-align: center;
+}
+
+.eduyarp-site .section-head--row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  max-width: none;
+  text-align: left;
+}
+
+.eduyarp-site .section-head__title {
+  font-size: var(--text-h2);
+}
+
+.eduyarp-site .section-head .eyebrow {
+  margin-bottom: 12px;
+}
+
+.eduyarp-site .text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--indigo-600);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.eduyarp-site .text-link:hover {
+  text-decoration: underline;
+}
+
+/* ---------- Landing hero ---------- */
+
+.eduyarp-site .landing-hero {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(48px, 8vw, 104px) 0 clamp(56px, 9vw, 120px);
+  background:
+  linear-gradient(
+    90deg,
+    rgba(11, 18, 48, 0.92) 0%,
+    rgba(11, 18, 48, 0.72) 55%,
+    rgba(11, 18, 48, 0.45) 100%
+  ),
+  url('../../../assets/eduyarp/eduyarp-hero-image.jpg') center / cover no-repeat;
+  color: #fff;
+}
+
+.eduyarp-site .landing-hero::before {
+  display: none;
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse at 70% 30%, #000 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.eduyarp-site .landing-hero__grid {
+  position: relative;
+  display: grid;
+  align-items: center;
+  gap: 56px;
+}
+
+.eduyarp-site .landing-hero__title {
+  max-width: 14ch;
+  margin-top: 16px;
+  font-size: var(--text-hero);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+}
+
+.eduyarp-site .landing-hero__text {
+  max-width: 54ch;
+  margin-top: 22px;
+  color: #cbd3ff;
+  font-size: clamp(1rem, 0.4vw + 0.95rem, 1.2rem);
+  line-height: 1.65;
+}
+
+.eduyarp-site .landing-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 34px;
+}
+
+@media (min-width: 960px) {
+  .eduyarp-site .landing-hero__grid {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  }
+
+}
+
+/* Hero composition (decorative, aria-hidden) */
+
+.eduyarp-site .hero-visual {
+  position: relative;
+  width: 100%;
+  max-width: 470px;
+  min-height: 340px;
+  margin: 0 auto;
+}
+
+.eduyarp-site .hero-visual__glow {
+  position: absolute;
+  inset: 10% 5%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.55), transparent 65%);
+  filter: blur(40px);
+}
+
+.eduyarp-site .hv-card {
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--radius-xl);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.6);
+}
+
+.eduyarp-site .hv-card--main {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+}
+
+.eduyarp-site .hv-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.eduyarp-site .hv-chip {
+  padding: 3px 12px;
+  border-radius: 999px;
+  background: rgba(165, 180, 252, 0.2);
+  color: #c7d2fe;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.eduyarp-site .hv-dots {
+  display: inline-flex;
+  gap: 5px;
+}
+
+.eduyarp-site .hv-dots i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.eduyarp-site .hv-player {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-md);
+  background:
+    radial-gradient(circle at 30% 20%, rgba(34, 211, 238, 0.35), transparent 55%),
+    linear-gradient(135deg, #2b3a8f, #1a2260);
+}
+
+.eduyarp-site .hv-play {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--indigo-600);
+  box-shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.5);
+}
+
+.eduyarp-site .hv-line {
+  display: block;
+  width: 60%;
+  height: 8px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.eduyarp-site .hv-line--lg {
+  width: 82%;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.eduyarp-site .hv-progress {
+  height: 8px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.14);
+  overflow: hidden;
+}
+
+.eduyarp-site .hv-progress span {
+  display: block;
+  width: 62%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #818cf8, #22d3ee);
+}
+
+.eduyarp-site .hv-card--float {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--ink-900);
+  animation: eduyarp-hv-float 6s ease-in-out infinite;
+}
+
+.eduyarp-site .hv-card--float strong,
+.eduyarp-site .hv-card--float small {
+  display: block;
+  line-height: 1.25;
+}
+
+.eduyarp-site .hv-card--float small {
+  color: var(--slate-500);
+  font-size: 12px;
+}
+
+.eduyarp-site .hv-card--class {
+  top: -22px;
+  right: -8px;
+}
+
+.eduyarp-site .hv-card--done {
+  bottom: -22px;
+  left: -8px;
+  animation-delay: -3s;
+}
+
+.eduyarp-site .hv-icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+}
+
+.eduyarp-site .hv-icon--teal {
+  background: #ccfbf1;
+  color: #0f766e;
+}
+
+.eduyarp-site .hv-icon--indigo {
+  background: var(--indigo-100);
+  color: var(--indigo-600);
+}
+
+@keyframes eduyarp-hv-float {
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@media (max-width: 520px) {
+  .eduyarp-site .hv-card--class {
+    right: 0;
+  }
+
+  .eduyarp-site .hv-card--done {
+    left: 0;
+  }
+
+}
+
+/* ---------- Method / why ---------- */
+
+.eduyarp-site .method {
+  display: grid;
+  gap: 20px;
+  counter-reset: none;
+}
+
+@media (min-width: 640px) {
+  .eduyarp-site .method {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
+
+@media (min-width: 1000px) {
+  .eduyarp-site .method {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+}
+
+.eduyarp-site .method__step {
+  position: relative;
+  padding: 28px 24px;
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-xl);
+  background: #fff;
+  transition:
+    transform var(--t-base) var(--ease-out),
+    box-shadow var(--t-base) var(--ease-out),
+    border-color var(--t-base);
+}
+
+.eduyarp-site .method__step:hover {
+  transform: translateY(-4px);
+  border-color: #c7d2fe;
+  box-shadow: var(--shadow-md);
+}
+
+.eduyarp-site .method__num {
+  position: absolute;
+  top: 20px;
+  right: 22px;
+  color: var(--slate-300);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.eduyarp-site .method__step h3,
+.eduyarp-site .why-card h3 {
+  margin: 18px 0 8px;
+  font-size: var(--text-h3);
+}
+
+.eduyarp-site .method__step p,
+.eduyarp-site .why-card p {
+  color: var(--slate-600);
+  font-size: 15px;
+}
+
+.eduyarp-site .icon-tile {
+  display: inline-grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--gradient-brand);
+  color: #fff;
+  box-shadow: 0 10px 22px -10px rgba(79, 70, 229, 0.7);
+}
+
+.eduyarp-site .icon-tile--soft {
+  width: 42px;
+  height: 42px;
+  background: var(--indigo-50);
+  color: var(--indigo-600);
+  box-shadow: none;
+}
+
+.eduyarp-site .why-grid {
+  display: grid;
+  gap: 20px;
+}
+
+@media (min-width: 640px) {
+  .eduyarp-site .why-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
+
+@media (min-width: 1000px) {
+  .eduyarp-site .why-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+}
+
+.eduyarp-site .why-card {
+  padding: 26px;
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-xl);
+  background: #fff;
+  transition: box-shadow var(--t-base), border-color var(--t-base);
+}
+
+.eduyarp-site .why-card:hover {
+  border-color: #c7d2fe;
+  box-shadow: var(--shadow-md);
+}
+
+.eduyarp-site .why-card h3 {
+  margin-top: 16px;
+}
+
+/* ---------- CTA ---------- */
+
+.eduyarp-site .cta-wrap {
+  padding-bottom: var(--section-space);
+}
+
+.eduyarp-site .cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: clamp(28px, 5vw, 56px);
+  border-radius: var(--radius-xl);
+  background: var(--gradient-ink);
+  color: #fff;
+  box-shadow: var(--shadow-lg);
+}
+
+.eduyarp-site .cta h2 {
+  font-size: var(--text-h2);
+}
+
+.eduyarp-site .cta p {
+  margin-top: 8px;
+  color: #cbd3ff;
+}
+
+/* ---------- Page hero (catalogue) ---------- */
+
+.eduyarp-site .page-hero {
+  padding: clamp(40px, 6vw, 72px) 0;
+  background: var(--gradient-ink);
+  color: #fff;
+}
+
+.eduyarp-site .page-hero__title {
+  margin-top: 10px;
+  font-size: var(--text-h1);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.eduyarp-site .page-hero__text {
+  max-width: 60ch;
+  margin-top: 14px;
+  color: #cbd3ff;
+  font-size: 1.05rem;
+}
+
+/* ---------- Course cards ---------- */
+
+.eduyarp-site .course-grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+}
+
+.eduyarp-site .course-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-xl);
+  background: #fff;
+  box-shadow: var(--shadow-xs);
+  transition:
+    transform var(--t-base) var(--ease-out),
+    box-shadow var(--t-base) var(--ease-out),
+    border-color var(--t-base);
+}
+
+.eduyarp-site .course-card:hover,
+.eduyarp-site .course-card:focus-within {
+  transform: translateY(-5px);
+  border-color: #c7d2fe;
+  box-shadow: var(--shadow-lg);
+}
+
+.eduyarp-site .course-card__cover {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 112px;
+  padding: 16px 18px;
+  background:
+    radial-gradient(circle at 85% 0%, rgba(255, 255, 255, 0.35), transparent 55%),
+    linear-gradient(135deg, var(--cover-a, #6366f1), var(--cover-b, #4338ca));
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.eduyarp-site .course-card__cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.18) 1px, transparent 1.5px);
+  background-size: 16px 16px;
+  mask-image: linear-gradient(120deg, transparent 30%, #000);
+}
+
+.eduyarp-site .course-card__cover svg {
+  position: relative;
+  z-index: 1;
+}
+
+.eduyarp-site .course-card__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+}
+
+.eduyarp-site .course-card__title {
+  font-size: 1.15rem;
+}
+
+.eduyarp-site .course-card__text {
+  color: var(--slate-600);
+  font-size: 15px;
+}
+
+.eduyarp-site .course-card__footer {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px dashed var(--slate-200);
+}
+
+.eduyarp-site .course-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--indigo-600);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.eduyarp-site .course-card__cta svg {
+  transition: transform var(--t-fast) var(--ease-out);
+}
+
+.eduyarp-site .course-card:hover .course-card__cta svg {
+  transform: translateX(4px);
+}
+
+/* ---------- Course detail ---------- */
+
+.eduyarp-site .course-hero {
+  padding: clamp(32px, 5vw, 60px) 0 clamp(40px, 6vw, 72px);
+  background: var(--gradient-ink);
+}
+
+.eduyarp-site .course-hero__title {
+  max-width: 22ch;
+  font-size: var(--text-h1);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.eduyarp-site .course-hero__text {
+  max-width: 62ch;
+  font-size: 1.05rem;
+}
+
+.eduyarp-site .course-hero__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.eduyarp-site .course-hero__stats li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  color: #dbe2ff;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.eduyarp-site .course-layout {
+  margin-top: -32px;
+  position: relative;
+}
+
+.eduyarp-site .card {
+  padding: 24px;
+  border-radius: var(--radius-xl);
+  border-color: var(--slate-200);
+  box-shadow: var(--shadow-xs);
+}
+
+.eduyarp-site .card__title {
+  font-size: 1.2rem;
+}
+
+.eduyarp-site .card__title svg {
+  padding: 5px;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: var(--indigo-50);
+  color: var(--indigo-600);
+}
+
+.eduyarp-site .check-list svg {
+  color: #fff;
+  padding: 3px;
+  border-radius: 50%;
+  background: var(--teal-600);
+}
+
+.eduyarp-site .enrol {
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  border-top: 4px solid var(--indigo-600);
+}
+
+.eduyarp-site .curriculum {
+  display: grid;
+  gap: 12px;
+}
+
+.eduyarp-site .curriculum__module {
+  padding: 0;
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-lg);
+  background: var(--slate-50);
+  overflow: hidden;
+}
+
+.eduyarp-site .acc__summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  padding: 16px 18px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.eduyarp-site .acc__summary::-webkit-details-marker {
+  display: none;
+}
+
+.eduyarp-site .acc__summary .curriculum__title {
+  flex: 1;
+  min-width: 140px;
+  font-size: 1.02rem;
+}
+
+.eduyarp-site .acc__count {
+  color: var(--slate-500);
+  font-size: 13px;
+}
+
+.eduyarp-site .acc__chev {
+  color: var(--slate-500);
+  transition: transform var(--t-base) var(--ease-out);
+}
+
+.eduyarp-site details[open] > .acc__summary .acc__chev {
+  transform: rotate(180deg);
+}
+
+.eduyarp-site .acc__panel {
+  padding: 0 18px 18px;
+}
+
+.eduyarp-site .acc__panel[open],
+.eduyarp-site details[open] > .acc__panel {
+  animation: eduyarp-acc-in var(--t-base) var(--ease-out);
+}
+
+@keyframes eduyarp-acc-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+.eduyarp-site .curriculum__topics li::before {
+  background: var(--indigo-500);
+}
+
+/* ---------- Progress ---------- */
+
+.eduyarp-site .progress__track {
+  height: 10px;
+  border-radius: 99px;
+  background: var(--slate-200);
+}
+
+.eduyarp-site .progress__fill {
+  border-radius: 99px;
+  background: linear-gradient(90deg, #6366f1, #22d3ee);
+  transition: width var(--t-slow) var(--ease-out);
+}
+
+.eduyarp-site .progress__value {
+  font-weight: 800;
+}
+
+/* ---------- Dashboard ---------- */
+
+.eduyarp-site .page {
+  padding-top: 32px;
+}
+
+.eduyarp-site .welcome {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+  padding: clamp(24px, 4vw, 40px);
+  border-radius: var(--radius-xl);
+  background: var(--gradient-ink);
+  color: #fff;
+  box-shadow: var(--shadow-lg);
+}
+
+.eduyarp-site .welcome__title {
+  margin-top: 8px;
+  font-size: var(--text-h1);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.eduyarp-site .welcome__text {
+  margin-top: 8px;
+  color: #cbd3ff;
+}
+
+.eduyarp-site .welcome__stats {
+  display: flex;
+  gap: 12px;
+}
+
+.eduyarp-site .welcome__stats li {
+  display: grid;
+  min-width: 92px;
+  padding: 14px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.07);
+  text-align: center;
+}
+
+.eduyarp-site .welcome__stats strong {
+  font-size: 1.7rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.eduyarp-site .welcome__stats span {
+  color: #a5b0ff;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.eduyarp-site .my-course {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: transform var(--t-base) var(--ease-out), box-shadow var(--t-base);
+}
+
+.eduyarp-site .my-course:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.eduyarp-site .my-course__title {
+  font-size: 1.1rem;
+}
+
+.eduyarp-site .class-item {
+  border-radius: var(--radius-lg);
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+
+.eduyarp-site .class-item:hover {
+  border-color: #c7d2fe;
+}
+
+.eduyarp-site .class-item__when {
+  border-radius: var(--radius-md);
+  background: var(--indigo-50);
+}
+
+.eduyarp-site .state {
+  border-radius: var(--radius-xl);
+}
+
+/* ---------- Auth ---------- */
+
+.eduyarp-site .auth {
+  min-height: calc(100vh - 68px);
+  padding: 48px var(--gutter);
+  background: var(--gradient-ink);
+}
+
+.eduyarp-site .auth__card {
+  max-width: 440px;
+  padding: clamp(24px, 5vw, 36px);
+  box-shadow: var(--shadow-lg);
+}
+
+.eduyarp-site .auth__title {
+  font-size: 1.7rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.eduyarp-site .input {
+  border-radius: var(--radius-md);
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+
+.eduyarp-site .input:focus {
+  border-color: var(--indigo-500);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.18);
+  outline: none;
+}
+
+/* ---------- Reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .eduyarp-site .hv-card--float {
+    animation: none;
+  }
+
+  .eduyarp-site .course-card:hover,
+  .eduyarp-site .method__step:hover,
+  .eduyarp-site .my-course:hover {
+    transform: none;
+  }
+
+}
+
+.eduyarp-site .main {
+  padding-bottom: 72px;
+}
+
+.eduyarp-site .main:has(.landing-hero) {
+  padding-bottom: 0;
+}
+
+/* Exactly four featured courses: a balanced 2x2 grid, or one row of four on wide screens. */
+
+@media (min-width: 640px) {
+  .eduyarp-site .course-grid--four {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+@media (min-width: 1100px) {
+  .eduyarp-site .course-grid--four {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+}

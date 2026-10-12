@@ -1,0 +1,1442 @@
+/* Source: apps/admin/src/index.css. Generated from the original Eduyarp app and scoped under .eduyog-admin. */
+
+/* Eduyog Admin — design tokens and components. */
+
+.eduyog-admin {
+  --color-bg: #f5f7fb;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f8fafc;
+  --color-border: #e2e8f0;
+  --color-border-strong: #cbd5e1;
+  --color-text: #0f172a;
+  --color-text-muted: #64748b;
+  --color-primary: #1d4ed8;
+  --color-primary-hover: #1e40af;
+  --color-primary-soft: #eff4ff;
+  --color-danger: #b91c1c;
+  --color-danger-hover: #991b1b;
+  --color-danger-soft: #fef2f2;
+  --color-success: #15803d;
+  --color-success-soft: #ecfdf3;
+  --color-warning: #a16207;
+  --color-warning-soft: #fefce8;
+  --color-sidebar: #0f1b3d;
+  --color-sidebar-text: #c7d2fe;
+  --color-sidebar-active: rgba(255, 255, 255, 0.1);
+  --color-focus: #2563eb;
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --shadow-lg: 0 20px 40px -12px rgba(15, 23, 42, 0.25);
+  --sidebar-width: 248px;
+
+  --font-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, Roboto, 'Helvetica Neue', Arial,
+    sans-serif;
+
+  color-scheme: light;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+.eduyog-admin, .eduyog-admin *,
+.eduyog-admin *::before,
+.eduyog-admin *::after {
+  box-sizing: border-box;
+}
+
+.eduyog-admin {
+  margin: 0;
+  min-width: 320px;
+  background: var(--color-bg);
+}
+
+.eduyog-admin h1,
+.eduyog-admin h2,
+.eduyog-admin p {
+  margin: 0;
+}
+
+.eduyog-admin a {
+  color: var(--color-primary);
+}
+
+.eduyog-admin :focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.eduyog-admin .visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.eduyog-admin .muted {
+  color: var(--color-text-muted);
+}
+
+.eduyog-admin .skip-link {
+  position: absolute;
+  left: 12px;
+  top: -48px;
+  z-index: 100;
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-lg);
+}
+
+.eduyog-admin .skip-link:focus {
+  top: 12px;
+}
+
+/* ---------- Buttons ---------- */
+
+.eduyog-admin .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 0 16px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  font: inherit;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.eduyog-admin .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.eduyog-admin .btn--primary {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.eduyog-admin .btn--primary:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+.eduyog-admin .btn--secondary {
+  background: var(--color-surface);
+  border-color: var(--color-border-strong);
+  color: var(--color-text);
+}
+
+.eduyog-admin .btn--secondary:hover:not(:disabled) {
+  background: var(--color-surface-muted);
+}
+
+.eduyog-admin .btn--danger {
+  background: var(--color-danger);
+  color: #fff;
+}
+
+.eduyog-admin .btn--danger:hover:not(:disabled) {
+  background: var(--color-danger-hover);
+}
+
+.eduyog-admin .btn--danger-ghost {
+  background: transparent;
+  color: var(--color-danger);
+}
+
+.eduyog-admin .btn--danger-ghost:hover:not(:disabled) {
+  background: var(--color-danger-soft);
+}
+
+.eduyog-admin .btn--ghost {
+  background: transparent;
+  color: inherit;
+}
+
+.eduyog-admin .btn--ghost:hover:not(:disabled) {
+  background: rgba(148, 163, 184, 0.15);
+}
+
+.eduyog-admin .btn--sm {
+  min-height: 32px;
+  padding: 0 12px;
+  font-size: 13px;
+}
+
+.eduyog-admin .btn--icon {
+  width: 38px;
+  padding: 0;
+}
+
+.eduyog-admin .btn--block {
+  width: 100%;
+}
+
+/* ---------- Layout ---------- */
+
+.eduyog-admin .layout {
+  min-height: 100vh;
+}
+
+.eduyog-admin .sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  width: var(--sidebar-width);
+  padding: 20px 14px;
+  background: var(--color-sidebar);
+  color: var(--color-sidebar-text);
+}
+
+.eduyog-admin .brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 8px 20px;
+  color: #fff;
+}
+
+.eduyog-admin .brand__mark {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.eduyog-admin .brand__name {
+  display: block;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.eduyog-admin .brand__sub {
+  display: block;
+  font-size: 12px;
+  opacity: 0.75;
+}
+
+.eduyog-admin .brand--compact {
+  padding: 0;
+  gap: 10px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.eduyog-admin .brand--compact .brand__mark {
+  width: 30px;
+  height: 30px;
+  font-size: 15px;
+}
+
+.eduyog-admin .nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.eduyog-admin .nav__link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  color: var(--color-sidebar-text);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.eduyog-admin .nav__link:hover {
+  background: var(--color-sidebar-active);
+  color: #fff;
+}
+
+.eduyog-admin .nav__link[aria-current='page'] {
+  background: var(--color-sidebar-active);
+  color: #fff;
+  box-shadow: inset 3px 0 0 #60a5fa;
+}
+
+.eduyog-admin .sidebar__footer {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.eduyog-admin .sidebar__footer .btn {
+  justify-content: flex-start;
+  color: var(--color-sidebar-text);
+}
+
+.eduyog-admin .sidebar__footer .btn:hover {
+  background: var(--color-sidebar-active);
+  color: #fff;
+}
+
+.eduyog-admin .sidebar__user {
+  padding: 0 12px 12px;
+  overflow: hidden;
+}
+
+.eduyog-admin .sidebar__user-name {
+  display: block;
+  color: #fff;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.eduyog-admin .sidebar__user-email {
+  display: block;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.eduyog-admin .topbar {
+  display: none;
+}
+
+.eduyog-admin .main {
+  margin-left: var(--sidebar-width);
+  padding: 32px 40px 48px;
+  max-width: calc(1200px + var(--sidebar-width));
+}
+
+.eduyog-admin .main:focus {
+  outline: none;
+}
+
+.eduyog-admin .scrim {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .eduyog-admin .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 56px;
+    padding: 0 12px;
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .eduyog-admin .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+  }
+
+  .eduyog-admin .sidebar--open {
+    transform: translateX(0);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .eduyog-admin .scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 25;
+    background: rgba(15, 23, 42, 0.4);
+  }
+
+  .eduyog-admin .main {
+    margin-left: 0;
+    padding: 20px 16px 40px;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eduyog-admin .sidebar {
+    transition: none;
+  }
+
+}
+
+/* ---------- Page header ---------- */
+
+.eduyog-admin .page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.eduyog-admin .page-header__title {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.eduyog-admin .page-header__description {
+  margin-top: 4px;
+  color: var(--color-text-muted);
+}
+
+.eduyog-admin .page-header__actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ---------- Cards & stats ---------- */
+
+.eduyog-admin .card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 20px;
+}
+
+.eduyog-admin .card--flush {
+  padding: 0;
+  overflow: hidden;
+}
+
+.eduyog-admin .stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.eduyog-admin .stat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 150px;
+}
+
+.eduyog-admin .stat__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.eduyog-admin .stat__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.eduyog-admin .stat__link {
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.eduyog-admin .stat__link:hover {
+  text-decoration: underline;
+}
+
+.eduyog-admin .stat__value {
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.eduyog-admin .stat__detail {
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.eduyog-admin .stat__loading,
+.eduyog-admin .stat__error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+.eduyog-admin .stat__error {
+  flex-direction: column;
+  align-items: flex-start;
+  color: var(--color-danger);
+}
+
+/* ---------- Tables ---------- */
+
+.eduyog-admin .table-wrap {
+  position: relative;
+  overflow-x: auto;
+}
+
+.eduyog-admin .table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.eduyog-admin .table th {
+  padding: 12px 16px;
+  background: var(--color-surface-muted);
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.eduyog-admin .table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+}
+
+.eduyog-admin .table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.eduyog-admin .table tbody tr:hover {
+  background: var(--color-surface-muted);
+}
+
+.eduyog-admin .table__actions-head {
+  width: 1%;
+}
+
+.eduyog-admin .cell-primary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.eduyog-admin .cell-secondary {
+  margin-top: 2px;
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.eduyog-admin .cell-nowrap {
+  white-space: nowrap;
+}
+
+.eduyog-admin .cell-break {
+  overflow-wrap: anywhere;
+}
+
+.eduyog-admin .line-clamp {
+  display: -webkit-box;
+  max-width: 420px;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.eduyog-admin .row-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.eduyog-admin .external-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 280px;
+  text-decoration: none;
+}
+
+.eduyog-admin .external-link:hover {
+  text-decoration: underline;
+}
+
+.eduyog-admin .truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.eduyog-admin .you-tag {
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* ---------- Badges ---------- */
+
+.eduyog-admin .badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.eduyog-admin .badge--success {
+  background: var(--color-success-soft);
+  color: var(--color-success);
+}
+
+.eduyog-admin .badge--muted {
+  background: #f1f5f9;
+  color: var(--color-text-muted);
+}
+
+.eduyog-admin .badge--primary {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.eduyog-admin .badge--neutral {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+/* ---------- States & alerts ---------- */
+
+.eduyog-admin .state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 48px 24px;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.eduyog-admin .state__title {
+  color: var(--color-text);
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.eduyog-admin .state__text {
+  max-width: 420px;
+}
+
+.eduyog-admin .state--error .state__title {
+  color: var(--color-danger);
+}
+
+.eduyog-admin .alert {
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border: 1px solid;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+}
+
+.eduyog-admin .alert--error {
+  background: var(--color-danger-soft);
+  border-color: #fecaca;
+  color: var(--color-danger);
+}
+
+.eduyog-admin .alert--info {
+  background: var(--color-primary-soft);
+  border-color: #c7d7fe;
+  color: var(--color-primary-hover);
+}
+
+.eduyog-admin .alert--warning {
+  margin: 12px 0 0;
+  background: var(--color-warning-soft);
+  border-color: #fde68a;
+  color: var(--color-warning);
+}
+
+.eduyog-admin .spinner {
+  display: inline-block;
+  flex: none;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: admin-spin 0.7s linear infinite;
+}
+
+.eduyog-admin .spinner--md {
+  width: 22px;
+  height: 22px;
+  color: var(--color-primary);
+}
+
+.eduyog-admin .spinner--sm {
+  width: 14px;
+  height: 14px;
+}
+
+@keyframes admin-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eduyog-admin .spinner {
+    animation-duration: 1.6s;
+  }
+
+}
+
+.eduyog-admin .fullscreen-center {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+}
+
+/* ---------- Forms ---------- */
+
+.eduyog-admin .form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.eduyog-admin .field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.eduyog-admin .field__label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.eduyog-admin .field__required {
+  color: var(--color-danger);
+}
+
+.eduyog-admin .field__hint {
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.eduyog-admin .field__error {
+  color: var(--color-danger);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.eduyog-admin .input {
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+}
+
+.eduyog-admin .input:focus {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -1px;
+  border-color: var(--color-focus);
+}
+
+.eduyog-admin .input[aria-invalid='true'] {
+  border-color: var(--color-danger);
+}
+
+.eduyog-admin .input--textarea {
+  resize: vertical;
+  min-height: 84px;
+}
+
+.eduyog-admin .field--checkbox {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: 10px;
+}
+
+.eduyog-admin .field--checkbox .field__hint,
+.eduyog-admin .field--checkbox .field__error {
+  grid-column: 2;
+}
+
+.eduyog-admin .checkbox {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--color-primary);
+}
+
+/* ---------- Modal ---------- */
+
+.eduyog-admin .modal {
+  width: calc(100% - 32px);
+  max-height: calc(100vh - 48px);
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  color: var(--color-text);
+}
+
+.eduyog-admin .modal::backdrop {
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.eduyog-admin .modal--sm {
+  max-width: 440px;
+}
+
+.eduyog-admin .modal--md {
+  max-width: 560px;
+}
+
+.eduyog-admin .modal--lg {
+  max-width: 760px;
+}
+
+.eduyog-admin .modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 20px 12px;
+}
+
+.eduyog-admin .modal__title {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.eduyog-admin .modal__body {
+  padding: 4px 20px 20px;
+}
+
+.eduyog-admin .modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface-muted);
+}
+
+.eduyog-admin .confirm__text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+/* ---------- Details list ---------- */
+
+.eduyog-admin .details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0;
+}
+
+.eduyog-admin .details dt {
+  color: var(--color-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.eduyog-admin .details dd {
+  margin: 4px 0 0;
+}
+
+.eduyog-admin .details__full {
+  grid-column: 1 / -1;
+}
+
+.eduyog-admin .details__message {
+  padding: 12px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 520px) {
+  .eduyog-admin .details {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+/* ---------- Toasts ---------- */
+
+.eduyog-admin .toast-region {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: min(380px, calc(100% - 32px));
+}
+
+.eduyog-admin .toast {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  background: var(--color-surface);
+  border-left: 4px solid;
+  font-size: 14px;
+}
+
+.eduyog-admin .toast--success {
+  border-left-color: var(--color-success);
+}
+
+.eduyog-admin .toast--error {
+  border-left-color: var(--color-danger);
+}
+
+.eduyog-admin .toast__close {
+  flex: none;
+  padding: 0 4px;
+  border: none;
+  background: none;
+  color: var(--color-text-muted);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* ---------- Login ---------- */
+
+.eduyog-admin .login {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  padding: 24px 16px;
+  background: linear-gradient(160deg, #0f1b3d 0%, #1d4ed8 100%);
+}
+
+.eduyog-admin .login__panel {
+  width: 100%;
+  max-width: 420px;
+  padding: 32px;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-lg);
+}
+
+.eduyog-admin .brand--login {
+  padding: 0 0 24px;
+  color: var(--color-text);
+}
+
+.eduyog-admin .login__title {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.eduyog-admin .login__subtitle {
+  margin: 4px 0 20px;
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 480px) {
+  .eduyog-admin .login__panel {
+    padding: 24px 20px;
+  }
+
+}
+
+/* ---------- Eduyarp ---------- */
+
+.eduyog-admin .badge--danger {
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+
+.eduyog-admin .input--sm {
+  width: auto;
+  min-height: 32px;
+  padding: 4px 8px;
+  font-size: 13px;
+}
+
+.eduyog-admin .small {
+  font-size: 13px;
+}
+
+.eduyog-admin .nav__group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.eduyog-admin .nav__group + .nav__group {
+  margin-top: 16px;
+}
+
+.eduyog-admin .nav__heading {
+  padding: 0 12px 4px;
+  color: var(--color-sidebar-text);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+  text-transform: uppercase;
+}
+
+.eduyog-admin .back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.eduyog-admin .back-link:hover {
+  color: var(--color-primary);
+}
+
+.eduyog-admin .cell-link {
+  display: inline-block;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.eduyog-admin .cell-link:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.eduyog-admin .form__row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.eduyog-admin .course-admin {
+  display: grid;
+  gap: 20px;
+}
+
+.eduyog-admin .course-admin__side {
+  display: grid;
+  gap: 20px;
+  align-content: start;
+}
+
+@media (min-width: 1100px) {
+  .eduyog-admin .course-admin {
+    grid-template-columns: minmax(0, 1fr) 360px;
+    align-items: start;
+  }
+
+}
+
+.eduyog-admin .section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.eduyog-admin .section-title {
+  margin: 0 0 12px;
+  font-size: 16px;
+}
+
+.eduyog-admin .section-head .section-title {
+  margin: 0;
+}
+
+.eduyog-admin .curriculum {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.eduyog-admin .curriculum__module {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-muted);
+}
+
+.eduyog-admin .curriculum__head,
+.eduyog-admin .curriculum__topic {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px 12px;
+}
+
+.eduyog-admin .curriculum__head {
+  padding: 12px 14px;
+}
+
+.eduyog-admin .curriculum__topics {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+
+.eduyog-admin .curriculum__topic {
+  align-items: center;
+  padding: 8px 14px 8px 28px;
+}
+
+.eduyog-admin .curriculum__topic + .curriculum__topic {
+  border-top: 1px solid var(--color-border);
+}
+
+.eduyog-admin .curriculum__empty {
+  margin: 0;
+  padding: 0 14px 12px;
+}
+
+.eduyog-admin .curriculum__order {
+  display: inline-block;
+  min-width: 32px;
+  margin-right: 6px;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.eduyog-admin .plain-list {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+}
+
+.eduyog-admin .plain-list__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.eduyog-admin .inline-form {
+  display: flex;
+  gap: 8px;
+}
+
+.eduyog-admin .inline-form .input {
+  flex: 1;
+  min-width: 0;
+}
+
+.eduyog-admin .details--stacked {
+  grid-template-columns: 1fr;
+}
+
+.eduyog-admin .tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.eduyog-admin .mini-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 120px;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.eduyog-admin .mini-progress__track {
+  flex: 1;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--color-primary-soft);
+}
+
+.eduyog-admin .mini-progress__fill {
+  height: 100%;
+  background: var(--color-primary);
+}
+
+/* The course page header holds a badge and several buttons. */
+
+.eduyog-admin .page-header__actions {
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* The Eduyarp group makes the menu taller; scroll it on short screens. */
+
+.eduyog-admin .sidebar .nav {
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.eduyog-admin .filters {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) repeat(2, minmax(0, 1fr)) auto;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 720px) {
+  .eduyog-admin .filters {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+}
+
+/* ---------- Course media fields (optional cover image and icon URLs) ---------- */
+
+.eduyog-admin .media-fieldset {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+  margin: 0;
+  padding: 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-muted);
+}
+
+.eduyog-admin .media-fieldset__legend {
+  padding: 0 6px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.eduyog-admin .media-field {
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+}
+
+.eduyog-admin .media-field > .field {
+  width: 100%;
+}
+
+.eduyog-admin .media-preview {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.eduyog-admin .media-preview--cover {
+  width: min(100%, 320px);
+  aspect-ratio: 16 / 7;
+}
+
+.eduyog-admin .media-preview--icon {
+  width: 64px;
+  height: 64px;
+}
+
+.eduyog-admin .media-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.eduyog-admin .media-preview--icon img {
+  object-fit: contain;
+}
+
+.eduyog-admin .media-preview__fallback {
+  padding: 4px;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+/* ---------- Announcements ---------- */
+
+.eduyog-admin .announce-list {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.eduyog-admin .announce {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  padding: 16px 18px;
+}
+
+.eduyog-admin .announce__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 12px;
+}
+
+.eduyog-admin .announce__tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+
+.eduyog-admin .announce__title {
+  margin: 0;
+  font-size: 1.05rem;
+  overflow-wrap: anywhere;
+}
+
+/* Plain text: line breaks are kept and nothing is interpreted. */
+
+.eduyog-admin .announce__body {
+  margin: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.eduyog-admin .announce-filters {
+  grid-template-columns: minmax(0, 360px);
+}
+
+/* ---------- Course FAQs and learning resources ---------- */
+
+.eduyog-admin .course-content {
+  display: grid;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.eduyog-admin .content-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.eduyog-admin .content-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.eduyog-admin .content-item__main {
+  display: grid;
+  flex: 1 1 280px;
+  gap: 4px;
+  min-width: 0;
+}
+
+.eduyog-admin .content-item__text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.eduyog-admin .content-item--stack {
+  display: grid;
+  gap: 8px;
+}
+
+.eduyog-admin .content-item__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+}
+
+.eduyog-admin .submission-detail {
+  display: grid;
+  gap: 10px;
+  padding-top: 8px;
+}
+
+.eduyog-admin .course-content > * {
+  min-width: 0;
+}
+
+.eduyog-admin .content-item .row-actions {
+  flex-wrap: wrap;
+}
+
+/* Eduyog logo (shared SVG). The disc is white, so it reads on the dark sidebar and on light pages. */
+
+.eduyog-admin .brand__logo {
+  display: block;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.eduyog-admin .brand--compact .brand__logo {
+  width: 32px;
+  height: 32px;
+}

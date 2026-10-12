@@ -1,0 +1,175 @@
+/* Source: apps/eduyarp/src/styles/assignments.css. Generated from the original Eduyarp app and scoped under .eduyarp-site. */
+
+/* Assignments, submissions and feedback. Uses the existing Eduyarp tokens. */
+
+.eduyarp-site .asg-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.eduyarp-site .asg {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.eduyarp-site .asg--active {
+  border-color: #c7d2fe;
+  background: var(--indigo-50, #eef2ff);
+}
+
+.eduyarp-site .asg__main {
+  display: grid;
+  flex: 1 1 260px;
+  gap: 6px;
+  min-width: 0;
+}
+
+.eduyarp-site .asg__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+
+.eduyarp-site .asg__title {
+  font-weight: 700;
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+  text-decoration: none;
+}
+
+.eduyarp-site .asg__title:hover {
+  color: var(--indigo-600);
+  text-decoration: underline;
+}
+
+.eduyarp-site .asg__title--button {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+.eduyarp-site .asg__meta,
+.eduyarp-site .asg__preview {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.eduyarp-site .asg__preview {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.eduyarp-site .asg__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.eduyarp-site .asg-instructions {
+  margin: 4px 0 0;
+  max-width: 75ch;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.eduyarp-site .asg-form {
+  display: grid;
+  gap: 14px;
+  max-width: 760px;
+}
+
+.eduyarp-site .sub-list {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.eduyarp-site .sub {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  padding: 14px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.eduyarp-site .sub--latest {
+  border-color: #c7d2fe;
+}
+
+.eduyarp-site .sub__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+}
+
+.eduyarp-site .sub__head time {
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.eduyarp-site .sub__text,
+.eduyarp-site .sub__link {
+  margin: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.eduyarp-site .sub__feedback {
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+  border-left: 3px solid var(--indigo-600);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-muted);
+}
+
+.eduyarp-site .sub__feedback-title {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.eduyarp-site .sub-detail {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
+.eduyarp-site .sub-detail__title {
+  margin: 0;
+  font-size: 1.05rem;
+  overflow-wrap: anywhere;
+}
+
+.eduyarp-site .sub-history summary {
+  cursor: pointer;
+  font-weight: 600;
+  margin-bottom: 10px;
+}

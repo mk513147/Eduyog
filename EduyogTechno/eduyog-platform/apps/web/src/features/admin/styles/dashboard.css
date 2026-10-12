@@ -1,0 +1,747 @@
+/* Source: apps/admin/src/dashboard.css. Generated from the original Eduyarp app and scoped under .eduyog-admin. */
+
+/* ---------- Dashboard ---------- */
+
+/* Operational overview: compact KPIs, two charts, a feed, a schedule and two summaries.
+   Colour carries status (active = blue, completed = green, cancelled = grey) and is always
+   paired with text. */
+
+.eduyog-admin .kpis {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 1000px) {
+  .eduyog-admin .kpis {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+}
+
+.eduyog-admin .kpi {
+  display: grid;
+  align-content: start;
+  gap: 2px;
+  min-width: 0;
+  padding: 14px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.eduyog-admin .kpi__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.eduyog-admin .kpi__icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-md);
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.eduyog-admin .kpi__label {
+  color: var(--color-text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.eduyog-admin .kpi__label:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.eduyog-admin .kpi__value {
+  margin-top: 6px;
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.eduyog-admin .kpi__detail {
+  color: var(--color-text-muted);
+  font-size: 12.5px;
+  overflow-wrap: anywhere;
+}
+
+.eduyog-admin .kpi__error {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  color: var(--color-danger);
+  font-size: 13px;
+}
+
+.eduyog-admin .board {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 680px) {
+  .eduyog-admin .board {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+@media (min-width: 1240px) {
+  .eduyog-admin .board {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .eduyog-admin .board__status {
+    grid-column: span 5;
+  }
+
+  .eduyog-admin .board__courses {
+    grid-column: span 7;
+  }
+
+  .eduyog-admin .board__activity {
+    grid-column: span 7;
+  }
+
+  .eduyog-admin .board__classes {
+    grid-column: span 5;
+  }
+
+  .eduyog-admin .board__health {
+    grid-column: span 7;
+  }
+
+  .eduyog-admin .board__fitness {
+    grid-column: span 5;
+  }
+
+}
+
+.eduyog-admin .panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  padding: 16px 18px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.eduyog-admin .panel__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.eduyog-admin .panel__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.eduyog-admin .panel__title svg {
+  color: var(--color-text-muted);
+}
+
+.eduyog-admin .panel__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--color-primary);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.eduyog-admin .panel__link:hover {
+  text-decoration: underline;
+}
+
+.eduyog-admin .panel__empty {
+  padding: 18px 0;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  text-align: center;
+}
+
+.eduyog-admin .panel__error {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 12px;
+  padding: 12px;
+  border: 1px solid #fecaca;
+  border-radius: var(--radius-md);
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+
+.eduyog-admin .panel__error > div {
+  flex: 1 1 160px;
+}
+
+.eduyog-admin .panel__error-title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.eduyog-admin .panel__error-text {
+  font-size: 12.5px;
+  opacity: 0.85;
+}
+
+/* Skeletons */
+
+.eduyog-admin .skeleton-block {
+  display: grid;
+  gap: 10px;
+  padding: 4px 0;
+}
+
+.eduyog-admin .skeleton {
+  display: block;
+  height: 12px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #eef2f7 25%, #e2e8f0 37%, #eef2f7 63%);
+  background-size: 400% 100%;
+  animation: admin-skeleton-shimmer 1.4s ease infinite;
+}
+
+@keyframes admin-skeleton-shimmer {
+  from {
+    background-position: 100% 50%;
+  }
+
+  to {
+    background-position: 0 50%;
+  }
+}
+
+/* Status colours (always paired with a text label) */
+
+.eduyog-admin .seg--active {
+  background: var(--color-primary);
+  stroke: var(--color-primary);
+}
+
+.eduyog-admin .seg--completed {
+  background: var(--color-success);
+  stroke: var(--color-success);
+}
+
+.eduyog-admin .seg--cancelled {
+  background: #94a3b8;
+  stroke: #94a3b8;
+}
+
+/* Donut */
+
+.eduyog-admin .donut {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 16px 28px;
+}
+
+.eduyog-admin .donut__figure {
+  position: relative;
+  width: 148px;
+  height: 148px;
+  margin: 0;
+}
+
+.eduyog-admin .donut__svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.eduyog-admin .donut__track {
+  fill: none;
+  stroke: #eef2f7;
+  stroke-width: 16;
+}
+
+.eduyog-admin .donut__seg {
+  fill: none;
+  stroke-width: 16;
+  transition:
+    stroke-width 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.eduyog-admin .donut__figure:hover .donut__seg {
+  opacity: 0.55;
+}
+
+.eduyog-admin .donut__figure .donut__seg:hover {
+  opacity: 1;
+  stroke-width: 19;
+}
+
+.eduyog-admin .donut__center {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  pointer-events: none;
+}
+
+.eduyog-admin .donut__total {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.eduyog-admin .donut__caption {
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+.eduyog-admin .legend {
+  display: grid;
+  gap: 6px;
+  min-width: 170px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.eduyog-admin .legend__row {
+  display: grid;
+  grid-template-columns: 12px 1fr auto 42px;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+}
+
+.eduyog-admin .legend__swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.eduyog-admin .legend__value {
+  font-weight: 700;
+}
+
+.eduyog-admin .legend__percent {
+  color: var(--color-text-muted);
+  font-size: 12.5px;
+  text-align: right;
+}
+
+/* Bars */
+
+.eduyog-admin .bars {
+  display: grid;
+  gap: 10px;
+}
+
+.eduyog-admin .bars__list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.eduyog-admin .bars__row {
+  display: grid;
+  grid-template-columns: minmax(90px, 34%) minmax(0, 1fr) 28px;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+}
+
+.eduyog-admin .bars__label {
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.eduyog-admin .bars__track {
+  display: flex;
+  height: 14px;
+  overflow: hidden;
+  border-radius: 7px;
+  background: #eef2f7;
+}
+
+.eduyog-admin .bars__fill {
+  display: block;
+  height: 100%;
+  transition: width 0.4s ease;
+}
+
+.eduyog-admin .bars__row:hover .bars__track {
+  box-shadow: 0 0 0 2px var(--color-primary-soft);
+}
+
+.eduyog-admin .bars__value {
+  font-weight: 700;
+  text-align: right;
+}
+
+.eduyog-admin .bars__legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 12.5px;
+}
+
+.eduyog-admin .bars__legend .legend__swatch + .legend__swatch,
+.eduyog-admin .bars__legend .legend__swatch:not(:first-child) {
+  margin-left: 8px;
+}
+
+.eduyog-admin .bars__note {
+  margin-left: auto;
+}
+
+/* Activity feed */
+
+.eduyog-admin .feed {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.eduyog-admin .feed__item {
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 10px;
+  padding: 9px 0;
+  border-top: 1px solid var(--color-border);
+  font-size: 13.5px;
+}
+
+.eduyog-admin .feed__item:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.eduyog-admin .feed__dot {
+  align-self: center;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #94a3b8;
+}
+
+.eduyog-admin .feed__dot--enrolment {
+  background: var(--color-primary);
+}
+
+.eduyog-admin .feed__dot--user {
+  background: var(--color-success);
+}
+
+.eduyog-admin .feed__dot--lead {
+  background: var(--color-warning);
+}
+
+.eduyog-admin .feed__text {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.eduyog-admin .feed__time {
+  color: var(--color-text-muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+/* Schedule */
+
+.eduyog-admin .schedule {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.eduyog-admin .schedule__item {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr);
+  gap: 12px;
+  padding: 9px 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.eduyog-admin .schedule__item:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.eduyog-admin .schedule__when {
+  display: grid;
+  align-content: start;
+}
+
+.eduyog-admin .schedule__day {
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.eduyog-admin .schedule__time {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.eduyog-admin .schedule__what {
+  display: grid;
+  min-width: 0;
+  align-content: center;
+}
+
+.eduyog-admin .schedule__course {
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.eduyog-admin .schedule__trainer {
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+/* Course health */
+
+.eduyog-admin .health__summary {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: var(--radius-md);
+  background: var(--color-warning-soft);
+  color: var(--color-warning);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.eduyog-admin .health__summary svg {
+  flex: none;
+  margin-top: 1px;
+}
+
+.eduyog-admin .health__summary--ok {
+  background: var(--color-success-soft);
+  color: var(--color-success);
+}
+
+.eduyog-admin .health {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.eduyog-admin .health__item {
+  display: grid;
+  gap: 4px;
+  padding: 9px 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.eduyog-admin .health__item:first-child {
+  border-top: 0;
+}
+
+.eduyog-admin .health__title {
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.eduyog-admin .health__title:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.eduyog-admin .health__facts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  color: var(--color-text-muted);
+  font-size: 12.5px;
+}
+
+.eduyog-admin .health__warn {
+  color: var(--color-warning);
+  font-weight: 600;
+}
+
+/* Fitness summary */
+
+.eduyog-admin .weeks {
+  margin: 0;
+}
+
+.eduyog-admin .weeks__cols {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  align-items: end;
+  gap: 5px;
+  height: 56px;
+}
+
+.eduyog-admin .weeks__col {
+  display: flex;
+  align-items: flex-end;
+  height: 100%;
+}
+
+.eduyog-admin .weeks__bar {
+  display: block;
+  width: 100%;
+  border-radius: 3px 3px 1px 1px;
+  background: var(--color-primary);
+  opacity: 0.8;
+}
+
+.eduyog-admin .weeks__col:hover .weeks__bar {
+  opacity: 1;
+}
+
+.eduyog-admin .weeks__caption {
+  margin-top: 4px;
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+.eduyog-admin .fitness__recent-label {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.eduyog-admin .fitness__recent {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.eduyog-admin .fitness__recent li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13.5px;
+}
+
+.eduyog-admin .fitness__name {
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.eduyog-admin .fitness__date {
+  flex: none;
+  color: var(--color-text-muted);
+  font-size: 12.5px;
+}
+
+/* Shortcuts */
+
+.eduyog-admin .shortcuts {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.eduyog-admin .shortcuts__title {
+  color: var(--color-text-muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.eduyog-admin .shortcuts__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.eduyog-admin .shortcut {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 6px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.eduyog-admin .shortcut:hover {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.eduyog-admin .shortcuts__site {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eduyog-admin .skeleton {
+    animation: none;
+  }
+
+  .eduyog-admin .bars__fill,
+  .eduyog-admin .donut__seg {
+    transition: none;
+  }
+
+}

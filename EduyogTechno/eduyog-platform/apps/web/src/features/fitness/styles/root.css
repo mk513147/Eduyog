@@ -1,0 +1,12 @@
+/* The only unscoped Fitness rules: the html-level scrolling rules of the original app, applied only
+   while the Fitness page is on screen (the sticky Fitness navbar is 64px tall). */
+
+html:has(.fitness-site) {
+  scroll-padding-top: 64px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:has(.fitness-site) {
+    scroll-behavior: smooth;
+  }
+}

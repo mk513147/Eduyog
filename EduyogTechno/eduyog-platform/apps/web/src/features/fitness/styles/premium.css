@@ -1,0 +1,418 @@
+/* Source: apps/fitness/src/styles/premium.css. Generated from the Fitness app and scoped under .fitness-site. */
+
+/* Eduyog Fitness — premium visual layer. Loaded after index.css. Energetic: dark ink
+   sections, teal brand with an orange energy accent. Shares tokens.css with Eduyarp. */
+
+.fitness-site {
+  --color-bg: #f6f8f9;
+  --color-surface: #fff;
+  --color-tint: #eef6f5;
+  --color-border: var(--slate-200);
+  --color-border-strong: var(--slate-300);
+  --color-text: var(--slate-950);
+  --color-text-muted: var(--slate-600);
+  --color-primary: var(--teal-600);
+  --color-primary-hover: #0f766e;
+  --color-primary-soft: #ccfbf1;
+  --color-ink: #071a1c;
+  --color-ink-soft: #0c2a2c;
+  --color-on-ink: #d5ebe9;
+  --color-on-ink-muted: #8fb8b5;
+  --color-accent: #5eead4;
+  --color-focus: #0d9488;
+  font-family: var(--font-sans);
+  font-feature-settings: 'cv11', 'ss01';
+}
+
+.fitness-site {
+  background: var(--color-bg);
+}
+
+.fitness-site h1,
+.fitness-site h2,
+.fitness-site h3 {
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+.fitness-site :focus-visible {
+  outline: 2px solid var(--teal-500);
+  outline-offset: 3px;
+}
+
+.fitness-site .eyebrow {
+  color: var(--teal-600);
+  letter-spacing: 0.12em;
+}
+
+.fitness-site .eyebrow--light {
+  color: #5eead4;
+}
+
+/* ---------- Buttons ---------- */
+
+.fitness-site .btn {
+  border-radius: 999px;
+  font-weight: 600;
+  transition:
+    background-color var(--t-fast) var(--ease-out),
+    border-color var(--t-fast) var(--ease-out),
+    color var(--t-fast) var(--ease-out),
+    transform var(--t-fast) var(--ease-out),
+    box-shadow var(--t-base) var(--ease-out);
+}
+
+.fitness-site .btn:active:not(:disabled) {
+  transform: translateY(1px) scale(0.99);
+}
+
+.fitness-site .btn--primary {
+  background: var(--orange-500);
+  color: #1a0a00;
+  box-shadow: 0 10px 26px -10px rgba(249, 115, 22, 0.75);
+}
+
+.fitness-site .btn--primary:hover:not(:disabled) {
+  background: #fb8a3c;
+  transform: translateY(-1px);
+  box-shadow: 0 14px 30px -10px rgba(249, 115, 22, 0.85);
+}
+
+.fitness-site .btn--lg {
+  min-height: 52px;
+  padding: 12px 26px;
+}
+
+.fitness-site .btn svg {
+  transition: transform var(--t-fast) var(--ease-out);
+}
+
+.fitness-site .btn:hover svg:last-child:not(:first-child) {
+  transform: translateX(2px);
+}
+
+.fitness-site .btn--outline {
+  border-color: var(--slate-300);
+}
+
+.fitness-site .btn--outline:hover {
+  border-color: var(--teal-600);
+  color: var(--teal-600);
+}
+
+.fitness-site .text-link {
+  color: var(--teal-600);
+  font-weight: 600;
+}
+
+/* ---------- Navbar ---------- */
+
+.fitness-site .navbar {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: saturate(1.6) blur(14px);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.fitness-site .brand__mark {
+  border-radius: 11px;
+  background: linear-gradient(135deg, var(--teal-600), var(--cyan-400));
+  box-shadow: 0 6px 16px -6px rgba(13, 148, 136, 0.7);
+}
+
+.fitness-site .navbar__link {
+  border-radius: 999px;
+  transition: background-color var(--t-fast), color var(--t-fast);
+}
+
+.fitness-site .navbar__link:hover {
+  background: #e6f6f4;
+  color: var(--teal-600);
+}
+
+/* ---------- Hero ---------- */
+
+.fitness-site .hero {
+  position: relative;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(7, 26, 28, 0.92) 0%,
+      rgba(7, 26, 28, 0.72) 55%,
+      rgba(7, 26, 28, 0.45) 100%
+    ),
+    url('../../../assets/fitness/fitness-hero-image.jpg') center / cover no-repeat;
+
+  padding: clamp(56px, 9vw, 120px) 0 clamp(64px, 10vw, 130px);
+}
+
+.fitness-site .hero__rings {
+  display:none;
+  position: absolute;
+  top: 50%;
+  right: -10%;
+  width: min(720px, 90vw);
+  aspect-ratio: 1;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.fitness-site .hero__rings span {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(94, 234, 212, 0.14);
+  border-radius: 50%;
+}
+
+.fitness-site .hero__rings span:nth-child(2) {
+  inset: 14%;
+  border-color: rgba(94, 234, 212, 0.18);
+}
+
+.fitness-site .hero__rings span:nth-child(3) {
+  inset: 28%;
+  border-color: rgba(249, 115, 22, 0.28);
+}
+
+.fitness-site .hero__grid {
+  position: relative;
+  align-items: center;
+}
+
+.fitness-site .hero__title {
+  font-size: var(--text-hero);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  max-width: 16ch;
+}
+
+.fitness-site .hero__title span {
+  background: linear-gradient(100deg, #5eead4, #fdba74);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.fitness-site .hero__lead {
+  max-width: 54ch;
+  font-size: clamp(1rem, 0.4vw + 0.95rem, 1.2rem);
+}
+
+.fitness-site .hero__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin-top: 28px;
+  color: var(--color-on-ink);
+  font-size: 14px;
+}
+
+.fitness-site .hero__facts li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fitness-site .hero__facts svg {
+  color: #5eead4;
+}
+
+.fitness-site .hero__panel {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--radius-xl);
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.6);
+}
+
+.fitness-site .hero__item {
+  border-radius: var(--radius-lg);
+  transition: background-color var(--t-fast), transform var(--t-fast) var(--ease-out);
+}
+
+.fitness-site .hero__item:hover {
+  transform: translateX(3px);
+}
+
+.fitness-site .hero__item-icon {
+  background: linear-gradient(135deg, rgba(20, 184, 166, 0.35), rgba(249, 115, 22, 0.3));
+  color: #fff;
+  border-radius: 12px;
+}
+
+/* ---------- Sections ---------- */
+
+.fitness-site .section {
+  padding: var(--section-space) 0;
+}
+
+.fitness-site .section-title {
+  font-size: var(--text-h2);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.fitness-site .section--tinted {
+  background: linear-gradient(180deg, #eaf5f3, var(--color-bg));
+}
+
+.fitness-site .section--dark {
+  background:
+    radial-gradient(800px 400px at 100% 0%, rgba(249, 115, 22, 0.16), transparent 60%),
+    var(--color-ink);
+  color: var(--color-on-ink);
+}
+
+.fitness-site .section-header--light .section-title {
+  color: #fff;
+}
+
+.fitness-site .section-header--light .section-text {
+  color: var(--color-on-ink);
+}
+
+.fitness-site .section-header--light .eyebrow {
+  color: #5eead4;
+}
+
+.fitness-site .service-card {
+  border-radius: var(--radius-xl);
+  transition:
+    transform var(--t-base) var(--ease-out),
+    box-shadow var(--t-base) var(--ease-out),
+    border-color var(--t-base);
+}
+
+.fitness-site .service-card:hover {
+  transform: translateY(-5px);
+  border-color: #99e0d8;
+  box-shadow: var(--shadow-lg);
+}
+
+.fitness-site .service-card__icon {
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--teal-600), var(--cyan-400));
+  color: #fff;
+  box-shadow: 0 10px 22px -10px rgba(13, 148, 136, 0.8);
+}
+
+.fitness-site .check-list svg {
+  padding: 3px;
+  border-radius: 50%;
+  background: var(--teal-600);
+  color: #fff;
+}
+
+.fitness-site .approach {
+  display: grid;
+  gap: 20px;
+}
+
+@media (min-width: 640px) {
+  .fitness-site .approach {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
+
+@media (min-width: 1000px) {
+  .fitness-site .approach {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+}
+
+.fitness-site .approach__step {
+  position: relative;
+  padding: 28px 24px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-xl);
+  background: rgba(255, 255, 255, 0.05);
+  transition:
+    transform var(--t-base) var(--ease-out),
+    border-color var(--t-base),
+    background-color var(--t-base);
+}
+
+.fitness-site .approach__step:hover {
+  transform: translateY(-4px);
+  border-color: rgba(94, 234, 212, 0.45);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.fitness-site .approach__num {
+  position: absolute;
+  top: 20px;
+  right: 22px;
+  color: rgba(255, 255, 255, 0.28);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.fitness-site .approach__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--orange-500);
+  color: #1a0a00;
+}
+
+.fitness-site .approach__step h3 {
+  margin: 18px 0 8px;
+  color: #fff;
+  font-size: var(--text-h3);
+}
+
+.fitness-site .approach__step p {
+  color: var(--color-on-ink);
+  font-size: 15px;
+}
+
+.fitness-site .about__point {
+  border-radius: var(--radius-lg);
+}
+
+.fitness-site .about__point-icon {
+  border-radius: 12px;
+  background: #ccfbf1;
+  color: #0f766e;
+}
+
+.fitness-site .form-card {
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  border-top: 4px solid var(--orange-500);
+}
+
+.fitness-site .input {
+  border-radius: var(--radius-md);
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+
+.fitness-site .input:focus {
+  border-color: var(--teal-500);
+  box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.2);
+  outline: none;
+}
+
+.fitness-site .footer {
+  background: #041012;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fitness-site .service-card:hover,
+  .fitness-site .approach__step:hover,
+  .fitness-site .hero__item:hover {
+    transform: none;
+  }
+
+}
+
+.fitness-site .approach {
+  padding: 0;
+  list-style: none;
+}
