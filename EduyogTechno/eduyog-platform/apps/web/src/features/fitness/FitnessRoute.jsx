@@ -6,6 +6,7 @@ import './styles/tokens.css'
 import './styles/base.css'
 import './styles/premium.css'
 import './styles/root.css'
+import './styles/refine.css'
 
 // Lazy-loaded route module for /fitness: everything Fitness needs (motion, icons, Inter, CSS) lives
 // behind this import, so the homepage does not download any of it.

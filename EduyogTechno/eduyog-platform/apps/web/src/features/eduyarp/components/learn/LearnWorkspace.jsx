@@ -2,6 +2,7 @@ import { motion, useReducedMotion } from 'motion/react'
 import { useMemo, useState } from 'react'
 import { defaultTopicEntry, findTopicEntry, flattenTopics } from '../../utils/learning'
 import { formatShortDate } from '../../utils/format'
+import { ContactAccess } from '../ContactAccess'
 import { Icon } from '../Icon'
 import { Spinner } from '../States'
 import { CourseOutline } from './CourseOutline'
@@ -32,7 +33,10 @@ export function LearnWorkspace({ course, busyTopicId, onComplete }) {
   const current = findTopicEntry(flat, selectedId) ?? defaultTopicEntry(flat)
   const previous = current ? flat[current.position - 1] : undefined
   const next = current ? flat[current.position + 1] : undefined
-  const { progress } = course.enrolment
+  // The free preview (course.demo) has no enrolment or progress: topics are read-only and the locked ones
+  // show a contact action instead of content.
+  const demo = Boolean(course.demo)
+  const progress = course.enrolment?.progress ?? { percent: 0, totalTopics: 0 }
 
   const isModuleOpen = (moduleId) => toggles[moduleId] ?? (flat.length <= SMALL_COURSE_TOPICS || moduleId === current?.moduleId)
   const toggleModule = (moduleId) => setToggles((prev) => ({ ...prev, [moduleId]: !isModuleOpen(moduleId) }))
@@ -67,7 +71,7 @@ export function LearnWorkspace({ course, busyTopicId, onComplete }) {
   const topic = current?.topic
   const busy = topic ? busyTopicId === topic.id : false
   const totalTopics = flat.length
-  const allDone = progress.percent === 100 && progress.totalTopics > 0
+  const allDone = !demo && progress.percent === 100 && progress.totalTopics > 0
 
   return (
     <div className="learn-grid">
@@ -78,7 +82,7 @@ export function LearnWorkspace({ course, busyTopicId, onComplete }) {
 
       <div className="learn-main">
         <div id="learn-player" className="learn-player-wrap">
-          {topic ? <TopicPlayer key={topic.id} topic={topic} /> : null}
+          {topic && !topic.locked ? <TopicPlayer key={topic.id} topic={topic} /> : null}
         </div>
 
         {topic ? (
@@ -102,7 +106,15 @@ export function LearnWorkspace({ course, busyTopicId, onComplete }) {
               <h2 id="learn-topic-title" className="learn-topic__title">
                 {topic.title}
               </h2>
-              {topic.completed ? (
+              {demo ? (
+                topic.locked ? (
+                  <span className="badge learn-topic__status">
+                    <Icon name="lock" size={13} /> Locked
+                  </span>
+                ) : (
+                  <span className="badge learn-topic__status">Preview</span>
+                )
+              ) : topic.completed ? (
                 <span className="badge badge--success learn-topic__status">
                   <Icon name="check" size={13} /> Completed {topic.completedAt ? formatShortDate(topic.completedAt) : ''}
                 </span>
@@ -110,7 +122,18 @@ export function LearnWorkspace({ course, busyTopicId, onComplete }) {
                 <span className="badge learn-topic__status">Not completed</span>
               )}
             </div>
-            {topic.description && <p className="learn-topic__text">{topic.description}</p>}
+            {topic.locked ? (
+              <div className="learn-locked" role="status">
+                <span className="learn-locked__icon" aria-hidden="true">
+                  <Icon name="lock" size={20} />
+                </span>
+                <p className="learn-locked__title">This topic is part of the full course</p>
+                <p className="learn-locked__text">The free preview includes the first two topics of the first module.</p>
+                <ContactAccess courseTitle={course.title} heading="Unlock the full course" compact />
+              </div>
+            ) : (
+              topic.description && <p className="learn-topic__text">{topic.description}</p>
+            )}
 
             <div className="learn-actions">
               <button
@@ -123,7 +146,7 @@ export function LearnWorkspace({ course, busyTopicId, onComplete }) {
                 <span className="visually-hidden"> topic</span>
               </button>
 
-              {!topic.completed && (
+              {!demo && !topic.completed && (
                 <button type="button" className="btn btn--primary learn-actions__complete" onClick={complete} disabled={busy}>
                   {busy ? <Spinner size="sm" /> : <Icon name="check" size={16} />}
                   Mark complete
@@ -133,7 +156,7 @@ export function LearnWorkspace({ course, busyTopicId, onComplete }) {
 
               <button
                 type="button"
-                className={`btn learn-actions__next ${topic.completed ? 'btn--primary' : 'btn--secondary'}`}
+                className={`btn learn-actions__next ${topic.completed || demo ? 'btn--primary' : 'btn--secondary'}`}
                 disabled={!next}
                 onClick={() => next && selectTopic(next.topic.id)}
               >

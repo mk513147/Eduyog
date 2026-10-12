@@ -25,6 +25,8 @@ router.get('/services/:id', serviceController.get);
 router.patch('/services/:id', serviceController.update);
 router.delete('/services/:id', serviceController.remove);
 
+router.get('/registrations', userController.listRegistrations);
+router.patch('/users/:id/approval', userController.decideRegistration);
 router.get('/users', userController.list);
 router.get('/users/:id', userController.get);
 router.patch('/users/:id/profile', userController.updateProfile);

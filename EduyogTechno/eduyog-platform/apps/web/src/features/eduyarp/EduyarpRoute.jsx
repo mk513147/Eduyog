@@ -12,6 +12,9 @@ import './styles/account.css'
 import './styles/notifications.css'
 import './styles/assignments.css'
 import './styles/certificates.css'
+import './styles/refine.css'
+import './styles/access.css'
+import './styles/premium-ui.css'
 
 const DESCRIPTION = 'Eduyarp by Eduyog: professional training and technical courses with live classes.'
 

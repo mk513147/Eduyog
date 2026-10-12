@@ -49,7 +49,8 @@ test('every one of the original 17 Eduyarp routes is registered with the same pa
   const original = originalRoutes()
   assert.equal(original.length, 17, 'the original app defines 17 routes')
   const pages = unifiedPages()
-  assert.equal(eduyarpRoutes.length, 17)
+  assert.equal(eduyarpRoutes.length, 18, '17 original routes + the free preview (demo access)')
+  assert.ok(eduyarpRoutes.some((route) => route.id === 'eduyarp-preview' && route.access === 'student'))
   for (const old of original) {
     const route = eduyarpRoutes.find((candidate) => candidate.legacy === old.pattern)
     assert.ok(route, `no unified route for ${old.pattern}`)
@@ -58,8 +59,8 @@ test('every one of the original 17 Eduyarp routes is registered with the same pa
     assert.deepEqual(params(route.path), params(old.pattern), `${old.pattern}: param names`)
   }
   assert.equal(pages['eduyarp-not-found'], 'NotFoundPage')
-  assert.equal(new Set(eduyarpRoutes.map((route) => route.id)).size, 17)
-  assert.equal(new Set(eduyarpRoutes.map((route) => route.path)).size, 17)
+  assert.equal(new Set(eduyarpRoutes.map((route) => route.id)).size, 18)
+  assert.equal(new Set(eduyarpRoutes.map((route) => route.path)).size, 18)
 })
 
 test('the unified route map', () => {
@@ -70,6 +71,7 @@ test('the unified route map', () => {
     '/login': '/eduyarp/login',
     '/register': '/eduyarp/register',
     '/dashboard': '/eduyarp/dashboard',
+    '/preview/:courseId': '/eduyarp/preview/:courseId',
     '/my-courses/:courseId': '/eduyarp/my-courses/:courseId',
     '/my-courses/:courseId/assignments/:assignmentId': '/eduyarp/my-courses/:courseId/assignments/:assignmentId',
     '/certificates': '/eduyarp/certificates',
@@ -203,10 +205,36 @@ test('no unprefixed legacy path is left in the Eduyarp sources', () => {
 
 // ---------- Authentication and API contract preserved ----------
 
-test('endpoints, session and auth logic are unchanged from the original app', () => {
-  for (const file of ['api/endpoints.js', 'api/session.js', 'auth/AuthProvider.jsx', 'auth/AuthContext.js', 'auth/useAuth.js', 'utils/errors.js']) {
+test('session and auth context logic are unchanged from the original app', () => {
+  for (const file of ['api/session.js', 'auth/AuthContext.js', 'auth/useAuth.js', 'utils/errors.js']) {
     assert.equal(read(join(FEATURE, file)), read(join(ORIGINAL, file)), `${file} differs from the original`)
   }
+})
+
+// The approval workflow added a few lines to files that otherwise mirror the original app. Every original line
+// must still be there, in the original order; anything else must be one of the documented additions.
+function assertOnlyDocumentedAdditions(current, original, documented, label) {
+  const cur = current.replace(/\r\n/g, '\n').split('\n')
+  const orig = original.replace(/\r\n/g, '\n').split('\n')
+  let at = 0
+  const kept = new Set()
+  for (const line of orig) {
+    const found = cur.indexOf(line, at)
+    assert.ok(found >= 0, `${label}: original line was removed or changed: ${line.trim()}`)
+    kept.add(found)
+    at = found + 1
+  }
+  const added = cur.filter((_, index) => !kept.has(index)).filter((line) => line.trim() !== '')
+  for (const line of added) assert.ok(documented.test(line), `${label}: undocumented added line: ${line.trim()}`)
+}
+
+test('endpoints and AuthProvider: only the documented approval-workflow changes (no self-enrolment, no auto sign-in after registering)', () => {
+  const endpoints = read(join(FEATURE, 'api/endpoints.js'))
+  assertOnlyDocumentedAdditions(endpoints, read(join(ORIGINAL, 'api/endpoints.js')).replace(/ {2}enrol: \(courseId\) =>\n.*\n/, ''), /demoCourse|demo\)|The free preview|Certificate requests|certificateRequests|requestCertificate|certificate-request|d\.requests|d\.request\)/, 'api/endpoints.js')
+  assert.doesNotMatch(endpoints, /\/enrol/, 'students no longer enrol themselves')
+  const auth = read(join(FEATURE, 'auth/AuthProvider.jsx'))
+  assert.match(auth, /const \{ user \} = await authApi\.register\(/, 'registering returns the pending user')
+  assert.doesNotMatch(auth, /register[\s\S]{0,200}return login\(/, 'registering does not sign in')
 })
 
 test('the Eduyarp token keeps its own key and storage, and tolerates unavailable storage', async () => {

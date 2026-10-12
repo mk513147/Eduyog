@@ -16,6 +16,20 @@ export function RoleBadge({ role }) {
   )
 }
 
+const APPROVAL_STATUS = {
+  pending: { label: 'Pending', tone: 'badge--primary' },
+  approved: { label: 'Approved', tone: 'badge--success' },
+  rejected: { label: 'Rejected', tone: 'badge--danger' },
+}
+
+export function ApprovalStatusBadge({ status }) {
+  const { label, tone } = APPROVAL_STATUS[status] ?? { label: status, tone: 'badge--neutral' }
+  return <span className={`badge ${tone}`}>{label}</span>
+}
+
+// Certificate request states share the same labels and tones.
+export const RequestStatusBadge = ApprovalStatusBadge
+
 // Eduyarp
 
 const COURSE_STATUS_TONES = {

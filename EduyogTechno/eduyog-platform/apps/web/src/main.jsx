@@ -5,7 +5,9 @@ import { BASE_PATH } from './config'
 import { RouterProvider } from './router/RouterProvider'
 import { staticSiteRedirect } from './staticSites'
 import './styles/global.css'
+import './styles/brand.css'
 import './styles/eduyog-site.css'
+import './styles/home-refine.css'
 import './styles/shell.css'
 
 // "/saritex" or "/studentaq" reached the React shell (a host SPA fallback, or the dev server) instead

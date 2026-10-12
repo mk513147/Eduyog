@@ -25,6 +25,17 @@ async function login(req, res) {
     throw new HttpError(401, 'Invalid email or password');
   }
 
+  // Credentials are correct, but a Student whose registration is not approved cannot sign in. The
+  // messages say nothing beyond the account's own state, and are only given after a correct password.
+  if (!authService.isActiveAccount(user)) {
+    if (user.approvalStatus === 'pending') {
+      throw new HttpError(403, 'Your registration is waiting for approval. You can sign in once Eduyog has approved it.', {
+        code: 'account_pending',
+      });
+    }
+    throw new HttpError(403, 'This account cannot sign in. Please contact Eduyog.', { code: 'account_not_approved' });
+  }
+
   res.json({
     token: signAccessToken(user.id),
     tokenType: 'Bearer',

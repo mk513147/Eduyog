@@ -274,10 +274,6 @@
   gap: 8px;
 }
 
-.fitness-site .navbar__back {
-  display: none;
-}
-
 .fitness-site .menu-toggle {
   display: inline-grid;
   place-items: center;
@@ -318,10 +314,6 @@
   color: var(--color-text-muted);
 }
 
-.fitness-site .mobile-menu__back {
-  margin-top: 16px;
-}
-
 @media (min-width: 900px) {
   .fitness-site .navbar__nav {
     display: flex;
@@ -340,10 +332,6 @@
   .fitness-site .navbar__link:hover {
     background: var(--color-primary-soft);
     color: var(--color-text);
-  }
-
-  .fitness-site .navbar__back {
-    display: inline-flex;
   }
 
   .fitness-site .menu-toggle,

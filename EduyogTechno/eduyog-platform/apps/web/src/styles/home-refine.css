@@ -1,0 +1,291 @@
+/* Eduyog homepage refinement: tighter vertical rhythm and a soft brand background on alternate
+   sections. Scoped to .eduyog-site; uses the shared --eg-* tokens from brand.css. */
+
+.eduyog-site {
+  --section-space: var(--eg-section-y);
+}
+
+.eduyog-site .section__header {
+  margin-bottom: clamp(24px, 4vw, 36px);
+}
+
+.eduyog-site .section__lead {
+  margin-top: 12px;
+}
+
+.eduyog-site .section--alt {
+  position: relative;
+  background: var(--eg-bg-mint);
+}
+
+.eduyog-site .section--alt::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--eg-dots) 0 0 / 22px 22px;
+  mask-image: radial-gradient(ellipse at 100% 0%, #000 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.eduyog-site .section--alt > * {
+  position: relative;
+}
+
+/* Header "Education" dropdown: same pill style as the other nav items, a small panel under it on wide
+   screens, an inline list inside the mobile menu on narrow ones. */
+.eduyog-site .nav-dropdown {
+  position: relative;
+}
+
+.eduyog-site .nav-dropdown__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.eduyog-site .nav-dropdown__button[aria-expanded='true'] {
+  background: var(--indigo-50);
+  color: var(--indigo-600);
+}
+
+.eduyog-site .nav-dropdown__chevron {
+  transition: transform var(--t-fast);
+}
+
+.eduyog-site .nav-dropdown__button[aria-expanded='true'] .nav-dropdown__chevron {
+  transform: rotate(180deg);
+}
+
+.eduyog-site .nav-dropdown__menu {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 200px;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  box-shadow: var(--shadow-md);
+}
+
+.eduyog-site .nav-dropdown__menu[hidden] {
+  display: none;
+}
+
+.eduyog-site .nav-dropdown__item {
+  display: block;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.eduyog-site .nav-dropdown__item:hover,
+.eduyog-site .nav-dropdown__item:focus-visible {
+  background: var(--indigo-50);
+  color: var(--indigo-600);
+}
+
+.eduyog-site .nav-dropdown__button:focus-visible,
+.eduyog-site .nav-dropdown__item:focus-visible {
+  outline: 2px solid var(--indigo-500);
+  outline-offset: 2px;
+}
+
+@media (max-width: 1080px) {
+  .eduyog-site .nav-dropdown__button {
+    width: 100%;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-radius: var(--radius-md);
+  }
+
+  .eduyog-site .nav-dropdown__menu {
+    position: static;
+    min-width: 0;
+    margin-top: 4px;
+    box-shadow: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eduyog-site .nav-dropdown__chevron {
+    transition: none;
+  }
+}
+
+/* ---------- Header polish: one centreline, a short teal indicator, a cleaner dropdown ---------- */
+
+/* Alignment: every nav entry is a flex item centred on the header's centreline, and the dropdown button takes
+   the same font, line-height and padding as the links (a <button> defaults to line-height: normal, which made
+   it a few pixels shorter and sit higher). */
+.eduyog-site .site-nav__list {
+  align-items: center;
+}
+
+.eduyog-site .site-nav__list > li,
+.eduyog-site .nav-dropdown {
+  display: flex;
+  align-items: center;
+}
+
+.eduyog-site .nav-dropdown__button {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: inherit;
+  text-align: left;
+}
+
+.eduyog-site .site-header {
+  transition:
+    border-color var(--t-base) var(--ease-out),
+    box-shadow var(--t-base) var(--ease-out);
+}
+
+.eduyog-site .site-header.is-scrolled {
+  border-bottom-color: rgba(15, 107, 106, 0.16);
+  box-shadow: 0 10px 28px -22px rgba(11, 18, 48, 0.45);
+}
+
+/* The indicator: a short teal bar under the label on hover, keyboard focus, the open dropdown and the active item. */
+.eduyog-site .site-nav__link {
+  position: relative;
+}
+
+.eduyog-site .site-nav__link::after {
+  content: '';
+  position: absolute;
+  bottom: 3px;
+  left: 50%;
+  width: 18px;
+  height: 2px;
+  margin-left: -9px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--indigo-500), var(--violet-500));
+  opacity: 0;
+  transform: scaleX(0.3);
+  transition:
+    opacity var(--t-fast) var(--ease-out),
+    transform var(--t-base) var(--ease-out);
+}
+
+.eduyog-site .site-nav__link:hover::after,
+.eduyog-site .site-nav__link:focus-visible::after,
+.eduyog-site .site-nav__link[aria-current='page']::after,
+.eduyog-site .nav-dropdown__button[aria-expanded='true']::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.eduyog-site .site-nav__link[aria-current='page'] {
+  color: var(--indigo-600);
+}
+
+.eduyog-site .site-nav__link:focus-visible {
+  outline: 2px solid var(--indigo-500);
+  outline-offset: 2px;
+}
+
+.eduyog-site .nav-dropdown__chevron {
+  transition: transform var(--t-base) var(--ease-out);
+}
+
+/* The dropdown surface */
+.eduyog-site .nav-dropdown__menu {
+  display: grid;
+  gap: 2px;
+  min-width: 208px;
+  padding: 6px;
+  border-color: rgba(15, 107, 106, 0.16);
+  border-radius: 14px;
+  box-shadow:
+    0 22px 44px -22px rgba(11, 18, 48, 0.4),
+    0 2px 6px rgba(11, 18, 48, 0.05);
+  animation: eduyog-menu-in var(--t-fast) var(--ease-out);
+}
+
+.eduyog-site .nav-dropdown__menu[hidden] {
+  display: none;
+}
+
+.eduyog-site .nav-dropdown__item {
+  padding: 10px 14px;
+  border-radius: 10px;
+  transition:
+    background-color var(--t-fast) var(--ease-out),
+    color var(--t-fast) var(--ease-out),
+    box-shadow var(--t-fast) var(--ease-out);
+}
+
+.eduyog-site .nav-dropdown__item:hover,
+.eduyog-site .nav-dropdown__item:focus-visible {
+  box-shadow: inset 2px 0 0 var(--indigo-500);
+}
+
+@keyframes eduyog-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+/* Explore platforms: colour and shadow only, no movement or size change. */
+.eduyog-site .site-nav__cta {
+  transition:
+    background-color var(--t-fast) var(--ease-out),
+    box-shadow var(--t-base) var(--ease-out);
+}
+
+.eduyog-site .site-nav__cta:hover,
+.eduyog-site .site-nav__cta:active {
+  transform: none;
+}
+
+.eduyog-site .site-nav__cta:focus-visible {
+  outline: 2px solid var(--indigo-500);
+  outline-offset: 3px;
+}
+
+@media (max-width: 1080px) {
+  /* In the mobile menu every entry is a full-width row: a tint marks hover and the active item instead. */
+  .eduyog-site .site-nav__link::after {
+    display: none;
+  }
+
+  .eduyog-site .site-nav__link[aria-current='page'] {
+    background: var(--indigo-50);
+  }
+
+  .eduyog-site .site-nav__list {
+    align-items: stretch;
+  }
+
+  .eduyog-site .site-nav__list > li,
+  .eduyog-site .nav-dropdown {
+    display: block;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eduyog-site .site-header,
+  .eduyog-site .site-nav__link::after,
+  .eduyog-site .nav-dropdown__chevron,
+  .eduyog-site .nav-dropdown__item,
+  .eduyog-site .site-nav__cta {
+    transition: none;
+  }
+
+  .eduyog-site .nav-dropdown__menu {
+    animation: none;
+  }
+}

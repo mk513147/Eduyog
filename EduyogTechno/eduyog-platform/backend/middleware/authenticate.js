@@ -1,5 +1,5 @@
 const { verifyAccessToken } = require('../utils/jwt');
-const { findUserForAuth } = require('../services/auth.service');
+const { findUserForAuth, isActiveAccount } = require('../services/auth.service');
 const HttpError = require('../utils/httpError');
 
 // Protects a route: requires "Authorization: Bearer <token>" and sets
@@ -30,6 +30,12 @@ async function authenticate(req, res, next) {
   const found = await findUserForAuth(payload.sub);
   if (!found) {
     throw new HttpError(401, 'Invalid token');
+  }
+
+  // A Student who is pending or was rejected (including after receiving a token) is treated as signed
+  // out: 401, so the frontends clear the session. The check runs on every request.
+  if (!isActiveAccount(found.user)) {
+    throw new HttpError(401, 'Your account is not active. Please sign in again.');
   }
 
   // A password change invalidates every token issued before it. Both sides are

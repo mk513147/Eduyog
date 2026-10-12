@@ -18,6 +18,7 @@ export default function LoginPage() {
   const next = safeNextPath(query.get('next'))
   const [form, setForm] = useState({ email: '', password: '' })
   const [error, setError] = useState(null)
+  const [errorCode, setErrorCode] = useState(null)
   const [busy, setBusy] = useState(false)
 
   const update = (field) => (event) => setForm((prev) => ({ ...prev, [field]: event.target.value }))
@@ -26,6 +27,7 @@ export default function LoginPage() {
     event.preventDefault()
     setBusy(true)
     setError(null)
+    setErrorCode(null)
     try {
       const user = await login(form.email, form.password)
       // Students return to where they were (default: dashboard); Trainers land on
@@ -40,6 +42,7 @@ export default function LoginPage() {
       navigate(destination, { replace: true })
     } catch (err) {
       setError(err.status === 400 ? 'Please enter your email and password.' : err.message)
+      setErrorCode(err.details?.code ?? null)
       setBusy(false)
     }
   }
@@ -50,7 +53,7 @@ export default function LoginPage() {
         <h1 className="auth__title">Welcome back</h1>
         <p className="auth__text">Log in to continue learning.</p>
         {notice && <Alert tone="info">{notice}</Alert>}
-        {error && <Alert>{error}</Alert>}
+        {error && <Alert tone={errorCode === 'account_pending' ? 'info' : 'error'}>{error}</Alert>}
         <form className="form" onSubmit={handleSubmit} noValidate>
           <TextField
             label="Email"

@@ -1,7 +1,9 @@
 import { coursesApi } from '../api/endpoints'
 import { CourseCard } from '../components/CourseCard'
 import { Reveal, RevealItem, Stagger } from '../components/Reveal'
-import { EmptyState, ErrorState, LoadingState } from '../components/States'
+import { Linework } from '../components/Linework'
+import { CourseGridSkeleton } from '../components/Skeletons'
+import { EmptyState, ErrorState } from '../components/States'
 import { usePageTitle } from '../hooks/usePageTitle'
 import { useResource } from '../hooks/useResource'
 
@@ -10,7 +12,7 @@ export default function CatalogPage() {
   const { data: courses, error, loading, reload } = useResource(coursesApi.list)
 
   let content
-  if (loading) content = <LoadingState label="Loading courses…" />
+  if (loading) content = <CourseGridSkeleton />
   else if (error && !courses) content = <ErrorState error={error} onRetry={reload} />
   else if (courses.length === 0)
     content = (
@@ -33,6 +35,7 @@ export default function CatalogPage() {
   return (
     <>
       <section className="page-hero">
+        <Linework variant="corner" tone="dark" />
         <div className="container">
           <Reveal>
             <p className="eyebrow eyebrow--light">Eduyarp · Professional training</p>

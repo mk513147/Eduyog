@@ -28,6 +28,7 @@ router.post('/courses/:courseId/trainers', controller.assignTrainer);
 router.delete('/courses/:courseId/trainers/:trainerId', controller.unassignTrainer);
 
 router.get('/enrolments', controller.listEnrolments);
+router.post('/enrolments', controller.grantAccess);
 router.patch('/enrolments/:id', controller.updateEnrolment);
 
 router.get('/classes', controller.listClasses);
@@ -54,6 +55,9 @@ router.get('/assignments/:id/submissions', assignmentController.listSubmissions)
 router.get('/submissions/:id', assignmentController.getSubmission);
 router.put('/submissions/:id/feedback', assignmentController.setFeedback);
 
+router.get('/certificate-requests', certificateController.listRequests);
+router.post('/certificate-requests/:id/approve', certificateController.approveRequest);
+router.post('/certificate-requests/:id/reject', certificateController.rejectRequest);
 router.get('/certificates', certificateController.list);
 router.get('/certificates/:id', certificateController.get);
 router.post('/certificates/:id/revoke', certificateController.revoke);

@@ -882,6 +882,56 @@ function validateCertificateFilters(query) {
   return finish(errors, value, false);
 }
 
+// Admin decision on a student's registration: { status: 'approved' | 'rejected', reason? }.
+// The reason is optional free text (max 500 characters) and is only stored for rejections.
+function validateApprovalDecision(body) {
+  const input = body || {};
+  const errors = {};
+  const value = {};
+  if (!['approved', 'rejected'].includes(input.status)) {
+    errors.status = "Status must be 'approved' or 'rejected'";
+  } else {
+    value.status = input.status;
+  }
+  if (input.reason !== undefined && input.reason !== null) {
+    const reason = {};
+    optionalText(input, 'reason', 'Reason', 500, errors, reason);
+    value.reason = value.status === 'rejected' ? (reason.reason ?? null) : null;
+  } else {
+    value.reason = null;
+  }
+  return finish(errors, value, false);
+}
+
+// Admin grants full-course access: { studentId, courseId } (both ids, never anything else).
+function validateAccessGrant(body) {
+  const input = body || {};
+  const errors = {};
+  const value = {};
+  for (const field of ['studentId', 'courseId']) {
+    const id = parseId(typeof input[field] === 'number' ? String(input[field]) : input[field]);
+    if (id === null) errors[field] = `${field} must be a positive integer`;
+    else value[field] = id;
+  }
+  return finish(errors, value, false);
+}
+
+// Admin rejects a certificate request: a reason (max 500) is required and shown to the student.
+function validateCertificateRejection(body) {
+  const errors = {};
+  const value = {};
+  requiredText(body || {}, 'reason', 'Reason', 500, errors, value);
+  return finish(errors, value, false);
+}
+
+// Admin list filters for registrations and certificate requests.
+function validateStatusFilter(query, allowed) {
+  const status = query.status;
+  if (status === undefined || status === '') return { value: {} };
+  if (!allowed.includes(status)) return { errors: { status: `status must be one of: ${allowed.join(', ')}` } };
+  return { value: { status } };
+}
+
 module.exports = {
   validateRegistration,
   validateLogin,
@@ -907,4 +957,8 @@ module.exports = {
   validateFeedback,
   validateRevocation,
   validateCertificateFilters,
+  validateApprovalDecision,
+  validateAccessGrant,
+  validateCertificateRejection,
+  validateStatusFilter,
 };

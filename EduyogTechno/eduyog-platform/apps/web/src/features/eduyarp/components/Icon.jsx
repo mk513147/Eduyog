@@ -29,6 +29,7 @@ import {
   Layers,
   LayoutGrid,
   ListTree,
+  Lock,
   LogOut,
   Megaphone,
   Menu,
@@ -95,6 +96,7 @@ const ICONS = {
   topicOpen: Circle,
   module: FolderOpen,
   outline: ListTree,
+  lock: Lock,
 }
 
 export function Icon({ name, size = 18, className }) {

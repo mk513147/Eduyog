@@ -7,6 +7,7 @@ import LoginPage from './pages/LoginPage'
 import NotFoundPage from './pages/NotFoundPage'
 import OverviewPage from './pages/OverviewPage'
 import PlatformsPage from './pages/PlatformsPage'
+import RegistrationsPage from './pages/RegistrationsPage'
 import ServicesPage from './pages/ServicesPage'
 import UsersPage from './pages/UsersPage'
 import AnnouncementsPage from './pages/eduyarp/AnnouncementsPage'
@@ -25,6 +26,7 @@ const PAGES = {
   'admin-platforms': PlatformsPage,
   'admin-services': ServicesPage,
   'admin-users': UsersPage,
+  'admin-registrations': RegistrationsPage,
   'admin-fitness-leads': FitnessLeadsPage,
   'admin-eduyarp-courses': CoursesPage,
   'admin-eduyarp-course': CourseDetailPage,

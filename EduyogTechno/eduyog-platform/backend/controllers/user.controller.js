@@ -1,11 +1,28 @@
 const userService = require('../services/user.service');
 const profileService = require('../services/profile.service');
-const { validateProfile, validateRoleChange } = require('../utils/validators');
+const {
+  validateProfile,
+  validateRoleChange,
+  validateApprovalDecision,
+  validateStatusFilter,
+} = require('../utils/validators');
 const { getIdParam, requireValid } = require('./helpers');
 
 async function list(req, res) {
   const users = await userService.listUsers();
   res.json({ users });
+}
+
+// Admin: Student registrations (default: pending) and the approve / reject decision.
+async function listRegistrations(req, res) {
+  const { status } = requireValid(validateStatusFilter(req.query, ['pending', 'approved', 'rejected']));
+  res.json({ registrations: await userService.listRegistrations(status) });
+}
+
+async function decideRegistration(req, res) {
+  const decision = requireValid(validateApprovalDecision(req.body));
+  const user = await userService.decideRegistration(req.user.id, getIdParam(req), decision);
+  res.json({ user });
 }
 
 async function changeRole(req, res) {
@@ -35,4 +52,6 @@ module.exports = {
   get,
   updateProfile,
   changeRole,
+  listRegistrations,
+  decideRegistration,
 };

@@ -1,0 +1,32 @@
+/* ==========================================================================
+   StudentAQ — Eduyog brand alignment. Loaded after premium.css.
+   Maps StudentAQ's tokens to the Eduyog palette (teal #1f8a89, dark teal
+   #0f6b6a, green #16c06f, mint #effaf6, navy ink #0b1230), tightens the
+   vertical rhythm and adds the Back to Eduyog link. Markup is unchanged.
+   ========================================================================== */
+:root {
+  --navy-800: #0b5a59;
+  --blue-700: #0f6b6a;
+  --blue-600: #1f8a89;
+  --blue-200: #bfe8dd;
+  --blue-100: #d6f2ea;
+  --blue-50: #effaf6;
+  --color-bg: #f6fbf9;
+  --color-surface-soft: #effaf6;
+  --color-primary: #1f8a89;
+  --color-primary-hover: #0f6b6a;
+  --color-accent: #5eead4;
+  --color-ink: #0b1230;
+  --color-ink-2: #0b5a59;
+  --focus-ring: 0 0 0 4px rgba(31, 138, 137, 0.22);
+  --section-y: clamp(44px, 6vw, 80px);
+  --gradient-ink: radial-gradient(1000px 480px at 88% -10%, rgba(94, 234, 212, 0.22), transparent 60%),
+    radial-gradient(800px 480px at 0% 110%, rgba(22, 192, 111, 0.22), transparent 60%),
+    linear-gradient(160deg, #0b5a59, #0b1230);
+}
+
+.section--muted {
+  background:
+    radial-gradient(760px 360px at 100% 0%, rgba(31, 138, 137, 0.09), transparent 64%),
+    linear-gradient(180deg, #f3fbf8, #ffffff);
+}

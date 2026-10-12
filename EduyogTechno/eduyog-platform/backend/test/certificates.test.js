@@ -17,17 +17,28 @@ const complete = (user, topicId) => call('POST', `/api/eduyarp/topics/${topicId}
 const certsOf = async (user) => (await db.pool.query('SELECT * FROM certificates WHERE student_id = $1 ORDER BY id', [user.id])).rows;
 const count = async () => (await db.pool.query('SELECT count(*)::int AS n FROM certificates')).rows[0].n;
 
-// A new Student enrolled (through the API) in `course`.
+const grant = (student, course) => adminCall('POST', '/enrolments', { studentId: student.id, courseId: course.id });
+const requestsOf = async (user) =>
+  (await db.pool.query('SELECT * FROM certificate_requests WHERE student_id = $1 ORDER BY id', [user.id])).rows;
+
+// A new Student given full-course access (by the Admin, through the API) to `course`.
 async function newStudent(course, fullName) {
   const s = await createUser(db.pool, { fullName });
-  const res = await call('POST', `/api/eduyarp/courses/${course.id}/enrol`, { token: s.token });
+  const res = await grant(s, course);
   assert.equal(res.status, 201);
   return s;
 }
+// Completes every topic, then the Admin approves the pending request (so the certificate exists).
 async function finish(student, course) {
   let last;
   for (const id of course.topicIds) last = await complete(student, id);
+  await approvePending(student);
   return last;
+}
+async function approvePending(student) {
+  for (const r of (await requestsOf(student)).filter((x) => x.status === 'pending')) {
+    assert.equal((await adminCall('POST', `/certificate-requests/${r.id}/approve`)).status, 200);
+  }
 }
 
 before(async () => {
@@ -48,17 +59,28 @@ after(async () => {
 
 // ------------------------------------------------------------ generation
 
-test('enrolling or partial progress issues nothing; finishing the last topic issues exactly one', async () => {
+test('enrolling or partial progress requests nothing; finishing the last topic creates one pending request and NO certificate; approval issues exactly one', async () => {
   const s = await newStudent(A, 'Priya Sharma');
   assert.equal(await count(), 0, 'enrolment alone');
+  assert.equal((await requestsOf(s)).length, 0);
   const first = await complete(s, A.topicIds[0]);
   assert.equal(first.body.certificate, null);
   await complete(s, A.topicIds[1]);
   assert.equal((await certsOf(s)).length, 0, 'incomplete course');
+  assert.equal((await requestsOf(s)).length, 0, 'incomplete course');
   const last = await complete(s, A.topicIds[2]);
   assert.equal(last.status, 200);
   assert.equal(last.body.enrolmentStatus, 'completed');
-  assert.match(last.body.certificate.certificateNumber, NUMBER);
+  assert.equal(last.body.certificate, null, 'completion alone exposes no certificate');
+  assert.equal(last.body.certificateRequest.status, 'pending');
+  assert.equal((await certsOf(s)).length, 0);
+  assert.equal((await requestsOf(s)).length, 1);
+  const pending = await meCall(s, 'GET', `/courses/${A.id}`);
+  assert.equal(pending.body.course.certificate, null);
+  assert.equal(pending.body.course.certificateRequest.status, 'pending');
+  assert.equal((await meCall(s, 'GET', '/certificates')).body.certificates.length, 0);
+  await approvePending(s);
+  assert.equal((await complete(s, A.topicIds[2])).body.certificate.certificateNumber.length > 0, true);
   const rows = await certsOf(s);
   assert.equal(rows.length, 1);
   assert.equal(rows[0].status, 'active');
@@ -66,13 +88,15 @@ test('enrolling or partial progress issues nothing; finishing the last topic iss
   assert.equal(rows[0].course_title, 'Data Science Fundamentals');
   assert.equal(rows[0].course_id, A.id);
   assert.ok(rows[0].issued_at);
+  assert.equal((await requestsOf(s))[0].certificate_id, rows[0].id, 'the approved request points at the certificate');
   const course = await meCall(s, 'GET', `/courses/${A.id}`);
   assert.equal(course.body.course.certificate.certificateNumber, rows[0].certificate_number);
 });
 
-test('completing again is idempotent: the same certificate, never a second', async () => {
+test('completing again is idempotent: the same certificate, never a second request or certificate', async () => {
   const s = await newStudent(B, 'Repeat Student');
   await finish(s, B);
+  assert.equal((await requestsOf(s)).length, 1);
   const before = (await certsOf(s))[0];
   for (let i = 0; i < 3; i++) {
     const again = await complete(s, B.topicIds[1]);
@@ -81,19 +105,23 @@ test('completing again is idempotent: the same certificate, never a second', asy
   }
   const rows = await certsOf(s);
   assert.equal(rows.length, 1);
+  assert.equal((await requestsOf(s)).length, 1);
   assert.equal(rows[0].certificate_number, before.certificate_number);
   assert.equal(rows[0].issued_at.getTime(), before.issued_at.getTime());
 });
 
-test('concurrent completion of the last topic creates one certificate', async () => {
+test('concurrent completion of the last topic creates one request and no certificate; concurrent repeat requests stay at one', async () => {
   const s = await newStudent(A, 'Racer');
   await complete(s, A.topicIds[0]);
   await complete(s, A.topicIds[1]);
   const results = await Promise.all([1, 2, 3, 4, 5].map(() => complete(s, A.topicIds[2])));
   assert.ok(results.every((r) => r.status === 200));
-  assert.equal((await certsOf(s)).length, 1);
-  const numbers = new Set(results.map((r) => r.body.certificate?.certificateNumber));
-  assert.equal(numbers.size, 1);
+  assert.equal((await certsOf(s)).length, 0);
+  assert.equal((await requestsOf(s)).length, 1);
+  const again = await Promise.all([1, 2, 3, 4, 5].map(() => meCall(s, 'POST', `/courses/${A.id}/certificate-request`)));
+  assert.ok(again.every((r) => r.status === 200 && r.body.request.status === 'pending'), 'repeat requests return the pending one');
+  assert.equal((await requestsOf(s)).length, 1);
+  assert.equal(new Set(again.map((r) => r.body.request.id)).size, 1);
 });
 
 test('different students and courses get different, well-formed numbers', async () => {
@@ -112,9 +140,10 @@ test('a course with no topics, or an unpublished course, never produces a certif
   const empty = await createCourse(db.pool, { title: 'Empty', topicCount: 0 });
   const s = await newStudent(empty, 'Nothing To Do');
   assert.equal((await certsOf(s)).length, 0);
+  assert.equal((await requestsOf(s)).length, 0);
   const draft = await createCourse(db.pool, { title: 'Draft one', status: 'draft', topicCount: 1 });
   const d = await createUser(db.pool, { fullName: 'Drafty' });
-  assert.equal((await call('POST', `/api/eduyarp/courses/${draft.id}/enrol`, { token: d.token })).status, 404);
+  assert.equal((await grant(d, draft)).status, 404);
   assert.equal((await complete(d, draft.topicIds[0])).status, 404);
   assert.equal((await certsOf(d)).length, 0);
 });
@@ -124,9 +153,12 @@ test('a non-student, or a student not enrolled, cannot complete topics into a ce
   assert.equal((await complete(outsider, A.topicIds[0])).status, 404);
   assert.equal((await call('POST', `/api/eduyarp/topics/${A.topicIds[0]}/complete`, { token: trainer.token })).status, 403);
   assert.equal((await certsOf(outsider)).length, 0);
+  assert.equal((await requestsOf(outsider)).length, 0);
+  assert.equal((await meCall(outsider, 'POST', `/courses/${A.id}/certificate-request`)).status, 409, 'cannot request without completing');
+  assert.equal((await meCall(trainer, 'POST', `/courses/${A.id}/certificate-request`)).status, 403);
 });
 
-test('finishing the course after a cancelled enrolment: re-enrolling issues one certificate, and again never a second', async () => {
+test('finishing the course after a cancelled enrolment: re-granting creates one request; approval issues one certificate, never a second', async () => {
   const s = await newStudent(B, 'Comes Back');
   await complete(s, B.topicIds[0]);
   assert.equal((await adminCall('PATCH', `/enrolments/${(await db.pool.query('SELECT id FROM enrolments WHERE student_id = $1', [s.id])).rows[0].id}`, { status: 'cancelled' })).status, 200);
@@ -134,27 +166,31 @@ test('finishing the course after a cancelled enrolment: re-enrolling issues one 
   // progress is kept; the other topic is finished directly in the database while cancelled
   await db.pool.query('INSERT INTO topic_progress (student_id, topic_id, completed, completed_at) VALUES ($1, $2, TRUE, now())', [s.id, B.topicIds[1]]);
   assert.equal((await certsOf(s)).length, 0, 'cancelled enrolments never earn one');
-  const re = await call('POST', `/api/eduyarp/courses/${B.id}/enrol`, { token: s.token });
+  const re = await grant(s, B);
   assert.equal(re.status, 201);
   assert.equal(re.body.enrolment.status, 'completed');
-  assert.equal((await certsOf(s)).length, 1, 'completion reached by re-enrolling issues it');
-  // cancel and re-enrol once more: still one
-  await db.pool.query("UPDATE enrolments SET status = 'cancelled' WHERE student_id = $1", [s.id]);
-  assert.equal((await call('POST', `/api/eduyarp/courses/${B.id}/enrol`, { token: s.token })).status, 201);
+  assert.equal((await certsOf(s)).length, 0, 'completion reached by re-granting only requests it');
+  assert.equal((await requestsOf(s)).length, 1);
+  await approvePending(s);
   assert.equal((await certsOf(s)).length, 1);
+  // cancel and re-grant once more: still one certificate and no new request
+  await db.pool.query("UPDATE enrolments SET status = 'cancelled' WHERE student_id = $1", [s.id]);
+  assert.equal((await grant(s, B)).status, 201);
+  assert.equal((await certsOf(s)).length, 1);
+  assert.equal((await requestsOf(s)).length, 1);
 });
 
-test('a certificate survives cancellation attempts, curriculum changes and re-opening of the course', async () => {
+test('a certificate survives cancellation attempts and curriculum changes; a completed course is never reopened', async () => {
   const C = await createCourse(db.pool, { title: 'Evolving', topicCount: 2 });
   const s = await newStudent(C, 'Keeps It');
   await finish(s, C);
   const cert = (await certsOf(s))[0];
   const enrolmentId = (await db.pool.query('SELECT id FROM enrolments WHERE student_id = $1 AND course_id = $2', [s.id, C.id])).rows[0].id;
   assert.equal((await adminCall('PATCH', `/enrolments/${enrolmentId}`, { status: 'cancelled' })).status, 409, 'completed enrolments cannot be cancelled');
-  // a new topic reopens the enrolment; the certificate stays and is not duplicated on completion
+  // a new topic does NOT reopen the completed enrolment; the certificate stays and is not duplicated
   const added = await adminCall('POST', `/courses/${C.id}/modules`, { title: 'Extra module' });
   const topic = await adminCall('POST', `/modules/${added.body.module.id}/topics`, { title: 'Extra topic' });
-  assert.equal((await meCall(s, 'GET', `/courses/${C.id}`)).body.course.enrolment.status, 'active');
+  assert.equal((await meCall(s, 'GET', `/courses/${C.id}`)).body.course.enrolment.status, 'completed');
   assert.equal((await certsOf(s)).length, 1);
   assert.equal((await complete(s, topic.body.topic.id)).body.enrolmentStatus, 'completed');
   const after = await certsOf(s);
@@ -163,13 +199,14 @@ test('a certificate survives cancellation attempts, curriculum changes and re-op
   assert.equal(after[0].id, cert.id);
 });
 
-test('removing the last unfinished topic completes the course and issues the certificate (existing completion rule)', async () => {
+test('removing the last unfinished topic completes the course and requests the certificate (existing completion rule)', async () => {
   const C = await createCourse(db.pool, { title: 'Shrinking', topicCount: 2 });
   const s = await newStudent(C, 'Almost There');
   await complete(s, C.topicIds[0]);
-  assert.equal((await certsOf(s)).length, 0);
+  assert.equal((await requestsOf(s)).length, 0);
   assert.equal((await adminCall('DELETE', `/topics/${C.topicIds[1]}`)).status, 204);
-  assert.equal((await certsOf(s)).length, 1);
+  assert.equal((await certsOf(s)).length, 0);
+  assert.equal((await requestsOf(s)).length, 1);
   assert.equal((await meCall(s, 'GET', `/courses/${C.id}`)).body.course.enrolment.status, 'completed');
 });
 
@@ -181,6 +218,12 @@ test('already-completed enrolments from before certificates are not given one by
   await adminCall('PATCH', `/courses/${C.id}`, { description: 'edited' });
   await adminCall('POST', `/courses/${C.id}/modules`, { title: 'Empty module, no new topics' });
   assert.equal((await certsOf(s)).length, 0, 'no silent back-fill');
+  assert.equal((await requestsOf(s)).length, 0, 'no silent request either');
+  // the legacy student asks explicitly, and then it follows the same approval
+  const asked = await meCall(s, 'POST', `/courses/${C.id}/certificate-request`);
+  assert.equal(asked.status, 201);
+  assert.equal(asked.body.request.status, 'pending');
+  assert.equal((await certsOf(s)).length, 0);
 });
 
 // ------------------------------------------------------------ snapshots
@@ -208,18 +251,19 @@ test('snapshots: renaming the student or the course, or changing other details, 
   assert.equal(row.status, 'active', 'course changes never revoke');
   // a later certificate for the renamed student uses the current name
   const D = await createCourse(db.pool, { title: 'Second Course', topicCount: 1 });
-  assert.equal((await call('POST', `/api/eduyarp/courses/${D.id}/enrol`, { token: s.token })).status, 201);
+  assert.equal((await grant(s, D)).status, 201);
   await finish(s, D);
   const second = (await certsOf(s)).find((c) => c.course_id === D.id);
   assert.equal(second.student_name, 'New Name');
 });
 
-test('the display name used is users.full_name at the moment of completion', async () => {
+test('the display name used is users.full_name when the Admin approves', async () => {
   const C = await createCourse(db.pool, { title: 'Name Check', topicCount: 1 });
   const s = await newStudent(C, 'Before Rename');
   await call('PATCH', '/api/me/profile', { token: s.token, body: { fullName: 'After Rename' } });
   await finish(s, C);
   assert.equal((await certsOf(s))[0].student_name, 'After Rename');
+  assert.equal((await certsOf(s))[0].course_title, 'Name Check');
 });
 
 // ------------------------------------------------------------ student access
@@ -364,6 +408,8 @@ test('a revoked certificate stays in every list, is visible to the student marke
   assert.equal((await adminCall('GET', `/certificates/${cert.id}`)).body.certificate.revocationReason, 'Confidential reason');
   await complete(s, C.topicIds[0]);
   assert.equal((await certsOf(s)).length, 1, 'completing again does not issue a replacement');
+  assert.equal((await requestsOf(s)).length, 1, 'nor a new request');
+  assert.equal((await meCall(s, 'POST', `/courses/${C.id}/certificate-request`)).status, 409, 'a revoked certificate cannot be re-requested');
   assert.equal((await certsOf(s))[0].status, 'revoked');
 });
 

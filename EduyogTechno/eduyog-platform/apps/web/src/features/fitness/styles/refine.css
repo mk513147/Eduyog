@@ -1,0 +1,42 @@
+/* Fitness visual refinement: tighter vertical rhythm, soft brand backgrounds, restrained motion.
+   Scoped to .fitness-site; uses the shared --eg-* tokens from src/styles/brand.css. */
+
+.fitness-site {
+  --section-space: var(--eg-section-y);
+}
+
+.fitness-site .hero {
+  padding: clamp(36px, 6vw, 80px) 0 clamp(40px, 7vw, 88px);
+}
+
+.fitness-site .section-header {
+  margin-bottom: clamp(24px, 4vw, 40px);
+}
+
+.fitness-site .section--tinted {
+  position: relative;
+  background: var(--eg-bg-mint);
+}
+
+.fitness-site .section--tinted::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--eg-dots) 0 0 / 22px 22px;
+  mask-image: radial-gradient(ellipse at 100% 0%, #000 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.fitness-site .section--tinted > * {
+  position: relative;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .fitness-site .hero__grid > :first-child {
+    animation: eg-rise 600ms var(--eg-ease) both;
+  }
+
+  .fitness-site .hero__grid > :last-child {
+    animation: eg-fade 800ms var(--eg-ease) 120ms both;
+  }
+}

@@ -8,6 +8,7 @@ const {
   validateCurriculumItem,
   validateTrainerAssignment,
   validateEnrolmentUpdate,
+  validateAccessGrant,
   validateClass,
 } = require('../utils/validators');
 const { getIdParam, requireValid } = require('./helpers');
@@ -113,6 +114,13 @@ async function listEnrolments(req, res) {
   res.json({ enrolments });
 }
 
+// Grants a Student full-course access (an active enrolment). Revoking is the PATCH below (cancel).
+async function grantAccess(req, res) {
+  const { studentId, courseId } = requireValid(validateAccessGrant(req.body));
+  const enrolment = await enrolmentService.grantAccess(req.user.id, studentId, courseId);
+  res.status(201).json({ enrolment });
+}
+
 async function updateEnrolment(req, res) {
   const id = getIdParam(req);
   requireValid(validateEnrolmentUpdate(req.body));
@@ -161,6 +169,7 @@ module.exports = {
   assignTrainer,
   unassignTrainer,
   listEnrolments,
+  grantAccess,
   updateEnrolment,
   listClasses,
   createClass,

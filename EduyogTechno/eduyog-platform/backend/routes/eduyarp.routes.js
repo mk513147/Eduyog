@@ -18,6 +18,7 @@ router.get('/courses/:slug', eduyarpController.getCourse);
 
 // Student: always scoped to the signed-in student (req.user).
 router.post('/courses/:courseId/enrol', student, eduyarpController.enrol);
+router.get('/courses/:courseId/demo', student, eduyarpController.getDemoCourse);
 router.get('/me/courses', student, eduyarpController.listMyCourses);
 router.get('/me/courses/:courseId', student, eduyarpController.getMyCourse);
 router.get('/me/courses/:courseId/faqs', student, contentController.listFaqs);
@@ -26,6 +27,8 @@ router.get('/me/courses/:courseId/assignments', student, assignmentController.li
 router.get('/me/assignments/:id', student, assignmentController.getMine);
 router.post('/me/assignments/:id/submissions', student, assignmentController.submit);
 router.get('/me/certificates', student, certificateController.listMine);
+router.get('/me/certificate-requests', student, certificateController.listMyRequests);
+router.post('/me/courses/:courseId/certificate-request', student, certificateController.requestMine);
 router.get('/me/certificates/:id', student, certificateController.getMine);
 router.get('/me/schedule', student, eduyarpController.getMySchedule);
 router.post('/topics/:topicId/complete', student, eduyarpController.completeTopic);

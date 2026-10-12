@@ -1,5 +1,7 @@
 const courseService = require('../services/eduyarpCourse.service');
 const enrolmentService = require('../services/eduyarpEnrolment.service');
+const demoService = require('../services/eduyarpDemo.service');
+const HttpError = require('../utils/httpError');
 const { getIdParam } = require('./helpers');
 
 // ---------------------------------------------------------------------------
@@ -20,9 +22,16 @@ async function getCourse(req, res) {
 // Student: the student is always req.user, set by authenticate.
 // ---------------------------------------------------------------------------
 
-async function enrol(req, res) {
-  const enrolment = await enrolmentService.enrol(req.user.id, getIdParam(req, 'courseId'));
-  res.status(201).json({ enrolment });
+// Students cannot enrol themselves: full-course access is granted by an Admin. The route stays so
+// older clients get a clear answer instead of a 404.
+function enrol() {
+  throw new HttpError(403, 'Full-course access is granted by Eduyog. Contact us to get access.', { code: 'access_by_admin' });
+}
+
+// The first two topics of the first module of a published course, no enrolment needed.
+async function getDemoCourse(req, res) {
+  const course = await demoService.getDemoCourse(req.user.id, getIdParam(req, 'courseId'));
+  res.json({ course });
 }
 
 async function listMyCourses(req, res) {
@@ -49,6 +58,7 @@ module.exports = {
   listCourses,
   getCourse,
   enrol,
+  getDemoCourse,
   listMyCourses,
   getMyCourse,
   getMySchedule,

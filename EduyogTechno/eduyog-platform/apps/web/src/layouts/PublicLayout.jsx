@@ -1,18 +1,27 @@
 import { useEffect, useRef, useState } from 'react'
 import { BrandLogo } from '../components/BrandLogo'
-import { CONTACT_EMAIL, WHATSAPP_URL } from '../config'
+import { SiteFooter } from '../components/SiteFooter'
+import { BASE_PATH, WHATSAPP_URL } from '../config'
+import { sectionLinks } from '../lib/siteLinks'
 import { Link } from '../router/Link'
+import { useRouter } from '../router/useRouter'
 import { useFocusMainOnNavigation } from '../router/useFocusMainOnNavigation'
 
 const MOBILE_NAV_QUERY = '(max-width: 1080px)'
 
+// Header items: a plain link, or the Education dropdown ("menu": its items come from the shared section list,
+// so the destinations are the existing Eduyarp route and the StudentAQ and Saritex static sites).
 const NAV_LINKS = [
   { to: '/#home', label: 'Home' },
-  { to: '/#learn', label: 'Eduyarp' },
-  { to: '/#fitness', label: 'Fitness' },
-  { to: '/#education', label: 'Platforms' },
+  { menu: 'education', label: 'Education' },
+  { to: '/fitness', label: 'Fitness' },
   { to: '/#contact', label: 'Contact' },
 ]
+const EDUCATION_IDS = ['eduyarp', 'studentaq', 'saritex']
+const educationItems = () => {
+  const all = sectionLinks('eduyog', BASE_PATH)
+  return EDUCATION_IDS.map((id) => all.find((item) => item.id === id))
+}
 
 const FOOTER_LINKS = [
   { to: '/#home', label: 'Home' },
@@ -22,11 +31,108 @@ const FOOTER_LINKS = [
   { to: '/#contact', label: 'Contact' },
 ]
 
+// A disclosure dropdown: click, tap or Enter/Space/ArrowDown opens it; Escape (focus returns to the button),
+// a click outside or Tab closes it; ArrowUp/Down, Home and End move between the items. On narrow screens it
+// opens inline inside the mobile menu, so it cannot run off the screen.
+function EducationMenu({ onNavigate }) {
+  const [open, setOpen] = useState(false)
+  const focusFirst = useRef(false)
+  const rootRef = useRef(null)
+  const buttonRef = useRef(null)
+  const listRef = useRef(null)
+  const items = educationItems()
+
+  useEffect(() => {
+    if (!open) return undefined
+    const onClick = (event) => {
+      if (!rootRef.current?.contains(event.target)) setOpen(false)
+    }
+    const onKeyDown = (event) => {
+      if (event.key !== 'Escape') return
+      setOpen(false)
+      buttonRef.current?.focus()
+    }
+    document.addEventListener('click', onClick)
+    document.addEventListener('keydown', onKeyDown)
+    return () => {
+      document.removeEventListener('click', onClick)
+      document.removeEventListener('keydown', onKeyDown)
+    }
+  }, [open])
+
+  useEffect(() => {
+    if (open && focusFirst.current) listRef.current?.querySelector('[role="menuitem"]')?.focus()
+    focusFirst.current = false
+  }, [open])
+
+  const onButtonKeyDown = (event) => {
+    if (event.key === 'ArrowDown') {
+      event.preventDefault()
+      setOpen(true)
+      focusFirst.current = true
+    }
+  }
+
+  const onListKeyDown = (event) => {
+    const links = [...listRef.current.querySelectorAll('[role="menuitem"]')]
+    const index = links.indexOf(document.activeElement)
+    const move = { ArrowDown: (index + 1) % links.length, ArrowUp: (index - 1 + links.length) % links.length, Home: 0, End: links.length - 1 }[event.key]
+    if (move !== undefined) {
+      event.preventDefault()
+      links[move].focus()
+    } else if (event.key === 'Tab') {
+      setOpen(false)
+    }
+  }
+
+  const choose = () => {
+    setOpen(false)
+    onNavigate()
+  }
+
+  return (
+    <div className="nav-dropdown" ref={rootRef}>
+      <button
+        ref={buttonRef}
+        type="button"
+        className="site-nav__link nav-dropdown__button"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-controls="education-menu"
+        onClick={() => setOpen((value) => !value)}
+        onKeyDown={onButtonKeyDown}
+      >
+        Education
+        <svg className="nav-dropdown__chevron" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+      </button>
+      <ul id="education-menu" ref={listRef} className="nav-dropdown__menu" role="menu" aria-label="Education" hidden={!open} onKeyDown={onListKeyDown}>
+        {items.map((item) => (
+          <li key={item.id} role="none">
+            {item.to ? (
+              <Link role="menuitem" className="nav-dropdown__item" to={item.to} onClick={choose}>
+                {item.label}
+              </Link>
+            ) : (
+              <a role="menuitem" className="nav-dropdown__item" href={item.href} onClick={choose}>
+                {item.label}
+              </a>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
 // Public-visitor layout: shared header, footer and WhatsApp button. Role-specific layouts (student,
 // trainer, admin) are separate and are added when those areas are migrated; public navigation must
 // stay distinct from them.
 export function PublicLayout({ children }) {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(() => typeof window !== 'undefined' && window.scrollY > 8)
+  const { path } = useRouter()
   const toggleRef = useRef(null)
   const navRef = useRef(null)
   const mainRef = useRef(null)
@@ -52,6 +158,13 @@ export function PublicLayout({ children }) {
     }
   }, [menuOpen])
 
+  // A hairline and a soft shadow appear under the header once the page has scrolled.
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
   // Reset when switching to the desktop layout.
   useEffect(() => {
     const query = window.matchMedia?.(MOBILE_NAV_QUERY)
@@ -71,7 +184,7 @@ export function PublicLayout({ children }) {
         Skip to main content
       </a>
 
-      <header className="site-header" id="top">
+      <header className={`site-header${scrolled ? ' is-scrolled' : ''}`} id="top">
         <div className="container header__inner">
           <Link className="logo" to="/#home" aria-label="Eduyog home">
             <BrandLogo />
@@ -97,10 +210,19 @@ export function PublicLayout({ children }) {
           <nav ref={navRef} className={`site-nav${menuOpen ? ' is-open' : ''}`} id="site-nav" aria-label="Main">
             <ul className="site-nav__list">
               {NAV_LINKS.map((item) => (
-                <li key={item.to}>
-                  <Link className="site-nav__link" to={item.to} onClick={closeMenu}>
-                    {item.label}
-                  </Link>
+                <li key={item.to ?? item.menu}>
+                  {item.menu ? (
+                    <EducationMenu onNavigate={closeMenu} />
+                  ) : (
+                    <Link
+                      className="site-nav__link"
+                      to={item.to}
+                      onClick={closeMenu}
+                      aria-current={item.to === '/#home' && path === '/' ? 'page' : undefined}
+                    >
+                      {item.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
@@ -115,35 +237,13 @@ export function PublicLayout({ children }) {
         {children}
       </main>
 
-      <footer className="site-footer">
-        <div className="container footer__inner">
-          <div className="footer__brand">
-            <Link className="logo logo--light" to="/#home" aria-label="Eduyog home">
-              <BrandLogo />
-              <span className="logo__text">
-                Eduyog<span className="logo__accent">.</span>
-              </span>
-            </Link>
-            <p className="footer__tagline">Education, Skills, Careers &amp; Fitness – One Integrated Platform.</p>
-            <p className="footer__email">
-              <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
-            </p>
-          </div>
-
-          <nav aria-label="Footer">
-            <ul className="footer__links">
-              {FOOTER_LINKS.map((item) => (
-                <li key={item.to}>
-                  <Link to={item.to}>{item.label}</Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </div>
-        <div className="container footer__bottom">
-          <p>&copy; {new Date().getFullYear()} Eduyog Techno Solution Pvt. Ltd. All rights reserved.</p>
-        </div>
-      </footer>
+      <SiteFooter
+        current="eduyog"
+        brandLabel="Eduyog"
+        tagline="Education, Skills, Careers & Fitness – One Integrated Platform."
+        exploreTitle="Explore"
+        exploreLinks={FOOTER_LINKS}
+      />
 
       {/* Floating WhatsApp contact. The number is the one used by the StudentAQ site (websites/studentaq/assets/js/data.js). */}
       <a

@@ -1,0 +1,97 @@
+/* Eduyarp visual refinement: tighter vertical rhythm, a brand-teal hero overlay, soft section
+   backgrounds and restrained motion. Loaded last; every rule is scoped to .eduyarp-site and uses the
+   shared --eg-* tokens from src/styles/brand.css. */
+
+.eduyarp-site {
+  --section-space: var(--eg-section-y);
+  --color-focus: var(--eg-teal);
+}
+
+.eduyarp-site .section-head {
+  margin-bottom: clamp(24px, 3.5vw, 36px);
+}
+
+.eduyarp-site .section-head .eyebrow {
+  margin-bottom: 8px;
+}
+
+.eduyarp-site .landing-hero {
+  padding: clamp(36px, 5.5vw, 72px) 0 clamp(40px, 6vw, 80px);
+  background:
+    linear-gradient(90deg, rgba(7, 52, 52, 0.9) 0%, rgba(11, 90, 89, 0.72) 55%, rgba(15, 107, 106, 0.4) 100%),
+    url('../../../assets/eduyarp/eduyarp-hero-image.jpg') center / cover no-repeat;
+}
+
+.eduyarp-site .landing-hero__grid {
+  gap: clamp(28px, 4vw, 44px);
+}
+
+.eduyarp-site .landing-hero__text {
+  margin-top: 16px;
+}
+
+.eduyarp-site .landing-hero__actions {
+  margin-top: 24px;
+}
+
+.eduyarp-site .hv-player {
+  background:
+    radial-gradient(circle at 30% 20%, rgba(94, 234, 212, 0.35), transparent 55%),
+    linear-gradient(135deg, #0f6b6a, #073c3c);
+}
+
+/* Soft backgrounds for the alternating sections */
+.eduyarp-site .section--tint {
+  position: relative;
+  background: var(--eg-bg-mint);
+}
+
+.eduyarp-site .section--tint::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--eg-dots) 0 0 / 22px 22px;
+  mask-image: radial-gradient(ellipse at 100% 0%, #000 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.eduyarp-site .section--tint > * {
+  position: relative;
+}
+
+/* Cards: mint-tinted border, gentle lift */
+.eduyarp-site .card {
+  border-color: rgba(31, 138, 137, 0.16);
+  transition:
+    transform 200ms var(--eg-ease),
+    box-shadow 200ms var(--eg-ease),
+    border-color 200ms var(--eg-ease);
+}
+
+.eduyarp-site a.card:hover,
+.eduyarp-site .card--interactive:hover {
+  transform: translateY(-3px);
+  border-color: rgba(31, 138, 137, 0.4);
+}
+
+/* Entrance animation, only where motion is allowed */
+@media (prefers-reduced-motion: no-preference) {
+  .eduyarp-site .landing-hero__grid > :first-child {
+    animation: eg-rise 600ms var(--eg-ease) both;
+  }
+
+  .eduyarp-site .landing-hero__grid > :last-child {
+    animation: eg-fade 800ms var(--eg-ease) 120ms both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eduyarp-site .card {
+    transition: none;
+  }
+
+  .eduyarp-site a.card:hover,
+  .eduyarp-site .card--interactive:hover {
+    transform: none;
+  }
+}

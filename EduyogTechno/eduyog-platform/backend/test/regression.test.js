@@ -43,15 +43,20 @@ test('register, login and /auth/me still work and return the same shape', async 
   const email = `reg-${Date.now()}@test.example`;
   const reg = await call('POST', '/api/auth/register', { body: { fullName: 'Reg User', email, password: 'password123' } });
   assert.equal(reg.status, 201);
-  assert.deepEqual(Object.keys(reg.body.user).sort(), ['createdAt', 'email', 'fullName', 'id', 'role']);
+  assert.deepEqual(Object.keys(reg.body.user).sort(), ['approvalStatus', 'createdAt', 'email', 'fullName', 'id', 'role']);
   assert.equal(reg.body.user.role, 'student');
+  assert.equal(reg.body.user.approvalStatus, 'pending', 'a new registration waits for approval');
+  // a pending student cannot sign in until an Admin approves (see approval.test.js for the full matrix)
+  assert.equal((await call('POST', '/api/auth/login', { body: { email, password: 'password123' } })).status, 403);
+  const approved = await call('PATCH', `/api/admin/users/${reg.body.user.id}/approval`, { token: admin.token, body: { status: 'approved' } });
+  assert.equal(approved.status, 200);
   const login = await call('POST', '/api/auth/login', { body: { email, password: 'password123' } });
   assert.equal(login.status, 200);
   assert.ok(login.body.token);
   assert.equal(login.body.tokenType, 'Bearer');
   const me = await call('GET', '/api/auth/me', { token: login.body.token });
   assert.equal(me.status, 200);
-  assert.deepEqual(Object.keys(me.body.user).sort(), ['createdAt', 'email', 'fullName', 'id', 'role']);
+  assert.deepEqual(Object.keys(me.body.user).sort(), ['approvalStatus', 'createdAt', 'email', 'fullName', 'id', 'role']);
   assert.doesNotMatch(me.text, /passwordChangedAt|password_changed_at|password/i, 'the new column is not exposed');
 });
 
@@ -81,9 +86,11 @@ test('public course catalogue and detail are unchanged', async () => {
 
 test('enrolment, progress, topic completion and schedule still work for a Student', async () => {
   const student = await createUser(db.pool);
-  const enrolRes = await call('POST', `/api/eduyarp/courses/${course.id}/enrol`, { token: student.token });
+  // students cannot enrol themselves any more: the Admin grants access
+  assert.equal((await call('POST', `/api/eduyarp/courses/${course.id}/enrol`, { token: student.token })).status, 403);
+  const enrolRes = await call('POST', '/api/admin/eduyarp/enrolments', { token: admin.token, body: { studentId: student.id, courseId: course.id } });
   assert.equal(enrolRes.status, 201);
-  assert.equal((await call('POST', `/api/eduyarp/courses/${course.id}/enrol`, { token: student.token })).status, 409);
+  assert.equal((await call('POST', '/api/admin/eduyarp/enrolments', { token: admin.token, body: { studentId: student.id, courseId: course.id } })).status, 409);
 
   const first = await call('POST', `/api/eduyarp/topics/${course.topicIds[0]}/complete`, { token: student.token });
   assert.equal(first.status, 200);
@@ -120,7 +127,7 @@ test('Admin course, enrolment and user lists still work', async () => {
     assert.equal((await call('GET', path, { token: admin.token })).status, 200, path);
   }
   const users = await call('GET', '/api/admin/users', { token: admin.token });
-  assert.deepEqual(Object.keys(users.body.users[0]).sort(), ['createdAt', 'email', 'fullName', 'id', 'role', 'updatedAt']);
+  assert.deepEqual(Object.keys(users.body.users[0]).sort(), ['approvalStatus', 'createdAt', 'email', 'fullName', 'id', 'role', 'updatedAt']);
 });
 
 test('Student -> Trainer cancels active enrolments, keeps progress and history', async () => {
@@ -158,7 +165,7 @@ test('completed enrolments are not cancelled by a role change', async () => {
   assert.deepEqual((await enrolments(student.id)).map((r) => r.status), ['completed']);
 });
 
-test('Trainer -> Student does not restore cancelled enrolments; the student can re-enrol', async () => {
+test('Trainer -> Student does not restore cancelled enrolments; the Admin can grant access again', async () => {
   const person = await createUser(db.pool);
   const c = await createCourse(db.pool, { title: 'Role change D', topicCount: 3 });
   await enrol(db.pool, person.id, c.id);
@@ -170,7 +177,7 @@ test('Trainer -> Student does not restore cancelled enrolments; the student can 
   const noAccess = await call('GET', `/api/eduyarp/me/courses/${c.id}`, { token: person.token });
   assert.equal(noAccess.status, 404, 'a cancelled enrolment gives no access');
 
-  const again = await call('POST', `/api/eduyarp/courses/${c.id}/enrol`, { token: person.token });
+  const again = await call('POST', '/api/admin/eduyarp/enrolments', { token: admin.token, body: { studentId: person.id, courseId: c.id } });
   assert.equal(again.status, 201);
   const rows = await enrolments(person.id);
   assert.deepEqual(rows.map((r) => r.status), ['cancelled', 'active'], 'history kept, a new enrolment created');

@@ -10,14 +10,14 @@
   --ink-950: #070b1f;
   --ink-900: #0b1230;
   --ink-800: #121c4a;
-  --indigo-600: #4f46e5;
-  --indigo-500: #6366f1;
-  --indigo-100: #e0e7ff;
-  --indigo-50: #eef2ff;
+  --indigo-600: #0f6b6a;
+  --indigo-500: #1f8a89;
+  --indigo-100: #d3efe7;
+  --indigo-50: #effaf6;
   --teal-600: #0d9488;
   --teal-700: #0f766e;
-  --cyan-400: #22d3ee;
-  --violet-500: #8b5cf6;
+  --cyan-400: #5eead4;
+  --violet-500: #16c06f;
   --orange-500: #f97316;
   --orange-700: #c2410c;
 
@@ -54,7 +54,7 @@
   --section-space: clamp(64px, 9vw, 112px);
 
   --gradient-brand: linear-gradient(120deg, var(--indigo-600) 0%, var(--violet-500) 55%, var(--cyan-400) 120%);
-  --gradient-ink: radial-gradient(1200px 500px at 85% -10%, rgba(99, 102, 241, 0.45), transparent 60%),
+  --gradient-ink: radial-gradient(1200px 500px at 85% -10%, rgba(31, 138, 137, 0.45), transparent 60%),
     radial-gradient(900px 500px at 0% 110%, rgba(20, 184, 166, 0.28), transparent 60%), var(--ink-900);
 
   --font-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -165,11 +165,11 @@
 }
 
 .eduyog-site .eyebrow--light {
-  color: #a5b4fc;
+  color: #8de3cc;
 }
 
 .eduyog-site .text-gradient {
-  background: linear-gradient(100deg, #a5b4fc 0%, #67e8f9 100%);
+  background: linear-gradient(100deg, #8de3cc 0%, #99f6e4 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -225,13 +225,13 @@
 .eduyog-site .btn--primary {
   background: var(--indigo-600);
   color: #fff;
-  box-shadow: 0 6px 18px -8px rgba(79, 70, 229, 0.65);
+  box-shadow: 0 6px 18px -8px rgba(15, 107, 106, 0.65);
 }
 
 .eduyog-site .btn--primary:hover {
-  background: #4338ca;
+  background: #0b5a59;
   transform: translateY(-1px);
-  box-shadow: 0 10px 24px -8px rgba(79, 70, 229, 0.7);
+  box-shadow: 0 10px 24px -8px rgba(15, 107, 106, 0.7);
 }
 
 .eduyog-site .btn--ghost {
@@ -302,7 +302,7 @@
   background: var(--gradient-brand);
   color: #fff;
   font-weight: 800;
-  box-shadow: 0 6px 16px -6px rgba(79, 70, 229, 0.7);
+  box-shadow: 0 6px 16px -6px rgba(15, 107, 106, 0.7);
 }
 
 .eduyog-site .logo__text {
@@ -853,7 +853,7 @@
 }
 
 .eduyog-site .section--alt {
-  background: linear-gradient(180deg, #eef1ff 0%, var(--bg) 100%);
+  background: linear-gradient(180deg, #effaf6 0%, var(--bg) 100%);
 }
 
 .eduyog-site .section__header {
@@ -1009,7 +1009,7 @@
 
 .eduyog-site .edu-card:hover {
   transform: translateY(-5px);
-  border-color: #c7d2fe;
+  border-color: #c9efe3;
   box-shadow: var(--shadow-lg);
 }
 
@@ -1131,7 +1131,7 @@
 }
 
 .eduyog-site .steps__item:hover {
-  border-color: #c7d2fe;
+  border-color: #c9efe3;
   box-shadow: var(--shadow-md);
 }
 
@@ -1257,7 +1257,7 @@
 .eduyog-site .partner-cta__text {
   max-width: 56ch;
   margin-top: 6px;
-  color: #cbd3ff;
+  color: #cdeee4;
 }
 
 .eduyog-site .partner-cta .btn--primary {
@@ -1295,12 +1295,12 @@
 
 .eduyog-site .contact-card__intro {
   margin-top: 12px;
-  color: #cbd3ff;
+  color: #cdeee4;
 }
 
 .eduyog-site .contact-card__placeholder {
   margin-top: 8px;
-  color: #a5b0ff;
+  color: #8de3cc;
   font-size: 14px;
 }
 
@@ -1314,7 +1314,7 @@
 
 .eduyog-site .site-footer {
   background: var(--ink-950);
-  color: #94a0d4;
+  color: #9fc9c0;
   padding: 48px 0 0;
 }
 
@@ -1338,7 +1338,7 @@
 }
 
 .eduyog-site .footer__links a {
-  color: #c7d0ff;
+  color: #c9efe3;
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;
@@ -1454,7 +1454,7 @@
 
 .eduyog-site .contact-card__email {
   margin-top: 14px;
-  color: #cbd3ff;
+  color: #cdeee4;
   font-size: 1.0625rem;
   overflow-wrap: anywhere;
 }
@@ -1479,6 +1479,6 @@
 }
 
 .eduyog-site .footer__email a {
-  color: #dbe3ff;
+  color: #d6f2ea;
   font-weight: 500;
 }

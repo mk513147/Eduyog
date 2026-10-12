@@ -49,14 +49,12 @@ export function AuthProvider({ children }) {
     return user
   }, [])
 
-  // Registration always creates a Student account; then sign in.
-  const register = useCallback(
-    async (fullName, email, password) => {
-      await authApi.register(fullName, email, password)
-      return login(email, password)
-    },
-    [login],
-  )
+  // Registration always creates a Student account that waits for an Admin's approval, so it does NOT sign
+  // in. Resolves with the new (pending) user.
+  const register = useCallback(async (fullName, email, password) => {
+    const { user } = await authApi.register(fullName, email, password)
+    return user
+  }, [])
 
   // Keeps the header in step after a profile save (the display name can change).
   const updateUser = useCallback((changes) => {

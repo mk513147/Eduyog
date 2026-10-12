@@ -1,0 +1,95 @@
+/* Demo access and approval states: the locked-topic panel, the contact action, certificate request
+   states and the "waiting for approval" screen. Scoped to .eduyarp-site, brand tokens only. */
+
+.eduyarp-site .access-cta {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 var(--space-4, 16px);
+  padding: 16px 18px;
+  border: 1px solid rgba(31, 138, 137, 0.22);
+  border-radius: var(--radius-md, 12px);
+  background: var(--eg-bg-soft);
+}
+
+.eduyarp-site .access-cta--compact {
+  margin: 14px 0 0;
+  padding: 12px 14px;
+}
+
+.eduyarp-site .access-cta__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--eg-teal-dark);
+  font-weight: 700;
+}
+
+.eduyarp-site .access-cta__text {
+  margin: 0;
+  color: var(--slate-600, #475569);
+  font-size: 0.9375rem;
+}
+
+.eduyarp-site .access-cta__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.eduyarp-site .learn-locked {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+  padding: 22px 20px;
+  border: 1px dashed rgba(31, 138, 137, 0.4);
+  border-radius: var(--radius-md, 12px);
+  background: var(--eg-bg-soft);
+  color: var(--slate-700, #334155);
+}
+
+.eduyarp-site .learn-locked__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--eg-mint-2);
+  color: var(--eg-teal-dark);
+}
+
+.eduyarp-site .learn-locked__title {
+  margin: 0;
+  font-weight: 700;
+}
+
+.eduyarp-site .learn-locked__text {
+  margin: 0;
+}
+
+.eduyarp-site .outline-topic.is-locked {
+  color: var(--slate-500, #64748b);
+}
+
+.eduyarp-site .outline-topic.is-locked .outline-topic__icon {
+  color: var(--slate-400, #94a3b8);
+}
+
+.eduyarp-site .completion__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.eduyarp-site .approval-notice {
+  display: grid;
+  gap: 10px;
+  text-align: left;
+}
+
+.eduyarp-site .approval-notice__title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+}

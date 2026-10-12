@@ -18,19 +18,28 @@ function toPublicUser(row) {
     fullName: row.full_name,
     email: row.email,
     role: row.role,
+    // 'pending' | 'approved' | 'rejected'. Only Students are gated by it (see isActiveAccount).
+    approvalStatus: row.approval_status,
     createdAt: row.created_at,
   };
+}
+
+// A Student may sign in and use a token only once an Admin has approved the registration. Trainers
+// and Admins are never gated by it.
+function isActiveAccount(user) {
+  return user.role !== 'student' || user.approvalStatus === 'approved';
 }
 
 async function registerStudent({ fullName, email, password }) {
   const passwordHash = await bcrypt.hash(password, BCRYPT_ROUNDS);
 
   try {
-    // role is intentionally omitted so the column default ('student') applies.
+    // role is intentionally omitted so the column default ('student') applies, and the approval status
+    // is always 'pending' here: nothing in the request can choose either.
     const { rows } = await pool.query(
-      `INSERT INTO users (full_name, email, password_hash)
-       VALUES ($1, $2, $3)
-       RETURNING id, full_name, email, role, created_at`,
+      `INSERT INTO users (full_name, email, password_hash, approval_status)
+       VALUES ($1, $2, $3, 'pending')
+       RETURNING id, full_name, email, role, approval_status, created_at`,
       [fullName, email, passwordHash]
     );
     return toPublicUser(rows[0]);
@@ -48,7 +57,7 @@ async function registerStudent({ fullName, email, password }) {
 // Returns the public user, or null if the email or password is wrong.
 async function verifyCredentials(email, password) {
   const { rows } = await pool.query(
-    `SELECT id, full_name, email, role, created_at, password_hash
+    `SELECT id, full_name, email, role, approval_status, created_at, password_hash
      FROM users
      WHERE email = $1`,
     [email]
@@ -68,7 +77,7 @@ async function verifyCredentials(email, password) {
 // changed (NULL if never), which is not part of the public user.
 async function findUserForAuth(id) {
   const { rows } = await pool.query(
-    `SELECT id, full_name, email, role, created_at, password_changed_at
+    `SELECT id, full_name, email, role, approval_status, created_at, password_changed_at
      FROM users
      WHERE id = $1`,
     [id]
@@ -106,7 +115,7 @@ async function changePassword(userId, currentPassword, newPassword) {
 
 async function findUserById(id) {
   const { rows } = await pool.query(
-    `SELECT id, full_name, email, role, created_at
+    `SELECT id, full_name, email, role, approval_status, created_at
      FROM users
      WHERE id = $1`,
     [id]
@@ -116,6 +125,7 @@ async function findUserById(id) {
 
 module.exports = {
   BCRYPT_ROUNDS,
+  isActiveAccount,
   registerStudent,
   verifyCredentials,
   findUserById,

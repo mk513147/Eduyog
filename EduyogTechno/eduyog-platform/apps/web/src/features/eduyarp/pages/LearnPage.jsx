@@ -7,7 +7,7 @@ import { Icon } from '../components/Icon'
 import { CourseExtras } from '../components/learn/CourseExtras'
 import { LearnWorkspace } from '../components/learn/LearnWorkspace'
 import { ProgressBar } from '../components/ProgressBar'
-import { Alert, ErrorState, LoadingState } from '../components/States'
+import { Alert, ErrorState, LoadingState, Spinner } from '../components/States'
 import { usePageTitle } from '../hooks/usePageTitle'
 import { useResource } from '../hooks/useResource'
 import { Link } from '../router/Link'
@@ -19,6 +19,7 @@ export default function LearnPage({ params }) {
   usePageTitle(course?.title ?? 'My course')
   const [busyTopicId, setBusyTopicId] = useState(null)
   const [actionError, setActionError] = useState(null)
+  const [requestBusy, setRequestBusy] = useState(false)
 
   // The API returns the recalculated progress; apply it without a reload. Resolves to true when
   // the completion was saved. Topics are only ever completed by this explicit action.
@@ -31,6 +32,7 @@ export default function LearnPage({ params }) {
         ...prev,
         enrolment: { ...prev.enrolment, status: result.enrolmentStatus, progress: result.progress },
         certificate: result.certificate ?? prev.certificate,
+        certificateRequest: result.certificateRequest ?? prev.certificateRequest,
         modules: prev.modules.map((module) => ({
           ...module,
           topics: module.topics.map((t) =>
@@ -44,6 +46,20 @@ export default function LearnPage({ params }) {
       return false
     } finally {
       setBusyTopicId(null)
+    }
+  }
+
+  // After a rejection (or for a course finished before approvals existed) the student can ask again.
+  const requestCertificate = async () => {
+    setRequestBusy(true)
+    setActionError(null)
+    try {
+      const request = await studentApi.requestCertificate(course.id)
+      setData((prev) => ({ ...prev, certificateRequest: request }))
+    } catch (err) {
+      setActionError(`Could not send your certificate request: ${err.message}`)
+    } finally {
+      setRequestBusy(false)
     }
   }
 
@@ -99,14 +115,28 @@ export default function LearnPage({ params }) {
                 <span>
                   {course.certificate.status === 'revoked' ? 'Your certificate has been revoked.' : 'Certificate issued.'}
                 </span>
+              ) : course.certificateRequest?.status === 'pending' ? (
+                <span>Your certificate request is waiting for approval by Eduyog.</span>
+              ) : course.certificateRequest?.status === 'rejected' ? (
+                <span>
+                  Your certificate request was not approved
+                  {course.certificateRequest.decisionReason ? `: ${course.certificateRequest.decisionReason}` : '.'} You can
+                  request it again.
+                </span>
               ) : (
-                <span>You have finished every topic.</span>
+                <span>You have finished every topic. You can request your certificate.</span>
               )}
             </div>
             {course.certificate && (
               <Link to={`/eduyarp/certificates/${course.certificate.id}`} className="btn btn--primary btn--sm">
                 View certificate
               </Link>
+            )}
+            {!course.certificate && course.certificateRequest?.status !== 'pending' && (
+              <button type="button" className="btn btn--primary btn--sm" onClick={requestCertificate} disabled={requestBusy}>
+                {requestBusy && <Spinner size="sm" />}
+                {course.certificateRequest?.status === 'rejected' ? 'Request again' : 'Request certificate'}
+              </button>
             )}
           </div>
         )}

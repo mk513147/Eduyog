@@ -1,0 +1,232 @@
+/* Eduyog brand layer, shared by the public sections (Eduyog homepage, Eduyarp, Fitness).
+   The source of truth is the Eduyog homepage: the logo's teal and green on white and mint, navy ink,
+   Inter. Everything here is namespaced (--eg-*, .eg-*), so it cannot collide with a section's own CSS,
+   and it is never loaded into Admin or Saritex (Admin has its own scoped CSS; Saritex is a separate
+   document). Each section's CSS keeps its own scoped root class and maps its tokens to these values.
+
+   Note: in the Eduyarp, Fitness and homepage token files the historical token names --indigo-*, --violet-*
+   and --cyan-400 now hold the brand teal / green / aqua values, so every existing use re-themes at once. */
+
+:root {
+  --eg-teal: #1f8a89;
+  --eg-teal-dark: #0f6b6a;
+  --eg-teal-deep: #0b5a59;
+  --eg-green: #16c06f;
+  --eg-aqua: #5eead4;
+  --eg-mint: #effaf6;
+  --eg-mint-2: #dff5ed;
+  --eg-ink: #0b1230;
+  --eg-ink-deep: #070b1f;
+  --eg-text: #0f172a;
+  --eg-muted: #475569;
+  --eg-on-ink: #cdeee4;
+
+  --eg-gradient-brand: linear-gradient(120deg, var(--eg-teal-dark) 0%, var(--eg-teal) 55%, var(--eg-green) 125%);
+  --eg-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Section spacing used by the refined public pages (the standalone defaults were 64-112px). */
+  --eg-section-y: clamp(44px, 6vw, 80px);
+  --eg-section-y-tight: clamp(32px, 4.5vw, 56px);
+
+  /* Backgrounds: soft brand glows, a dot grid and ring / leaf motifs from the logo. All inline SVG, no files. */
+  --eg-bg-mint:
+    radial-gradient(880px 420px at 92% -6%, rgba(22, 192, 111, 0.13), transparent 62%),
+    radial-gradient(760px 420px at -8% 108%, rgba(31, 138, 137, 0.11), transparent 62%),
+    linear-gradient(180deg, #f3fbf8 0%, #ffffff 100%);
+  --eg-bg-soft:
+    radial-gradient(700px 360px at 100% 0%, rgba(31, 138, 137, 0.08), transparent 64%),
+    linear-gradient(180deg, #ffffff 0%, #f6fbf9 100%);
+  --eg-dots: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22'%3E%3Ccircle cx='2' cy='2' r='1.2' fill='%231f8a89' fill-opacity='.16'/%3E%3C/svg%3E");
+  --eg-rings: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='560' height='560' viewBox='0 0 560 560' fill='none' stroke='%231f8a89'%3E%3Ccircle cx='280' cy='280' r='270' stroke-opacity='.10'/%3E%3Ccircle cx='280' cy='280' r='200' stroke-opacity='.10'/%3E%3Ccircle cx='280' cy='280' r='130' stroke-opacity='.12'/%3E%3C/svg%3E");
+  --eg-leaf: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M8 56C8 26 28 8 58 6c0 30-18 50-50 50z' fill='%2316c06f' fill-opacity='.16'/%3E%3C/svg%3E");
+}
+
+/* ---------- Back to Eduyog (a plain footer link) ---------- */
+
+.eg-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.eg-back svg {
+  width: 14px;
+  height: 14px;
+  transition: transform 180ms var(--eg-ease);
+}
+
+.eg-back:hover svg {
+  transform: translateX(-3px);
+}
+
+/* ---------- Footer (Eduyog, Eduyarp, Fitness) ---------- */
+
+.eg-footer {
+  position: relative;
+  margin-top: auto;
+  padding: clamp(36px, 5vw, 56px) 0 0;
+  background:
+    radial-gradient(760px 300px at 92% 0%, rgba(31, 138, 137, 0.22), transparent 62%),
+    radial-gradient(620px 300px at 0% 110%, rgba(22, 192, 111, 0.1), transparent 62%),
+    var(--eg-ink);
+  color: #9fb4b0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.eg-footer::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: var(--eg-gradient-brand);
+}
+
+.eg-footer .container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-inline: clamp(16px, 4vw, 32px);
+}
+
+.eg-footer__grid {
+  display: grid;
+  gap: 28px clamp(24px, 4vw, 48px);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .eg-footer__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 980px) {
+  .eg-footer__grid {
+    grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr));
+  }
+}
+
+.eg-footer .eg-footer__logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.eg-footer .eg-footer__mark {
+  display: block;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  object-fit: contain;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.eg-footer .eg-footer__name {
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.eg-footer .eg-footer__tagline {
+  max-width: 36ch;
+  margin: 12px 0 0;
+}
+
+.eg-footer .eg-footer__title {
+  margin: 0 0 12px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+footer.eg-footer ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+footer.eg-footer li {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+footer.eg-footer a {
+  color: var(--eg-on-ink);
+  text-decoration: none;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  transition:
+    color 160ms var(--eg-ease),
+    background-size 220ms var(--eg-ease);
+}
+
+footer.eg-footer a:hover {
+  color: #fff;
+  background-size: 100% 1px;
+}
+
+footer.eg-footer a:focus-visible {
+  outline: 2px solid var(--eg-aqua);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.eg-footer .container.eg-footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 20px;
+  margin-top: clamp(28px, 4vw, 40px);
+  padding-block: 18px 22px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 13px;
+}
+
+.eg-footer__bottom p {
+  margin: 0;
+}
+
+.eg-footer .visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- Motion ---------- */
+
+@keyframes eg-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+@keyframes eg-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eg-back svg,
+  .eg-footer a {
+    transition: none;
+  }
+
+  .eg-back:hover svg {
+    transform: none;
+  }
+}

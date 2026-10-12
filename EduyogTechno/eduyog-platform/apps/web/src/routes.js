@@ -52,6 +52,7 @@ export const ROUTES = [
   eduyarp('eduyarp-register', '/eduyarp/register', '/register', 'guest'),
   // Eduyarp: students
   eduyarp('eduyarp-dashboard', '/eduyarp/dashboard', '/dashboard', 'student'),
+  eduyarp('eduyarp-preview', '/eduyarp/preview/:courseId', '/preview/:courseId', 'student'),
   eduyarp('eduyarp-learn', '/eduyarp/my-courses/:courseId', '/my-courses/:courseId', 'student'),
   eduyarp('eduyarp-assignment', '/eduyarp/my-courses/:courseId/assignments/:assignmentId', '/my-courses/:courseId/assignments/:assignmentId', 'student'),
   eduyarp('eduyarp-certificates', '/eduyarp/certificates', '/certificates', 'student'),
@@ -72,6 +73,7 @@ export const ROUTES = [
   admin('admin-platforms', '/admin/platforms', '/platforms', 'admin'),
   admin('admin-services', '/admin/services', '/services', 'admin'),
   admin('admin-users', '/admin/users', '/users', 'admin'),
+  admin('admin-registrations', '/admin/registrations', '/registrations', 'admin'),
   admin('admin-fitness-leads', '/admin/fitness-leads', '/fitness-leads', 'admin'),
   admin('admin-eduyarp-courses', '/admin/eduyarp/courses', '/eduyarp/courses', 'admin'),
   admin('admin-eduyarp-course', '/admin/eduyarp/courses/:id', '/eduyarp/courses/:id', 'admin', { id: /^\d+$/ }),

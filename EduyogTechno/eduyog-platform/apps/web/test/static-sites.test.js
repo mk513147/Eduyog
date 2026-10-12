@@ -25,10 +25,12 @@ const PAGES = {
 // The ONLY files that differ from the originals (see README, "Static sites"). Anything else
 // differing is a regression: the copies must stay faithful.
 const EXPECTED_CHANGES = {
-  studentaq: ['404.html', 'assets/js/data.js'],
+  studentaq: ['404.html', 'about.html', 'assets/js/data.js', 'contact.html', 'destinations.html', 'index.html', 'privacy.html', 'services.html'],
   saritex: ['AboutUs.html', 'Blogs.html', 'ContactUs.html', 'Reviews.html', 'Services.html', 'index.html'],
 }
 // Present in the source folders but intentionally not published.
+// Files that exist only in the published copy (the Eduyog brand layer for StudentAQ).
+const ADDED_ONLY = { studentaq: ['assets/css/eduyog-brand.css'], saritex: [] }
 const NOT_PUBLISHED = { studentaq: ['.gitkeep', 'README.md'], saritex: ['.gitkeep'] }
 
 function listFiles(root, dir = root) {
@@ -211,7 +213,7 @@ test('the copies differ from websites/ only by the documented changes', () => {
   for (const site of Object.keys(PAGES)) {
     const sourceRoot = join(SOURCES, site)
     const source = listFiles(sourceRoot).filter((file) => !NOT_PUBLISHED[site].includes(file))
-    assert.deepEqual([...FILES[site]], source, `${site}: file list differs from the original`)
+    assert.deepEqual([...FILES[site]], [...source, ...ADDED_ONLY[site]].sort(), `${site}: file list differs from the original`)
     const changed = source.filter((file) => sha(join(sourceRoot, file)) !== sha(join(PUBLIC, site, file)))
     assert.deepEqual(changed, EXPECTED_CHANGES[site], `${site}: changed files differ from the documented set`)
   }

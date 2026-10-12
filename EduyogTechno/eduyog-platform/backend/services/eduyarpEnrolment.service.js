@@ -32,27 +32,38 @@ function toProgress(row) {
 const STATUS_FROM_PROGRESS = `
   CASE WHEN total_topics > 0 AND completed_topics = total_topics THEN 'completed' ELSE 'active' END`;
 
-// Re-derives enrolment status for a course after its topics change, so
-// adding a topic reopens completed enrolments and deleting one can complete
-// them. Cancelled enrolments are left as they are. queryable is the pool or
-// a transaction client.
+// Completion is a one-way door. An 'active' enrolment becomes 'completed' when every topic is done (also
+// when a topic is deleted and that finishes it); a 'completed' enrolment NEVER goes back to 'active', and
+// 'cancelled' ones are history. So a curriculum change (a topic added, edited or removed) cannot reopen a
+// finished course, cannot raise anyone's number of active enrolments (the one-active-course rule stays
+// valid), and cannot discard the completion. Progress is still counted against the current curriculum, so a
+// completed student can see a percentage below 100 after new topics are added and may complete them.
+// Reaching completion creates a certificate REQUEST only, never a certificate.
+//
+// The enrolment rows are locked before the topics are counted, so a concurrent topic completion or
+// curriculum change is either fully included or runs after this and re-derives. queryable must be a
+// transaction client (syncCourseStatuses opens one).
 async function syncStatuses(courseId, queryable) {
+  await queryable.query(
+    "SELECT id FROM enrolments WHERE course_id = $1 AND status = 'active' ORDER BY id FOR UPDATE",
+    [courseId]
+  );
   const { rows } = await queryable.query(
-    `UPDATE enrolments SET status = s.status
+    `UPDATE enrolments SET status = 'completed'
      FROM (
        SELECT id, ${STATUS_FROM_PROGRESS} AS status
        FROM (
          SELECT e.id, ${PROGRESS_COLUMNS} FROM enrolments e
-         WHERE e.course_id = $1 AND ${CURRENT_ENROLMENT}
+         WHERE e.course_id = $1 AND e.status = 'active'
        ) counts
      ) s
-     WHERE enrolments.id = s.id AND enrolments.status <> s.status
+     WHERE enrolments.id = s.id AND enrolments.status = 'active' AND s.status = 'completed'
      RETURNING enrolments.id, enrolments.status`,
     [courseId]
   );
-  // Enrolments that have just become completed earn their certificate (same transaction when
-  // queryable is one). Ones that were already completed are left as they are.
-  await certificateService.issueForEnrolments(
+  // Enrolments that have just become completed get a certificate REQUEST for an Admin to review (same
+  // transaction when queryable is one). Ones that were already completed are left as they are.
+  await certificateService.requestForEnrolments(
     queryable,
     rows.filter((r) => r.status === 'completed').map((r) => r.id)
   );
@@ -90,36 +101,73 @@ function toEnrolment(row) {
 // Every query is scoped by studentId, which callers take from req.user.id.
 // ---------------------------------------------------------------------------
 
-// Only published courses are open for enrolment. A student may enrol again
-// after a cancelled enrolment; the unique index only covers current ones.
-// Earlier topic progress is kept, so the status is derived straight away.
-async function enrol(studentId, courseId) {
+// Full-course access is granted by an Admin (students cannot enrol themselves; demo access to the first
+// two topics is separate and creates no enrolment: eduyarpDemo.service.js). Granting creates an
+// ordinary 'active' enrolment, so every existing access check, progress and certificate rule applies
+// unchanged; revoking cancels it (cancelEnrolment), keeping history and topic progress.
+//
+// Rules, all decided inside one transaction that locks the student's user row (so two concurrent
+// grants for the same student queue up and the second sees the first):
+//   * the student must exist, be a Student and have an approved account;
+//   * the course must be published;
+//   * one ACTIVE course at a time: a new grant is refused while the student has another 'active'
+//     enrolment. 'completed' and 'cancelled' ones do not count. Students who already hold several
+//     active enrolments keep them (nothing is cancelled or rewritten); they simply cannot be
+//     granted another until they are down to none.
+async function grantAccess(adminId, studentId, courseId) {
   const course = await courseService.findCourse(courseId);
   if (!course || course.status !== 'published') {
     throw new HttpError(404, 'Course not found');
   }
+  const client = await pool.connect();
   try {
-    const { rows } = await pool.query(
-      `INSERT INTO enrolments (course_id, student_id) VALUES ($1, $2)
-       RETURNING id`,
-      [courseId, studentId]
+    await client.query('BEGIN');
+    const { rows: users } = await client.query(
+      'SELECT id, role, approval_status FROM users WHERE id = $1 FOR UPDATE',
+      [studentId]
     );
-    await syncCourseStatuses(courseId);
-    const { rows: enrolled } = await pool.query(
-      'SELECT id, course_id, status, enrolled_at FROM enrolments WHERE id = $1',
+    if (!users[0] || users[0].role !== 'student') {
+      throw new HttpError(404, 'Student not found');
+    }
+    if (users[0].approval_status !== 'approved') {
+      throw new HttpError(409, 'The student\'s registration has not been approved');
+    }
+    const { rows: current } = await client.query(
+      "SELECT course_id, status FROM enrolments WHERE student_id = $1 AND status IN ('active', 'completed')",
+      [studentId]
+    );
+    if (current.some((row) => String(row.course_id) === String(courseId))) {
+      throw new HttpError(409, 'The student already has access to this course');
+    }
+    if (current.some((row) => row.status === 'active')) {
+      throw new HttpError(409, 'The student already has an active course. Revoke it or wait for them to complete it first.');
+    }
+    const { rows } = await client.query(
+      'INSERT INTO enrolments (course_id, student_id, granted_by) VALUES ($1, $2, $3) RETURNING id',
+      [courseId, studentId, adminId]
+    );
+    // Earlier topic progress is kept, so the status is derived straight away.
+    await syncStatuses(courseId, client);
+    const { rows: enrolled } = await client.query(
+      'SELECT id, course_id, student_id, status, enrolled_at FROM enrolments WHERE id = $1',
       [rows[0].id]
     );
+    await client.query('COMMIT');
     return {
       id: enrolled[0].id,
       courseId: enrolled[0].course_id,
+      studentId: enrolled[0].student_id,
       status: enrolled[0].status,
       enrolledAt: enrolled[0].enrolled_at,
     };
   } catch (err) {
+    await client.query('ROLLBACK').catch(() => {});
     if (err.code === PG_ERRORS.UNIQUE_VIOLATION && err.constraint === 'enrolments_student_course_key') {
-      throw new HttpError(409, 'You are already enrolled in this course');
+      throw new HttpError(409, 'The student already has access to this course');
     }
     throw err;
+  } finally {
+    client.release();
   }
 }
 
@@ -165,6 +213,7 @@ async function getStudentCourse(studentId, courseId) {
     trainers: trainers.get(String(courseId)),
     modules: await courseService.getOutline(courseId, { studentId, includeVideo: true }),
     certificate: await certificateService.findForStudentCourse(studentId, courseId),
+    certificateRequest: await certificateService.findRequestForStudentCourse(studentId, courseId),
   };
 }
 
@@ -192,7 +241,9 @@ async function completeTopic(studentId, topicId) {
     const enrolmentId = enrolmentRows[0].id;
     const statusBefore = enrolmentRows[0].status;
 
-    const { rows: progressRows } = await client.query(
+    let progressRows;
+    try {
+      ({ rows: progressRows } = await client.query(
       `INSERT INTO topic_progress (student_id, topic_id, completed, completed_at)
        VALUES ($1, $2, TRUE, now())
        ON CONFLICT (student_id, topic_id)
@@ -200,10 +251,15 @@ async function completeTopic(studentId, topicId) {
                      completed_at = COALESCE(topic_progress.completed_at, EXCLUDED.completed_at)
        RETURNING completed_at`,
       [studentId, topicId]
-    );
+      ));
+    } catch (err) {
+      // The topic was deleted between the lookup and the insert.
+      if (err.code === PG_ERRORS.FOREIGN_KEY_VIOLATION) throw new HttpError(404, 'Topic not found in your enrolled courses');
+      throw err;
+    }
 
     const { rows } = await client.query(
-      `UPDATE enrolments SET status = counts.status
+      `UPDATE enrolments SET status = CASE WHEN enrolments.status = 'completed' THEN 'completed' ELSE counts.status END
        FROM (
          SELECT e.id, total_topics, completed_topics, ${STATUS_FROM_PROGRESS} AS status
          FROM (SELECT e.id, ${PROGRESS_COLUMNS} FROM enrolments e WHERE e.id = $1) e
@@ -215,14 +271,16 @@ async function completeTopic(studentId, topicId) {
     const progress = toProgress(rows[0]);
     const { status } = rows[0];
 
-    // Reaching completion issues the certificate in the same transaction; if that fails the
+    // Reaching completion creates the certificate request in the same transaction; if that fails the
     // whole completion rolls back instead of leaving a completed course without one.
     if (status === 'completed' && statusBefore !== 'completed') {
-      await certificateService.issueForEnrolments(client, [enrolmentId]);
+      await certificateService.requestForEnrolments(client, [enrolmentId]);
     }
     const courseRow = await client.query('SELECT course_id FROM enrolments WHERE id = $1', [enrolmentId]);
-    const certificate =
-      status === 'completed' ? await certificateService.findForStudentCourse(studentId, courseRow.rows[0].course_id, client) : null;
+    const courseId = courseRow.rows[0].course_id;
+    const certificate = status === 'completed' ? await certificateService.findForStudentCourse(studentId, courseId, client) : null;
+    const certificateRequest =
+      status === 'completed' ? await certificateService.findRequestForStudentCourse(studentId, courseId, client) : null;
 
     await client.query('COMMIT');
     return {
@@ -232,6 +290,7 @@ async function completeTopic(studentId, topicId) {
       enrolmentStatus: status,
       progress,
       certificate,
+      certificateRequest,
     };
   } catch (err) {
     await client.query('ROLLBACK').catch(() => {});
@@ -331,7 +390,7 @@ module.exports = {
   toProgress,
   syncCourseStatuses,
   cancelActiveEnrolments,
-  enrol,
+  grantAccess,
   listStudentCourses,
   getStudentCourse,
   completeTopic,

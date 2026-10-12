@@ -158,7 +158,7 @@
 }
 
 .eduyarp-site .bell__item--unread {
-  background: var(--indigo-50, #eef2ff);
+  background: var(--indigo-50, #effaf6);
 }
 
 .eduyarp-site .bell__dot {
@@ -257,8 +257,8 @@
 }
 
 .eduyarp-site .notify--unread {
-  border-color: #c7d2fe;
-  background: var(--indigo-50, #eef2ff);
+  border-color: #c9efe3;
+  background: var(--indigo-50, #effaf6);
 }
 
 .eduyarp-site .notify__dot {
@@ -435,7 +435,7 @@
   width: 38px;
   height: 38px;
   border-radius: 10px;
-  background: var(--indigo-50, #eef2ff);
+  background: var(--indigo-50, #effaf6);
   color: var(--indigo-600);
 }
 
@@ -496,9 +496,9 @@
   max-width: 760px;
   margin-bottom: 20px;
   padding: 16px;
-  border: 1px solid #c7d2fe;
+  border: 1px solid #c9efe3;
   border-radius: var(--radius-lg);
-  background: var(--indigo-50, #eef2ff);
+  background: var(--indigo-50, #effaf6);
 }
 
 .eduyarp-site .res-form__title {

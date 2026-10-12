@@ -10,6 +10,7 @@ import { Link } from '../../router/Link'
 import { useToast } from '../../toast/useToast'
 import { EMPTY_FILTERS, courseOptions, filterEnrolments, hasActiveFilters } from '../../utils/enrolmentFilters'
 import { formatDateTime } from '../../utils/format'
+import { GrantAccessModal } from './GrantAccessModal'
 
 const STATUS_OPTIONS = [
   ['active', 'Active'],
@@ -27,13 +28,14 @@ export default function EnrolmentsPage() {
   const [cancelling, setCancelling] = useState(null)
   const [busy, setBusy] = useState(false)
   const [cancelError, setCancelError] = useState(null)
+  const [granting, setGranting] = useState(false)
 
   const confirmCancel = async () => {
     setBusy(true)
     setCancelError(null)
     try {
       await eduyarpApi.enrolments.cancel(cancelling.id)
-      toast.success(`Cancelled ${cancelling.student.fullName}'s enrolment in ${cancelling.course.title}.`)
+      toast.success(`Revoked ${cancelling.student.fullName}'s access to ${cancelling.course.title}.`)
       setCancelling(null)
       reload()
     } catch (err) {
@@ -54,7 +56,12 @@ export default function EnrolmentsPage() {
     content = (
       <EmptyState
         title="No enrolments yet"
-        description="Students who enrol in a published course on Eduyarp will appear here."
+        description="Grant a student access to a published course and it will appear here."
+        action={
+          <button type="button" className="btn btn--primary" onClick={() => setGranting(true)}>
+            Grant course access
+          </button>
+        }
       />
     )
   else if (visible.length === 0)
@@ -116,9 +123,9 @@ export default function EnrolmentsPage() {
                           setCancelling(enrolment)
                         }}
                       >
-                        Cancel
+                        Revoke
                         <span className="visually-hidden">
-                          {' '}enrolment of {enrolment.student.fullName} in {enrolment.course.title}
+                          {' '}access of {enrolment.student.fullName} to {enrolment.course.title}
                         </span>
                       </button>
                     ) : (
@@ -137,7 +144,12 @@ export default function EnrolmentsPage() {
     <>
       <PageHeader
         title="Eduyarp Enrolments"
-        description="All student enrolments, newest first. Cancelled enrolments are kept as history."
+        description="Full-course access is granted here; students can only preview the first two topics until then. Revoked access is kept as history."
+        actions={
+          <button type="button" className="btn btn--primary" onClick={() => setGranting(true)}>
+            Grant course access
+          </button>
+        }
       />
       {error && enrolments && <Alert>Could not refresh the list: {error.message}</Alert>}
       {enrolments && enrolments.length > 0 && (
@@ -188,11 +200,21 @@ export default function EnrolmentsPage() {
       )}
       <div className="card card--flush">{content}</div>
 
+      {granting && (
+        <GrantAccessModal
+          onClose={() => setGranting(false)}
+          onGranted={(student, course) => {
+            setGranting(false)
+            toast.success(`${student?.fullName ?? 'The student'} now has access to ${course?.title ?? 'the course'}.`)
+            reload()
+          }}
+        />
+      )}
       {cancelling && (
         <ConfirmDialog
-          title="Cancel enrolment?"
-          confirmLabel="Cancel enrolment"
-          cancelLabel="Keep enrolment"
+          title="Revoke course access?"
+          confirmLabel="Revoke access"
+          cancelLabel="Keep access"
           tone="danger"
           busy={busy}
           error={cancelError}

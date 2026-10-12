@@ -10,9 +10,9 @@
   --color-border-strong: #cbd5e1;
   --color-text: #0f172a;
   --color-text-muted: #64748b;
-  --color-primary: #4f46e5;
-  --color-primary-hover: #4338ca;
-  --color-primary-soft: #eef2ff;
+  --color-primary: #0f6b6a;
+  --color-primary-hover: #0b5a59;
+  --color-primary-soft: #effaf6;
   --color-danger: #b91c1c;
   --color-danger-soft: #fef2f2;
   --color-success: #15803d;
@@ -21,8 +21,8 @@
   --color-info-soft: #eff6ff;
   --color-ink: #111a3a;
   --color-ink-soft: #1e2a5a;
-  --color-on-ink: #e0e7ff;
-  --color-on-ink-muted: #a5b4fc;
+  --color-on-ink: #d3efe7;
+  --color-on-ink-muted: #8de3cc;
   --color-focus: #2563eb;
 
   --radius-sm: 6px;
@@ -263,7 +263,7 @@
 
 .eduyarp-site .badge--primary {
   background: var(--color-primary-soft);
-  border-color: #c7d2fe;
+  border-color: #c9efe3;
   color: var(--color-primary-hover);
 }
 
@@ -449,7 +449,7 @@
 .eduyarp-site .hero {
   padding: 56px 0 64px;
   background:
-    radial-gradient(circle at 85% 20%, rgba(129, 140, 248, 0.35), transparent 45%),
+    radial-gradient(circle at 85% 20%, rgba(63, 181, 174, 0.35), transparent 45%),
     linear-gradient(135deg, var(--color-ink), var(--color-ink-soft));
   color: #fff;
 }
@@ -551,7 +551,7 @@
 }
 
 .eduyarp-site .course-card:hover {
-  border-color: #c7d2fe;
+  border-color: #c9efe3;
   box-shadow: var(--shadow-md);
   transform: translateY(-2px);
 }
@@ -983,7 +983,7 @@
 .eduyarp-site .input:focus {
   border-color: var(--color-primary);
   outline: none;
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+  box-shadow: 0 0 0 3px rgba(15, 107, 106, 0.2);
 }
 
 .eduyarp-site .input[aria-invalid='true'] {
@@ -1112,7 +1112,7 @@
 .eduyarp-site .progress__fill {
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, var(--color-primary), #818cf8);
+  background: linear-gradient(90deg, var(--color-primary), #3fb5ae);
   transition: width 0.4s ease;
 }
 

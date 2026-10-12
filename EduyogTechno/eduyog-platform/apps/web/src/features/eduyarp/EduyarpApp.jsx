@@ -1,3 +1,4 @@
+import { motion, useReducedMotion } from 'motion/react'
 import { useAuth } from './auth/useAuth'
 import { Layout } from './components/Layout'
 import { Alert, LoadingState } from './components/States'
@@ -12,6 +13,7 @@ import LearnPage from './pages/LearnPage'
 import LoginPage from './pages/LoginPage'
 import NotFoundPage from './pages/NotFoundPage'
 import NotificationsPage from './pages/NotificationsPage'
+import PreviewPage from './pages/PreviewPage'
 import ProfilePage from './pages/ProfilePage'
 import RegisterPage from './pages/RegisterPage'
 import StudentAssignmentPage from './pages/StudentAssignmentPage'
@@ -32,6 +34,7 @@ const PAGES = {
   'eduyarp-login': LoginPage,
   'eduyarp-register': RegisterPage,
   'eduyarp-dashboard': DashboardPage,
+  'eduyarp-preview': PreviewPage,
   'eduyarp-learn': LearnPage,
   'eduyarp-assignment': StudentAssignmentPage,
   'eduyarp-certificates': CertificatesPage,
@@ -82,6 +85,7 @@ export default function EduyarpApp({ route }) {
   const { status, isStudent, isTrainer } = useAuth()
   const { path, fullPath, query } = useRouter()
   const Page = PAGES[route.id] ?? NotFoundPage
+  const reduce = useReducedMotion()
   const { access, params } = route
 
   const decision = resolveAccess({ access, status, isStudent, isTrainer, fullPath, next: query.get('next') })
@@ -90,7 +94,13 @@ export default function EduyarpApp({ route }) {
   if (decision.type === 'loading') content = <LoadingState label="Checking your session…" />
   else if (decision.type === 'redirect') content = <Redirect to={decision.to} />
   else if (decision.type === 'role-only') content = <RoleOnly area={decision.area} />
-  else content = <Page key={path} params={params} />
+  else
+    // A short opacity-only fade between pages: content is in the DOM (and usable) from the first frame.
+    content = (
+      <motion.div key={path} initial={reduce ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.22, ease: 'easeOut' }}>
+        <Page params={params} />
+      </motion.div>
+    )
 
   return <Layout>{content}</Layout>
 }

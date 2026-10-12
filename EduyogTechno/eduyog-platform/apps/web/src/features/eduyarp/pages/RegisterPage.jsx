@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAuth } from '../auth/useAuth'
 import { TextField } from '../components/Fields'
 import { Alert, Spinner } from '../components/States'
+import { Icon } from '../components/Icon'
 import { usePageTitle } from '../hooks/usePageTitle'
 import { Link } from '../router/Link'
 import { safeNextPath } from '../router/match'
@@ -14,12 +15,13 @@ const FIELDS = ['fullName', 'email', 'password']
 export default function RegisterPage() {
   usePageTitle('Create account')
   const { register } = useAuth()
-  const { query, navigate } = useRouter()
+  const { query } = useRouter()
   const next = safeNextPath(query.get('next'))
   const [form, setForm] = useState({ fullName: '', email: '', password: '' })
   const [fieldErrors, setFieldErrors] = useState({})
   const [formError, setFormError] = useState(null)
   const [busy, setBusy] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
 
   const update = (field) => (event) => {
     setForm((prev) => ({ ...prev, [field]: event.target.value }))
@@ -33,7 +35,7 @@ export default function RegisterPage() {
     setFieldErrors({})
     try {
       await register(form.fullName, form.email, form.password)
-      navigate(next, { replace: true })
+      setSubmitted(true)
     } catch (err) {
       const split = splitApiError(err, FIELDS)
       // 409: an account with this email already exists.
@@ -47,11 +49,30 @@ export default function RegisterPage() {
     }
   }
 
+  if (submitted) {
+    return (
+      <div className="auth">
+        <div className="auth__card card approval-notice" role="status">
+          <h1 className="approval-notice__title">
+            <Icon name="check" size={22} /> Registration received
+          </h1>
+          <p className="auth__text">
+            Thanks, {form.fullName.trim()}. Your account is waiting for approval by the Eduyog team. You will be able to log
+            in once it has been approved.
+          </p>
+          <Link to="/eduyarp/login" className="btn btn--secondary btn--block">
+            Go to log in
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="auth">
       <div className="auth__card card">
         <h1 className="auth__title">Create your account</h1>
-        <p className="auth__text">Join Eduyarp to enrol in courses and track your progress.</p>
+        <p className="auth__text">Join Eduyarp to preview courses and track your progress. New accounts are approved by the Eduyog team.</p>
         {formError && <Alert>{formError}</Alert>}
         <form className="form" onSubmit={handleSubmit} noValidate>
           <TextField

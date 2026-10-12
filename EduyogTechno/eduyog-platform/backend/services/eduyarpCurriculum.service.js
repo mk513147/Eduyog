@@ -48,11 +48,28 @@ function toItem(kind, row) {
   return item;
 }
 
-// Course of a module or topic parent, for re-syncing enrolment status.
-async function courseIdFor(kindName, parentId) {
+// Course of a module or topic parent, for re-syncing enrolment status. `db` is the pool or a transaction client.
+async function courseIdFor(kindName, parentId, db = pool) {
   if (kindName === 'module') return parentId;
-  const { rows } = await pool.query('SELECT course_id FROM course_modules WHERE id = $1', [parentId]);
+  const { rows } = await db.query('SELECT course_id FROM course_modules WHERE id = $1', [parentId]);
   return rows[0]?.course_id ?? null;
+}
+
+// Runs fn(client) in one transaction: a curriculum change and the enrolment re-sync it causes commit together
+// (or not at all), so a failure can never leave statuses out of step with the topics.
+async function inTransaction(fn) {
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    const result = await fn(client);
+    await client.query('COMMIT');
+    return result;
+  } catch (err) {
+    await client.query('ROLLBACK').catch(() => {});
+    throw err;
+  } finally {
+    client.release();
+  }
 }
 
 function translateWriteError(kind, err) {
@@ -69,19 +86,23 @@ async function createItem(kindName, parentId, { title, description = null, displ
   const videoColumn = kind.hasVideo ? ', video_url' : '';
   const videoParam = kind.hasVideo ? ', $5' : '';
   try {
-    const { rows } = await pool.query(
-      `INSERT INTO ${kind.table} (${kind.parentColumn}, title, description, display_order${videoColumn})
-       VALUES ($1, $2, $3, COALESCE($4::integer,
-         (SELECT COALESCE(MAX(display_order), 0) + 1 FROM ${kind.table} WHERE ${kind.parentColumn} = $1))${videoParam})
-       RETURNING *`,
-      kind.hasVideo
-        ? [parentId, title, description, displayOrder ?? null, videoUrl]
-        : [parentId, title, description, displayOrder ?? null]
-    );
-    if (kindName === 'topic') {
-      await syncCourseStatuses(await courseIdFor('topic', parentId));
-    }
-    return toItem(kind, rows[0]);
+    return await inTransaction(async (client) => {
+      const { rows } = await client.query(
+        `INSERT INTO ${kind.table} (${kind.parentColumn}, title, description, display_order${videoColumn})
+         VALUES ($1, $2, $3, COALESCE($4::integer,
+           (SELECT COALESCE(MAX(display_order), 0) + 1 FROM ${kind.table} WHERE ${kind.parentColumn} = $1))${videoParam})
+         RETURNING *`,
+        kind.hasVideo
+          ? [parentId, title, description, displayOrder ?? null, videoUrl]
+          : [parentId, title, description, displayOrder ?? null]
+      );
+      // A new topic never reopens a completed enrolment (see syncStatuses); the re-sync is still run so the
+      // statuses are derived from the committed curriculum.
+      if (kindName === 'topic') {
+        await syncCourseStatuses(await courseIdFor('topic', parentId, client), client);
+      }
+      return toItem(kind, rows[0]);
+    });
   } catch (err) {
     if (err.code === PG_ERRORS.FOREIGN_KEY_VIOLATION) {
       throw new HttpError(404, `${kind.parentLabel} not found`);
@@ -113,17 +134,28 @@ async function updateItem(kindName, id, changes) {
 // progress rows, so course progress is recalculated from what remains.
 async function deleteItem(kindName, id) {
   const kind = KINDS[kindName];
-  const { rows } = await pool.query(
-    `DELETE FROM ${kind.table} WHERE id = $1 RETURNING ${kind.parentColumn} AS parent_id`,
-    [id]
-  );
-  if (!rows[0]) {
-    throw new HttpError(404, `${kind.label} not found`);
-  }
-  const courseId = await courseIdFor(kindName, rows[0].parent_id);
-  if (courseId !== null) {
-    await syncCourseStatuses(courseId);
-  }
+  await inTransaction(async (client) => {
+    // Lock the course's current enrolments BEFORE deleting. A student completing a topic locks their enrolment
+    // first and then touches the topic (topic_progress references it); taking the locks in the same order here
+    // means the two can never deadlock, and the delete waits for any completion in flight.
+    const { rows: owner } = await client.query(
+      kindName === 'module'
+        ? 'SELECT course_id FROM course_modules WHERE id = $1'
+        : 'SELECT m.course_id FROM course_topics t JOIN course_modules m ON m.id = t.module_id WHERE t.id = $1',
+      [id]
+    );
+    if (!owner[0]) {
+      throw new HttpError(404, `${kind.label} not found`);
+    }
+    await client.query("SELECT id FROM enrolments WHERE course_id = $1 AND status IN ('active', 'completed') ORDER BY id FOR UPDATE", [
+      owner[0].course_id,
+    ]);
+    const { rows } = await client.query(`DELETE FROM ${kind.table} WHERE id = $1 RETURNING id`, [id]);
+    if (!rows[0]) {
+      throw new HttpError(404, `${kind.label} not found`);
+    }
+    await syncCourseStatuses(owner[0].course_id, client);
+  });
 }
 
 module.exports = {

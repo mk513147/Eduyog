@@ -8,6 +8,7 @@ import { useAutoRefresh } from '../../hooks/useAutoRefresh'
 import { useResource } from '../../hooks/useResource'
 import { useToast } from '../../toast/useToast'
 import { formatDateTime } from '../../utils/format'
+import CertificateRequestsPanel from './CertificateRequestsPanel'
 
 function StatusBadge({ status }) {
   return <span className={`badge ${status === 'revoked' ? 'badge--danger' : 'badge--success'}`}>{status === 'revoked' ? 'Revoked' : 'Active'}</span>
@@ -144,6 +145,8 @@ export default function CertificatesPage() {
   const [courseId, setCourseId] = useState('')
   const [viewing, setViewing] = useState(null)
   const [revoking, setRevoking] = useState(null)
+  // 'requests' (approve or reject what students asked for) or 'issued' (the certificates themselves).
+  const [view, setView] = useState('requests')
 
   const courses = certificates ? [...new Map(certificates.map((c) => [c.courseId, c.courseTitle])).entries()] : []
   const term = search.trim().toLowerCase()
@@ -161,7 +164,7 @@ export default function CertificatesPage() {
   else if (certificates.length === 0)
     content = (
       <div className="card card--flush">
-        <EmptyState title="No certificates yet" description="A certificate is issued automatically when a student completes every topic of a course." />
+        <EmptyState title="No certificates yet" description="A certificate is issued when you approve a student's request for a completed course." />
       </div>
     )
   else if (visible.length === 0)
@@ -224,10 +227,19 @@ export default function CertificatesPage() {
     <>
       <PageHeader
         title="Eduyarp Certificates"
-        description="Issued automatically when a student completes a course. Revoking keeps the record and marks it revoked."
+        description="A certificate is issued only when you approve a student's request. Revoking keeps the record and marks it revoked."
       />
-      {error && certificates && <Alert>Could not refresh the list: {error.message}</Alert>}
-      {certificates && certificates.length > 0 && (
+      <div className="filters" role="group" aria-label="Certificates view">
+        <button type="button" className={`btn ${view === 'requests' ? 'btn--primary' : 'btn--secondary'}`} aria-pressed={view === 'requests'} onClick={() => setView('requests')}>
+          Requests
+        </button>
+        <button type="button" className={`btn ${view === 'issued' ? 'btn--primary' : 'btn--secondary'}`} aria-pressed={view === 'issued'} onClick={() => setView('issued')}>
+          Issued certificates
+        </button>
+      </div>
+      {view === 'requests' && <CertificateRequestsPanel onIssued={reload} />}
+      {view === 'issued' && error && certificates && <Alert>Could not refresh the list: {error.message}</Alert>}
+      {view === 'issued' && certificates && certificates.length > 0 && (
         <div className="filters cert-filters">
           <input
             type="search"
@@ -264,7 +276,7 @@ export default function CertificatesPage() {
           </button>
         </div>
       )}
-      {content}
+      {view === 'issued' && content}
 
       {viewing && <DetailsModal certificate={viewing} onClose={() => setViewing(null)} />}
       {revoking && (

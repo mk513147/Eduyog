@@ -23,8 +23,8 @@
 }
 
 .eduyarp-site .asg--active {
-  border-color: #c7d2fe;
-  background: var(--indigo-50, #eef2ff);
+  border-color: #c9efe3;
+  background: var(--indigo-50, #effaf6);
 }
 
 .eduyarp-site .asg__main {
@@ -118,7 +118,7 @@
 }
 
 .eduyarp-site .sub--latest {
-  border-color: #c7d2fe;
+  border-color: #c9efe3;
 }
 
 .eduyarp-site .sub__head {

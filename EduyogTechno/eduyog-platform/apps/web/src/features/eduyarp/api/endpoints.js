@@ -12,14 +12,18 @@ export const coursesApi = {
   list: () => request('/eduyarp/courses', { token: null }).then((d) => d.courses),
   get: (slug) =>
     request(`/eduyarp/courses/${encodeURIComponent(slug)}`, { token: null }).then((d) => d.course),
-  enrol: (courseId) =>
-    request(`/eduyarp/courses/${courseId}/enrol`, { method: 'POST' }).then((d) => d.enrolment),
 }
 
 // Always the signed-in student: the backend derives the student from the token.
 export const studentApi = {
   courses: () => request('/eduyarp/me/courses').then((d) => d.courses),
   course: (courseId) => request(`/eduyarp/me/courses/${courseId}`).then((d) => d.course),
+  // The free preview: first two topics of the first module; the rest arrives locked (title only).
+  demoCourse: (courseId) => request(`/eduyarp/courses/${courseId}/demo`).then((d) => d.course),
+  // Certificate requests: one is created when a course is completed; this asks again (after a rejection).
+  certificateRequests: () => request('/eduyarp/me/certificate-requests').then((d) => d.requests),
+  requestCertificate: (courseId) =>
+    request(`/eduyarp/me/courses/${courseId}/certificate-request`, { method: 'POST' }).then((d) => d.request),
   schedule: () => request('/eduyarp/me/schedule').then((d) => d.classes),
   completeTopic: (topicId) => request(`/eduyarp/topics/${topicId}/complete`, { method: 'POST' }),
   certificates: () => request('/eduyarp/me/certificates').then((d) => d.certificates),

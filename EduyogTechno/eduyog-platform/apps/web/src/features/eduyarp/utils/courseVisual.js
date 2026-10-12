@@ -41,11 +41,11 @@ export function courseIconName(course) {
   return ICON_RULES.find((rule) => rule.test.test(title))?.icon ?? 'book'
 }
 
-/** Stable gradient per course id, so no imagery is invented. */
+/** Stable gradient per course id, so no imagery is invented. The hue stays inside the Eduyog brand range (green to teal to aqua). */
 export function coverStyle(id) {
-  const hue = (Number(id) * 47 + 230) % 360
+  const hue = 150 + ((Number(id) * 23) % 50)
   return {
-    '--cover-a': `hsl(${hue} 78% 52%)`,
-    '--cover-b': `hsl(${(hue + 48) % 360} 80% 38%)`,
+    '--cover-a': `hsl(${hue} 62% 38%)`,
+    '--cover-b': `hsl(${hue + 12} 70% 26%)`,
   }
 }

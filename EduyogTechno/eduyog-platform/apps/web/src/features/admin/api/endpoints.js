@@ -34,6 +34,11 @@ export const usersApi = {
     request(`/admin/users/${id}/profile`, { method: 'PATCH', body: changes }).then((d) => d.profile),
   changeRole: (id, role) =>
     request(`/admin/users/${id}/role`, { method: 'PATCH', body: { role } }).then((d) => d.user),
+  // Student registrations awaiting (or after) a decision; status: 'pending' | 'approved' | 'rejected'.
+  registrations: (status = 'pending') =>
+    request(`/admin/registrations?status=${encodeURIComponent(status)}`).then((d) => d.registrations),
+  decideApproval: (id, { status, reason }) =>
+    request(`/admin/users/${id}/approval`, { method: 'PATCH', body: { status, reason } }).then((d) => d.user),
 }
 
 export const leadsApi = {
@@ -83,6 +88,9 @@ export const eduyarpApi = {
   },
   enrolments: {
     list: () => request('/admin/eduyarp/enrolments').then((d) => d.enrolments),
+    // Full-course access: creates an active enrolment (the backend enforces the one-active-course rule).
+    grant: (studentId, courseId) =>
+      request('/admin/eduyarp/enrolments', { method: 'POST', body: { studentId, courseId } }).then((d) => d.enrolment),
     cancel: (id) =>
       request(`/admin/eduyarp/enrolments/${id}`, { method: 'PATCH', body: { status: 'cancelled' } }).then(
         (d) => d.enrolment,
@@ -131,6 +139,14 @@ export const eduyarpApi = {
       return request(`/admin/eduyarp/certificates${query ? `?${query}` : ''}`).then((d) => d.certificates)
     },
     get: (id) => request(`/admin/eduyarp/certificates/${id}`).then((d) => d.certificate),
+    requests: {
+      list: (status = 'pending') =>
+        request(`/admin/eduyarp/certificate-requests?status=${encodeURIComponent(status)}`).then((d) => d.requests),
+      approve: (id) =>
+        request(`/admin/eduyarp/certificate-requests/${id}/approve`, { method: 'POST' }).then((d) => d.request),
+      reject: (id, reason) =>
+        request(`/admin/eduyarp/certificate-requests/${id}/reject`, { method: 'POST', body: { reason } }).then((d) => d.request),
+    },
     revoke: (id, reason) =>
       request(`/admin/eduyarp/certificates/${id}/revoke`, { method: 'POST', body: { reason } }).then((d) => d.certificate),
   },

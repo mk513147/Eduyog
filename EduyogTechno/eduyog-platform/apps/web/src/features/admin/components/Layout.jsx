@@ -13,6 +13,7 @@ const NAV_GROUPS = [
       { to: '/admin/platforms', label: 'Platforms', icon: 'platforms' },
       { to: '/admin/services', label: 'Services', icon: 'services' },
       { to: '/admin/users', label: 'Users', icon: 'users' },
+      { to: '/admin/registrations', label: 'Registrations', icon: 'users' },
       { to: '/admin/fitness-leads', label: 'Fitness Leads', icon: 'leads' },
     ],
   },

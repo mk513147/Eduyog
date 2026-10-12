@@ -3,6 +3,7 @@ import { coursesApi } from '../api/endpoints'
 import { useAuth } from '../auth/useAuth'
 import { CourseCard } from '../components/CourseCard'
 import { Icon } from '../components/Icon'
+import { HeroDivider, HeroJourney, Linework } from '../components/Linework'
 import { Reveal, RevealItem, Stagger } from '../components/Reveal'
 import { usePageTitle } from '../hooks/usePageTitle'
 import { useResource } from '../hooks/useResource'
@@ -25,6 +26,26 @@ const WHY = [
   { icon: 'users', title: 'Trainer support', text: 'Courses are led by assigned trainers who run the live sessions.' },
   { icon: 'cap', title: 'Built for students', text: 'Training for UG, PG and PhD students in Data Science, AI, Prompt Engineering and Software Development.' },
 ]
+
+// A thin line with a node over each of the four steps (wide screens only, see premium-ui.css): the four
+// steps read as one connected path.
+function MethodLine() {
+  return (
+    <div className="method-line" aria-hidden="true">
+      <motion.span
+        className="method-line__rule"
+        initial={{ scaleX: 0 }}
+        whileInView={{ scaleX: 1 }}
+        viewport={{ once: true, margin: '0px 0px -10% 0px' }}
+        transition={{ duration: 1.1, ease: EASE }}
+      />
+      <span className="method-line__node" style={{ left: '0%' }} />
+      <span className="method-line__node" style={{ left: '33.333%' }} />
+      <span className="method-line__node" style={{ left: '66.666%' }} />
+      <span className="method-line__node" style={{ left: '100%' }} />
+    </div>
+  )
+}
 
 function HeroVisual() {
   return (
@@ -53,6 +74,7 @@ function HeroVisual() {
           <span />
         </div>
       </motion.div>
+      <HeroJourney />
       <motion.div
         className="hv-card hv-card--float hv-card--class"
         initial={{ opacity: 0, x: 24 }}
@@ -65,20 +87,6 @@ function HeroVisual() {
         <span>
           <strong>Live class</strong>
           <small>With your trainer</small>
-        </span>
-      </motion.div>
-      <motion.div
-        className="hv-card hv-card--float hv-card--done"
-        initial={{ opacity: 0, x: -24 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.6, delay: 0.75, ease: EASE }}
-      >
-        <span className="hv-icon hv-icon--indigo">
-          <Icon name="check" size={18} />
-        </span>
-        <span>
-          <strong>Topic complete</strong>
-          <small>Progress updated</small>
         </span>
       </motion.div>
     </div>
@@ -94,6 +102,7 @@ export default function LandingPage() {
   return (
     <>
       <section className="landing-hero">
+        <Linework variant="hero" tone="dark" />
         <div className="container landing-hero__grid">
           <div className="landing-hero__copy">
             <motion.p
@@ -122,6 +131,12 @@ export default function LandingPage() {
               and Software Development — with structured modules, trainer support and progress you
               can see.
             </motion.p>
+            <ul className="hero-topics" aria-label="Course areas">
+              <li>Data Science</li>
+              <li>Artificial Intelligence</li>
+              <li>Prompt Engineering</li>
+              <li>Software Development</li>
+            </ul>
             <motion.div
               className="landing-hero__actions"
               initial={{ opacity: 0, y: 16 }}
@@ -145,9 +160,10 @@ export default function LandingPage() {
           </div>
           <HeroVisual />
         </div>
+        <HeroDivider />
       </section>
 
-      <section className="section section--lg" aria-labelledby="method-title">
+      <section className="section section--lg section--grid" aria-labelledby="method-title">
         <div className="container">
           <Reveal className="section-head">
             <p className="eyebrow">How it works</p>
@@ -155,6 +171,8 @@ export default function LandingPage() {
               A clear path from first topic to finished course
             </h2>
           </Reveal>
+          <div className="method-wrap">
+          <MethodLine />
           <Stagger as="ol" className="method">
             {METHOD.map((step, index) => (
               <RevealItem as="li" key={step.title} className="method__step">
@@ -167,11 +185,13 @@ export default function LandingPage() {
               </RevealItem>
             ))}
           </Stagger>
+          </div>
         </div>
       </section>
 
       {featured.length > 0 && (
         <section className="section section--lg section--tint" aria-labelledby="featured-title">
+          <Linework variant="band" tone="light" />
           <div className="container">
             <Reveal className="section-head section-head--row">
               <div>
@@ -195,7 +215,8 @@ export default function LandingPage() {
         </section>
       )}
 
-      <section className="section section--lg" aria-labelledby="why-title">
+      <section className="section section--lg section--dots" aria-labelledby="why-title">
+        <Linework variant="band" tone="light" />
         <div className="container">
           <Reveal className="section-head">
             <p className="eyebrow">Why Eduyarp</p>
@@ -219,9 +240,10 @@ export default function LandingPage() {
 
       <section className="container cta-wrap">
         <Reveal className="cta">
-          <div>
+          <Linework variant="corner" tone="dark" />
+          <div className="cta__copy">
             <h2>Ready to start learning?</h2>
-            <p>Pick a course, enrol, and work through it at your own pace.</p>
+            <p>Preview a course for free, then get full access and work through it at your own pace.</p>
           </div>
           <Link to="/eduyarp/courses" className="btn btn--light btn--lg">
             Explore courses <Icon name="arrowRight" />

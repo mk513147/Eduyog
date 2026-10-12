@@ -5,6 +5,7 @@ import { NotificationBell } from '../notifications/NotificationBell'
 import { Link } from '../router/Link'
 import { useRouter } from '../router/useRouter'
 import { loginPath } from '../router/match'
+import { SiteFooter } from '../../../components/SiteFooter'
 import { BrandLogo } from './BrandLogo'
 import { Icon } from './Icon'
 
@@ -19,6 +20,14 @@ export function Layout({ children }) {
   // Return here after logging in, except from the login/register pages.
   const loginLink = path === '/eduyarp/login' || path === '/eduyarp/register' ? '/eduyarp/login' : loginPath(fullPath)
   const closeMenu = () => setMenuOpen(false)
+  const footerLinks = [
+    { label: 'Courses', to: '/eduyarp/courses' },
+    ...(isStudent ? [{ label: 'My dashboard', to: '/eduyarp/dashboard' }, { label: 'Certificates', to: '/eduyarp/certificates' }] : []),
+    ...(isTrainer ? [{ label: 'Trainer dashboard', to: '/eduyarp/trainer' }] : []),
+    ...(status === 'authenticated'
+      ? [{ label: 'Notifications', to: '/account/notifications' }, { label: 'Profile', to: '/account/profile' }]
+      : [{ label: 'Log in', to: '/eduyarp/login' }]),
+  ]
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8)
@@ -52,7 +61,6 @@ export function Layout({ children }) {
             <BrandLogo />
             <span>
               <span className="brand__name">Eduyarp</span>
-              <span className="brand__sub">by Eduyog</span>
             </span>
           </Link>
 
@@ -123,25 +131,13 @@ export function Layout({ children }) {
         {children}
       </main>
 
-      <footer className="footer">
-        <div className="container footer__inner">
-          <div className="footer__brand">
-            <BrandLogo />
-            <p>
-              <strong>Eduyarp</strong>
-              <span>Professional training and technical classes by Eduyog Techno Solution Pvt. Ltd.</span>
-            </p>
-          </div>
-          <nav className="footer__links" aria-label="Footer">
-            <Link to="/eduyarp/courses">Courses</Link>
-            {isStudent && <Link to="/eduyarp/dashboard">My dashboard</Link>}
-            {isStudent && <Link to="/eduyarp/certificates">Certificates</Link>}
-            {isTrainer && <Link to="/eduyarp/trainer">Trainer dashboard</Link>}
-            {status === 'authenticated' && <Link to="/account/notifications">Notifications</Link>}
-            {status === 'authenticated' ? <Link to="/account/profile">Profile</Link> : <Link to="/eduyarp/login">Log in</Link>}
-          </nav>
-        </div>
-      </footer>
+      <SiteFooter
+        current="eduyarp"
+        brandLabel="Eduyarp"
+        tagline="Professional training and technical classes by Eduyog Techno Solution Pvt. Ltd."
+        exploreTitle="Eduyarp"
+        exploreLinks={footerLinks}
+      />
     </div>
   )
 }

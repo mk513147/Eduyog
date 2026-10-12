@@ -2,12 +2,12 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { Icon } from '../Icon'
 
 function TopicButton({ topic, current, onSelect }) {
-  const iconName = topic.completed ? 'topicDone' : current ? 'topicCurrent' : 'topicOpen'
+  const iconName = topic.locked ? 'lock' : topic.completed ? 'topicDone' : current ? 'topicCurrent' : 'topicOpen'
   return (
     <li>
       <button
         type="button"
-        className={`outline-topic${current ? ' is-current' : ''}${topic.completed ? ' is-done' : ''}`}
+        className={`outline-topic${current ? ' is-current' : ''}${topic.completed ? ' is-done' : ''}${topic.locked ? ' is-locked' : ''}`}
         aria-current={current ? 'true' : undefined}
         onClick={() => onSelect(topic.id)}
       >
@@ -20,6 +20,8 @@ function TopicButton({ topic, current, onSelect }) {
           <span className="outline-topic__meta">
             {current && <span className="outline-topic__now">Currently viewing</span>}
             {topic.completed && <span>Completed</span>}
+            {topic.locked && <span>Locked</span>}
+            {topic.locked === false && <span className="outline-topic__preview">Free preview</span>}
             {topic.videoEmbedUrl && (
               <span className="outline-topic__video">
                 <Icon name="video" size={13} /> Video
@@ -45,6 +47,7 @@ export function CourseOutline({ modules, currentTopicId, isModuleOpen, onToggleM
         {modules.map((module, index) => {
           const open = isModuleOpen(module.id)
           const done = module.topics.filter((t) => t.completed).length
+          const preview = module.topics.some((t) => 'locked' in t) // the free preview has no progress
           const panelId = `outline-module-${module.id}`
           return (
             <li key={module.id} className="outline__module">
@@ -64,10 +67,18 @@ export function CourseOutline({ modules, currentTopicId, isModuleOpen, onToggleM
                     <span className="outline__name">{module.title}</span>
                   </span>
                   <span className="outline__count">
-                    <span className="visually-hidden">{done} of {module.topics.length} topics completed</span>
-                    <span aria-hidden="true">
-                      {done}/{module.topics.length}
-                    </span>
+                    {preview ? (
+                      <span>
+                        {module.locked ? 'Locked' : `${module.topics.length} ${module.topics.length === 1 ? 'topic' : 'topics'}`}
+                      </span>
+                    ) : (
+                      <>
+                        <span className="visually-hidden">{done} of {module.topics.length} topics completed</span>
+                        <span aria-hidden="true">
+                          {done}/{module.topics.length}
+                        </span>
+                      </>
+                    )}
                   </span>
                   <Icon name="chevronDown" size={18} className="outline__chev" />
                 </button>

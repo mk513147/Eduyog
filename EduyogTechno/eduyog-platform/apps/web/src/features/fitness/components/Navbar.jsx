@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { BrandLogo } from '../../../components/BrandLogo'
-import { Link } from '../../../router/Link'
 import { NAV_ITEMS } from '../content'
 import { Icon } from './Icon'
 
@@ -49,10 +48,6 @@ export function Navbar() {
         </nav>
 
         <div className="navbar__actions">
-          <Link className="btn btn--outline btn--sm navbar__back" to="/">
-            <Icon name="arrow-left" size={16} />
-            Back to Eduyog
-          </Link>
           <button
             type="button"
             className="menu-toggle"
@@ -74,10 +69,6 @@ export function Navbar() {
               <Icon name="arrow-right" size={18} />
             </a>
           ))}
-          <Link className="btn btn--outline mobile-menu__back" to="/" onClick={closeMenu}>
-            <Icon name="arrow-left" size={16} />
-            Back to Eduyog
-          </Link>
         </nav>
       </div>
     </header>

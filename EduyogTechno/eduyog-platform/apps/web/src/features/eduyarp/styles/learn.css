@@ -14,7 +14,7 @@
   color: #fff;
   background:
     radial-gradient(circle at 85% 0%, rgba(255, 255, 255, 0.35), transparent 55%),
-    linear-gradient(135deg, var(--cover-a, #6366f1), var(--cover-b, #4338ca));
+    linear-gradient(135deg, var(--cover-a, #1f8a89), var(--cover-b, #0b5a59));
   box-shadow: var(--shadow-xs);
 }
 
@@ -111,7 +111,7 @@
   align-items: center;
   gap: 6px;
   min-height: 36px;
-  color: #c7d2fe;
+  color: #c9efe3;
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;
@@ -122,7 +122,7 @@
 }
 
 .eduyarp-site .learn-head__link--quiet {
-  color: #a5b0ff;
+  color: #8de3cc;
   font-weight: 500;
 }
 
@@ -154,7 +154,7 @@
 
 .eduyarp-site .learn-head .progress__label,
 .eduyarp-site .learn-head .progress__meta {
-  color: #cbd3ff;
+  color: #cdeee4;
 }
 
 .eduyarp-site .learn-head .progress__value {
@@ -393,7 +393,7 @@
 }
 
 .eduyarp-site .learn-outline__toggle:hover {
-  border-color: #c7d2fe;
+  border-color: #c9efe3;
   box-shadow: var(--shadow-sm);
 }
 
@@ -671,7 +671,7 @@
 /* The current topic: accent fill + left bar + bolder title + the words "Currently viewing". */
 
 .eduyarp-site .outline-topic.is-current {
-  border-color: #c7d2fe;
+  border-color: #c9efe3;
   background: var(--indigo-50);
   box-shadow: inset 3px 0 0 var(--indigo-600);
 }

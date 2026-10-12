@@ -1,56 +1,108 @@
+import { useCallback } from 'react'
 import { studentApi } from '../api/endpoints'
 import { useAuth } from '../auth/useAuth'
-import { ClassStatusBadge, CourseStatusBadge, EnrolmentStatusBadge, LevelBadge } from '../components/Badges'
+import { ClassStatusBadge, EnrolmentStatusBadge, LevelBadge } from '../components/Badges'
 import { CourseIcon } from '../components/CourseIcon'
 import { Icon } from '../components/Icon'
-import { Reveal } from '../components/Reveal'
+import { ProgressRing } from '../components/ProgressRing'
 import { ProgressBar } from '../components/ProgressBar'
+import { Reveal } from '../components/Reveal'
 import { EmptyState, ErrorState, LoadingState } from '../components/States'
 import { usePageTitle } from '../hooks/usePageTitle'
 import { useResource } from '../hooks/useResource'
 import { Link } from '../router/Link'
 import { formatDate, formatTime } from '../utils/format'
 
-function MyCourses({ resource }) {
-  const { data: courses, error, loading, reload } = resource
+// The course to put first: an unfinished one with the most progress, otherwise the first course.
+function pickCurrent(courses) {
+  const open = courses.filter((c) => c.enrolment.status !== 'completed')
+  if (open.length === 0) return courses[0]
+  return open.reduce((best, c) => (c.enrolment.progress.percent > best.enrolment.progress.percent ? c : best))
+}
 
-  if (loading) return <LoadingState label="Loading your courses…" />
-  if (error && !courses) return <ErrorState error={error} onRetry={reload} />
-  if (courses.length === 0)
-    return (
-      <EmptyState
-        title="You have not enrolled in a course yet"
-        description="Browse the catalogue and enrol to start learning."
-        action={
-          <Link to="/eduyarp/courses" className="btn btn--primary">
-            Browse courses
-          </Link>
-        }
-      />
-    )
-
+function ContinueCard({ course }) {
+  const { progress } = course.enrolment
+  const started = progress.completedTopics > 0
+  const finished = course.enrolment.status === 'completed'
   return (
-    <ul className="my-courses">
-      {courses.map((course) => (
-        <li key={course.id} className="my-course card">
-          <div className="my-course__top">
-            <CourseIcon course={course} />
+    <section className="continue" aria-labelledby="continue-title">
+      <div className="continue__main">
+        <p className="eyebrow">{finished ? 'Course completed' : started ? 'Continue where you left off' : 'Start your course'}</p>
+        <div className="continue__head">
+          <CourseIcon course={course} />
+          <div>
+            <h2 id="continue-title" className="continue__title">
+              {course.title}
+            </h2>
             <div className="my-course__badges">
               <LevelBadge level={course.level} />
               <EnrolmentStatusBadge status={course.enrolment.status} />
-              {course.status !== 'published' && <CourseStatusBadge status={course.status} />}
             </div>
           </div>
-          <h3 className="my-course__title">{course.title}</h3>
-          {course.description && <p className="my-course__text line-clamp-2">{course.description}</p>}
-          <ProgressBar progress={course.enrolment.progress} size="sm" />
-          <Link to={`/eduyarp/my-courses/${course.id}`} className="btn btn--secondary btn--block">
-            {course.enrolment.progress.completedTopics === 0 ? 'Start learning' : 'Continue learning'}
-            <Icon name="arrowRight" size={16} />
+        </div>
+        {course.description && <p className="continue__text line-clamp-2">{course.description}</p>}
+        <div className="continue__actions">
+          <Link to={`/eduyarp/my-courses/${course.id}`} className="btn btn--primary btn--lg">
+            {finished ? 'Review course' : started ? 'Continue learning' : 'Start learning'}
+            <Icon name="arrowRight" />
           </Link>
-        </li>
-      ))}
-    </ul>
+          {finished && (
+            <Link to="/eduyarp/certificates" className="btn btn--secondary btn--lg">
+              Certificates
+            </Link>
+          )}
+        </div>
+      </div>
+      <div className="continue__progress" aria-label="Course progress">
+        <ProgressRing percent={progress.percent} />
+        <p className="continue__count">
+          <strong>{progress.completedTopics}</strong> of {progress.totalTopics} topics completed
+        </p>
+      </div>
+    </section>
+  )
+}
+
+function OtherCourses({ courses }) {
+  if (courses.length === 0) return null
+  return (
+    <section aria-labelledby="other-courses-title" className="other-courses">
+      <h2 id="other-courses-title" className="dash-heading">
+        Your other courses
+      </h2>
+      <ul className="other-courses__list">
+        {courses.map((course) => (
+          <li key={course.id} className="other-course">
+            <CourseIcon course={course} size="md" />
+            <div className="other-course__body">
+              <Link to={`/eduyarp/my-courses/${course.id}`} className="other-course__title">
+                {course.title}
+              </Link>
+              <ProgressBar progress={course.enrolment.progress} size="sm" />
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
+function NoCourse() {
+  return (
+    <section className="continue continue--empty" aria-labelledby="no-course-title">
+      <div className="continue__main">
+        <p className="eyebrow">Get started</p>
+        <h2 id="no-course-title" className="continue__title">
+          You do not have a course yet
+        </h2>
+        <p className="continue__text">Preview any course for free, then contact Eduyog to get full access.</p>
+        <div className="continue__actions">
+          <Link to="/eduyarp/courses" className="btn btn--primary btn--lg">
+            Browse courses <Icon name="arrowRight" />
+          </Link>
+        </div>
+      </div>
+    </section>
   )
 }
 
@@ -60,16 +112,11 @@ function UpcomingClasses() {
   if (loading) return <LoadingState label="Loading your schedule…" />
   if (error && !classes) return <ErrorState error={error} onRetry={reload} />
   if (classes.length === 0)
-    return (
-      <EmptyState
-        title="No upcoming classes"
-        description="Live classes for your courses will appear here once they are scheduled."
-      />
-    )
+    return <EmptyState title="No upcoming classes" description="Live classes for your courses will appear here once they are scheduled." />
 
   return (
-    <ul className="classes">
-      {classes.map((cls) => (
+    <ul className="classes classes--compact">
+      {classes.slice(0, 3).map((cls) => (
         <li key={cls.id} className={`class-item${cls.status === 'cancelled' ? ' class-item--cancelled' : ''}`}>
           <div className="class-item__when">
             <span className="class-item__date">{formatDate(cls.scheduledAt)}</span>
@@ -101,76 +148,103 @@ function UpcomingClasses() {
   )
 }
 
+// Open (published, not yet submitted) assignments of the current course, soonest due first.
+function DueAssignments({ courseId }) {
+  const loader = useCallback(() => studentApi.assignments(courseId), [courseId])
+  const { data, error, loading, reload } = useResource(loader)
+
+  if (loading) return <LoadingState label="Loading assignments…" />
+  if (error && !data) return <ErrorState error={error} onRetry={reload} />
+  const open = data
+    .filter((a) => a.status === 'published' && !a.latestSubmission)
+    .sort((a, b) => (a.dueAt ?? '9999').localeCompare(b.dueAt ?? '9999'))
+    .slice(0, 3)
+  if (open.length === 0) return <p className="muted small">Nothing to hand in right now.</p>
+  return (
+    <ul className="due-list">
+      {open.map((a) => (
+        <li key={a.id}>
+          <Link to={`/eduyarp/my-courses/${courseId}/assignments/${a.id}`} className="due-list__title">
+            {a.title}
+          </Link>
+          <span className="due-list__when">{a.dueAt ? `Due ${formatDate(a.dueAt)}` : 'No due date'}</span>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
 export default function DashboardPage() {
   usePageTitle('My dashboard')
   const { user } = useAuth()
   const coursesResource = useResource(studentApi.courses)
-  const myCourses = coursesResource.data
-  const total = myCourses?.length ?? 0
+  const { data: myCourses, error, loading, reload } = coursesResource
+  const current = myCourses && myCourses.length > 0 ? pickCurrent(myCourses) : null
+  const others = current ? myCourses.filter((c) => c.id !== current.id) : []
   const finished = myCourses?.filter((c) => c.enrolment.status === 'completed').length ?? 0
-  const topicsDone = myCourses?.reduce((sum, c) => sum + c.enrolment.progress.completedTopics, 0) ?? 0
+
+  let main
+  if (loading) main = <LoadingState label="Loading your courses…" />
+  else if (error && !myCourses) main = <ErrorState error={error} onRetry={reload} />
+  else if (!current) main = <NoCourse />
+  else
+    main = (
+      <>
+        <ContinueCard course={current} />
+        <OtherCourses courses={others} />
+      </>
+    )
 
   return (
-    <div className="container page">
-      <Reveal as="header" className="welcome">
+    <div className="container page dash">
+      <Reveal as="header" className="dash__head">
         <div>
-          <p className="eyebrow eyebrow--light">Student dashboard</p>
-          <h1 className="welcome__title">Welcome back, {user.fullName.split(' ')[0]}</h1>
-          <p className="welcome__text">Pick up where you left off, or find your next course.</p>
+          <p className="eyebrow">Student dashboard</p>
+          <h1 className="dash__title">Welcome back, {user.fullName.split(' ')[0]}</h1>
         </div>
         {myCourses && (
-          <ul className="welcome__stats" aria-label="Your learning at a glance">
-            <li>
-              <strong>{total}</strong>
-              <span>{total === 1 ? 'Course' : 'Courses'}</span>
-            </li>
-            <li>
-              <strong>{topicsDone}</strong>
-              <span>Topics done</span>
-            </li>
-            <li>
-              <strong>{finished}</strong>
-              <span>Completed</span>
-            </li>
-          </ul>
+          <p className="dash__summary">
+            {myCourses.length} {myCourses.length === 1 ? 'course' : 'courses'} · {finished} completed
+          </p>
         )}
       </Reveal>
 
-      <div className="dashboard">
-        <section className="card profile" aria-labelledby="profile-title">
-          <h2 id="profile-title" className="card__title">
-            <Icon name="user" /> Profile
-          </h2>
-          <dl className="profile__details">
-            <div>
-              <dt>Name</dt>
-              <dd>{user.fullName}</dd>
-            </div>
-            <div>
-              <dt>Email</dt>
-              <dd className="break">{user.email}</dd>
-            </div>
-          </dl>
-        </section>
+      <div className="dash__grid">
+        <div className="dash__main">{main}</div>
 
-        <section className="dashboard__courses" aria-labelledby="my-courses-title">
-          <div className="section__header">
-            <h2 id="my-courses-title" className="section__title section__title--sm">
-              My courses
+        <aside className="dash__side" aria-label="Schedule and assignments">
+          <section className="side-card" aria-labelledby="classes-title">
+            <h2 id="classes-title" className="dash-heading">
+              <Icon name="calendar" size={16} /> Upcoming classes
             </h2>
-            <Link to="/eduyarp/courses" className="text-link">
-              Browse more courses
-            </Link>
-          </div>
-          <MyCourses resource={coursesResource} />
-        </section>
+            <UpcomingClasses />
+          </section>
 
-        <section className="card dashboard__classes" aria-labelledby="classes-title">
-          <h2 id="classes-title" className="card__title">
-            <Icon name="calendar" /> Upcoming classes
-          </h2>
-          <UpcomingClasses />
-        </section>
+          {current && (
+            <section className="side-card" aria-labelledby="due-title">
+              <h2 id="due-title" className="dash-heading">
+                <Icon name="edit" size={16} /> Assignments to hand in
+              </h2>
+              <DueAssignments courseId={current.id} />
+            </section>
+          )}
+
+          <section className="side-card side-card--plain" aria-labelledby="account-title">
+            <h2 id="account-title" className="dash-heading">
+              <Icon name="user" size={16} /> Account
+            </h2>
+            <p className="side-card__name">{user.fullName}</p>
+            <p className="side-card__email break">{user.email}</p>
+            <div className="side-card__links">
+              <Link to="/account/profile" className="text-link">
+                Profile
+              </Link>
+              <Link to="/eduyarp/certificates" className="text-link">
+                Certificates
+              </Link>
+            </div>
+          </section>
+        </aside>
       </div>
     </div>
   )

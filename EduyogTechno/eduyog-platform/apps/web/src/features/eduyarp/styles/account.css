@@ -12,7 +12,7 @@
 }
 
 .eduyarp-site a.nav__user:hover {
-  background: var(--indigo-50, #eef2ff);
+  background: var(--indigo-50, #effaf6);
 }
 
 /* ---------- Alerts ---------- */
@@ -244,7 +244,7 @@
 }
 
 .eduyarp-site .t-course:hover {
-  border-color: #c7d2fe;
+  border-color: #c9efe3;
   box-shadow: var(--shadow-md);
 }
 
@@ -504,7 +504,7 @@
 .eduyarp-site .t-outline__tag {
   padding: 1px 8px;
   border-radius: 999px;
-  background: var(--indigo-50, #eef2ff);
+  background: var(--indigo-50, #effaf6);
   color: var(--indigo-600);
   font-size: 11px;
   font-weight: 700;

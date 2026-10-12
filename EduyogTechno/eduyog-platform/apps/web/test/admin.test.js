@@ -41,12 +41,13 @@ function unifiedPages() {
 }
 
 test('every one of the original Admin routes (11 protected + course detail + login) is registered with the same page', () => {
+  assert.equal(adminRoutes.some((route) => route.id === 'admin-registrations'), true, 'the one added route is the registrations review')
   const original = originalRoutes()
   assert.equal(original.protectedRoutes.length, 11, 'the original has 11 flat protected routes')
   assert.equal(original.courseDetailPage, 'CourseDetailPage')
   assert.equal(original.loginPath, '/login')
   const pages = unifiedPages()
-  assert.equal(adminRoutes.length, 13, '11 + course detail + login')
+  assert.equal(adminRoutes.length, 14, '11 + course detail + login + registrations (approval workflow)')
   for (const old of original.protectedRoutes) {
     const route = adminRoutes.find((candidate) => candidate.adminLegacy === old.path)
     assert.ok(route, `no unified route for ${old.path}`)
@@ -58,8 +59,8 @@ test('every one of the original Admin routes (11 protected + course detail + log
   assert.deepEqual(adminRoutes.find((route) => route.adminLegacy === '/login'), { ...adminRoutes.find((route) => route.id === 'admin-login') })
   assert.equal(adminRoutes.find((route) => route.id === 'admin-login').access, 'guest')
   assert.equal(pages['admin-not-found'], 'NotFoundPage')
-  assert.equal(new Set(adminRoutes.map((route) => route.id)).size, 13)
-  assert.equal(new Set(adminRoutes.map((route) => route.path)).size, 13)
+  assert.equal(new Set(adminRoutes.map((route) => route.id)).size, 14)
+  assert.equal(new Set(adminRoutes.map((route) => route.path)).size, 14)
 })
 
 test('the unified Admin route map: everything is under /admin', () => {
@@ -69,6 +70,7 @@ test('the unified Admin route map: everything is under /admin', () => {
     '/platforms': '/admin/platforms',
     '/services': '/admin/services',
     '/users': '/admin/users',
+    '/registrations': '/admin/registrations',
     '/fitness-leads': '/admin/fitness-leads',
     '/eduyarp/courses': '/admin/eduyarp/courses',
     '/eduyarp/courses/:id': '/admin/eduyarp/courses/:id',
@@ -131,7 +133,7 @@ test('every internal Admin link and nav entry resolves to an Admin route', () =>
   assert.deepEqual(unprefixed, [], 'no unprefixed legacy Admin path may remain')
   const layout = read(join(FEATURE, 'components', 'Layout.jsx'))
   const navTargets = [...layout.matchAll(/to: '([^']+)'/g)].map((m) => m[1])
-  assert.equal(navTargets.length, 11, 'the sidebar has 11 entries')
+  assert.equal(navTargets.length, 12, 'the sidebar has 11 original entries plus Registrations')
   for (const target of navTargets) assert.equal(resolveRoute(target).module, 'admin', target)
 })
 
@@ -158,12 +160,24 @@ test('guard: an authenticated administrator gets the page; the login page redire
 
 test('auth, session, endpoints and polling code are unchanged from the original Admin app', () => {
   for (const file of [
-    'auth/AuthProvider.jsx', 'auth/AuthContext.js', 'auth/useAuth.js', 'api/session.js', 'api/endpoints.js',
+    'auth/AuthProvider.jsx', 'auth/AuthContext.js', 'auth/useAuth.js', 'api/session.js',
     'hooks/autoRefresh.js', 'hooks/useAutoRefresh.js', 'hooks/useResource.js', 'utils/errors.js', 'utils/imageUrl.js', 'utils/dashboard.js',
     'toast/ToastProvider.jsx',
   ]) {
     assert.equal(read(join(FEATURE, file)), read(join(ORIGINAL, file)), `${file} differs from the original`)
   }
+})
+
+
+test('Admin endpoints: every original call is unchanged; only the documented approval, access-grant and certificate-request calls were added', () => {
+  const current = read(join(FEATURE, 'api/endpoints.js'))
+  // Remove exactly the added blocks; what is left must be the original file, byte for byte.
+  const stripped = current
+    .replace(/\n {2}\/\/ Student registrations awaiting[\s\S]*?d\.user\),\n(?=\}\n\nexport const leadsApi)/, '\n')
+    .replace(/ {4}\/\/ Full-course access: creates[\s\S]*?d\.enrolment\),\n(?= {4}cancel:)/, '')
+    .replace(/ {4}requests: \{[\s\S]*?\n {4}\},\n(?= {4}revoke:)/, '')
+  assert.equal(stripped, read(join(ORIGINAL, 'api/endpoints.js')))
+  for (const added of ['registrations:', 'decideApproval:', 'grant:', 'requests: {']) assert.ok(current.includes(added), added)
 })
 
 test('the original Admin login rules are intact: role from /auth/me, non-admins rejected, 401 vs 403 notices', () => {

@@ -1,12 +1,13 @@
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import { coursesApi, studentApi } from '../api/endpoints'
 import { useAuth } from '../auth/useAuth'
 import { CourseStatusBadge, LevelBadge } from '../components/Badges'
+import { ContactAccess } from '../components/ContactAccess'
 import { CourseArt } from '../components/CourseArt'
 import { CourseIcon } from '../components/CourseIcon'
 import { Icon } from '../components/Icon'
 import { Reveal } from '../components/Reveal'
-import { Alert, ErrorState, LoadingState, Spinner } from '../components/States'
+import { Alert, ErrorState, LoadingState } from '../components/States'
 import { usePageTitle } from '../hooks/usePageTitle'
 import { useResource } from '../hooks/useResource'
 import { Link } from '../router/Link'
@@ -15,39 +16,20 @@ import { useRouter } from '../router/useRouter'
 import { LEVEL_LABELS, splitLines } from '../utils/format'
 import NotFoundPage from './NotFoundPage'
 
-// Enrolment for a signed-in Student. Knows whether they are already enrolled
-// from their own course list.
-function StudentEnrolAction({ course }) {
-  const { navigate } = useRouter()
+// Access for a signed-in Student: the free preview (first two topics of the first module) is always
+// there; full access is granted by an Admin after the student contacts Eduyog. Students cannot enrol
+// themselves. Whether they already have full access comes from their own course list.
+function StudentAccessActions({ course }) {
   const mine = useResource(studentApi.courses)
-  const [busy, setBusy] = useState(false)
-  const [error, setError] = useState(null)
-
   const learnPath = `/eduyarp/my-courses/${course.id}`
   const enrolled = mine.data?.some((c) => c.id === course.id)
 
-  const enrol = async () => {
-    setBusy(true)
-    setError(null)
-    try {
-      await coursesApi.enrol(course.id)
-      navigate(learnPath)
-    } catch (err) {
-      // Already enrolled (e.g. in another tab): take them to the course.
-      if (err.status === 409) navigate(learnPath)
-      else {
-        setError(err.message)
-        setBusy(false)
-      }
-    }
-  }
-
-  if (mine.loading) return <LoadingState label="Checking your enrolment…" />
+  if (mine.loading) return <LoadingState label="Checking your access…" />
   if (enrolled)
     return (
       <>
         <p className="enrol__note">
-          <Icon name="check" size={16} /> You are enrolled in this course.
+          <Icon name="check" size={16} /> You have full access to this course.
         </p>
         <Link to={learnPath} className="btn btn--primary btn--block btn--lg">
           Continue learning <Icon name="arrowRight" />
@@ -57,11 +39,10 @@ function StudentEnrolAction({ course }) {
 
   return (
     <>
-      {error && <Alert>{error}</Alert>}
-      <button type="button" className="btn btn--primary btn--block btn--lg" onClick={enrol} disabled={busy}>
-        {busy && <Spinner size="sm" />}
-        Enrol now
-      </button>
+      <Link to={`/eduyarp/preview/${course.id}`} className="btn btn--primary btn--block btn--lg">
+        Preview the first 2 topics <Icon name="arrowRight" />
+      </Link>
+      <ContactAccess courseTitle={course.title} compact />
     </>
   )
 }
@@ -76,7 +57,7 @@ function EnrolPanel({ course }) {
     action = (
       <>
         <Link to={loginPath(fullPath)} className="btn btn--primary btn--block btn--lg">
-          Log in to enrol
+          Log in to preview
         </Link>
         <p className="enrol__hint">
           New to Eduyarp?{' '}
@@ -86,14 +67,14 @@ function EnrolPanel({ course }) {
     )
   else if (!isStudent)
     action = (
-      <Alert tone="info">Enrolment is available to Student accounts only.</Alert>
+      <Alert tone="info">Previews and course access are available to Student accounts only.</Alert>
     )
-  else action = <StudentEnrolAction course={course} />
+  else action = <StudentAccessActions course={course} />
 
   return (
     <aside className="enrol card" aria-labelledby="enrol-title">
       <h2 id="enrol-title" className="visually-hidden">
-        Enrolment
+        Course access
       </h2>
       <dl className="enrol__facts">
         <div>
