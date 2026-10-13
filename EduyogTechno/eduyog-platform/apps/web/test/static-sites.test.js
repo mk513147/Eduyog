@@ -30,7 +30,7 @@ const EXPECTED_CHANGES = {
 }
 // Present in the source folders but intentionally not published.
 // Files that exist only in the published copy (the Eduyog brand layer for StudentAQ).
-const ADDED_ONLY = { studentaq: ['assets/css/eduyog-brand.css', 'assets/img/eduyog-logo.svg', 'assets/js/site-config.js'], saritex: [] }
+const ADDED_ONLY = { studentaq: ['assets/css/eduyog-brand.css', 'assets/img/eduyog-logo.svg', 'assets/js/site-config.js'], saritex: ['Team/Sneha Sharma.jpeg'] }
 const NOT_PUBLISHED = { studentaq: ['.gitkeep', 'README.md'], saritex: ['.gitkeep'] }
 
 function listFiles(root, dir = root) {
