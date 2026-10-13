@@ -65,7 +65,7 @@ function HeroVisual() {
         </div>
         <div className="hv-player">
           <span className="hv-play">
-            <Icon name="play" size={30} />
+            <Icon name="play" size={30} />s
           </span>
         </div>
         <span className="hv-line hv-line--lg" />
@@ -119,7 +119,7 @@ export default function LandingPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.08, ease: EASE }}
             >
-              Learn skills that <span className="text-gradient">move you forward.</span>
+              Learn skills that <span className="text-gradient">move you forward</span>
             </motion.h1>
             <motion.p
               className="landing-hero__text"

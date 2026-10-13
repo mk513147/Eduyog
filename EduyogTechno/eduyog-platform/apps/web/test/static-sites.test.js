@@ -25,12 +25,12 @@ const PAGES = {
 // The ONLY files that differ from the originals (see README, "Static sites"). Anything else
 // differing is a regression: the copies must stay faithful.
 const EXPECTED_CHANGES = {
-  studentaq: ['404.html', 'about.html', 'assets/js/data.js', 'contact.html', 'destinations.html', 'index.html', 'privacy.html', 'services.html'],
+  studentaq: ['404.html', 'about.html', 'assets/js/data.js', 'assets/js/enquiry-form.js', 'assets/js/layout.js', 'assets/js/pages.js', 'contact.html', 'destinations.html', 'index.html', 'privacy.html', 'services.html'],
   saritex: ['AboutUs.html', 'Blogs.html', 'ContactUs.html', 'Reviews.html', 'Services.html', 'index.html'],
 }
 // Present in the source folders but intentionally not published.
 // Files that exist only in the published copy (the Eduyog brand layer for StudentAQ).
-const ADDED_ONLY = { studentaq: ['assets/css/eduyog-brand.css'], saritex: [] }
+const ADDED_ONLY = { studentaq: ['assets/css/eduyog-brand.css', 'assets/img/eduyog-logo.svg', 'assets/js/site-config.js'], saritex: [] }
 const NOT_PUBLISHED = { studentaq: ['.gitkeep', 'README.md'], saritex: ['.gitkeep'] }
 
 function listFiles(root, dir = root) {
@@ -222,9 +222,9 @@ test('the copies differ from websites/ only by the documented changes', () => {
 // Back-to-Eduyog footer link, PDF folder-name case fix, and the four PDF file names corrected to the
 // names on disk (the originals point at files that do not exist).
 const ADDED_LINE =
-  /href="\.\.\/">Back to Eduyog<\/a>|SaritexPdf_File|"(Full DIssertation|Harsh Shripremkumar {2}Dissertation|Mirza Dissertaion|Intelligent System- MD Shoaib )\.pdf"/
+  /href="\.\.\/">Back to Eduyog<\/a>|eduyog-logo\.svg|SaritexPdf_File|"(Full DIssertation|Harsh Shripremkumar {2}Dissertation|Mirza Dissertaion|Intelligent System- MD Shoaib )\.pdf"/
 const REMOVED_LINE =
-  /SariteXpdf_File|"(Full Dissertation|Harsh Shripremkumar Dissertation|Mirza Dissertation|Intelligent System- MD Shoaib)\.pdf"/
+  /eduyog-logo.svg|SariteXpdf_File|"(Full Dissertation|Harsh Shripremkumar Dissertation|Mirza Dissertation|Intelligent System- MD Shoaib)\.pdf"/
 
 test('Saritex copy: the only differences are the documented edits', () => {
   for (const page of PAGES.saritex) {
@@ -253,18 +253,20 @@ test('Saritex: both forms keep their SheetDB endpoint over https (no new third p
   assert.ok(original.includes('https://sheetdb.io/api/v1/io3zycyrrbs36'))
 })
 
-test('StudentAQ Google Form: configuration is consistent and never invented', (t) => {
+test('StudentAQ enquiry form posts to the backend: no third-party form config remains', () => {
   const sandbox = { window: {} }
   vm.runInNewContext(read('studentaq', 'assets/js/data.js'), sandbox)
-  const { formId, entries } = sandbox.window.SITE_DATA.googleForm
-  const empty = Object.entries(entries).filter(([, value]) => !value).map(([name]) => name)
-  t.diagnostic(`Google Form formId is ${formId ? 'set' : 'EMPTY (submissions use the WhatsApp fallback)'}; ${empty.length} of ${Object.keys(entries).length} entry ids are empty`)
-  // Either nothing is configured (the fallback applies), or everything is.
-  if (formId) assert.deepEqual(empty, [], 'formId is set but some entry ids are missing')
-  // The copy must not differ from the source configuration.
-  const original = readFileSync(join(SOURCES, 'studentaq', 'assets/js/data.js'), 'utf8')
-  const originalForm = original.slice(original.indexOf('googleForm:'), original.indexOf('footer: {'))
-  assert.equal(read('studentaq', 'assets/js/data.js').includes(originalForm), true, 'googleForm block was altered')
+  const data = sandbox.window.SITE_DATA
+  assert.equal(data.googleForm, undefined)
+  assert.equal(data.api.enquiryPath, 'studentaq-enquiries')
+  assert.equal(data.contact.email, 'eduyogtechnology@gmail.com')
+  // No hard-coded API host anywhere in the StudentAQ scripts.
+  for (const file of ['enquiry-form.js', 'site-config.js']) {
+    assert.ok(!/https?:\/\/(?!wa\.me)/.test(read('studentaq', `assets/js/${file}`).replace(/\/\*[\s\S]*?\*\//g, '')), `${file}: hard-coded URL`)
+  }
+  // Only the contact page loads the generated settings file, before the form script.
+  assert.ok(read('studentaq', 'contact.html').indexOf('assets/js/site-config.js') > 0)
+  assert.equal(read('studentaq', 'assets/js/site-config.js').includes("apiBaseUrl: ''"), true)
 })
 
 // ---- URL helpers used by the React shell (src/staticSites.js) ----------------------------------

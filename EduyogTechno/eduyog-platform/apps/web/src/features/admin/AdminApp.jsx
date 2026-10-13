@@ -3,6 +3,7 @@ import { Layout } from './components/Layout'
 import { LoadingState } from './components/States'
 import { resolveAdminAccess } from './access'
 import FitnessLeadsPage from './pages/FitnessLeadsPage'
+import StudentaqEnquiriesPage from './pages/StudentaqEnquiriesPage'
 import LoginPage from './pages/LoginPage'
 import NotFoundPage from './pages/NotFoundPage'
 import OverviewPage from './pages/OverviewPage'
@@ -28,6 +29,7 @@ const PAGES = {
   'admin-users': UsersPage,
   'admin-registrations': RegistrationsPage,
   'admin-fitness-leads': FitnessLeadsPage,
+  'admin-studentaq-enquiries': StudentaqEnquiriesPage,
   'admin-eduyarp-courses': CoursesPage,
   'admin-eduyarp-course': CourseDetailPage,
   'admin-eduyarp-trainers': TrainersPage,

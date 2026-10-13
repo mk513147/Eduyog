@@ -1,7 +1,8 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useFocusMainOnNavigation } from '../../../router/useFocusMainOnNavigation'
 import { useAuth } from '../auth/useAuth'
 import { Link } from '../router/Link'
+import { useRouter } from '../router/useRouter'
 import { BrandLogo } from './BrandLogo'
 import { Icon } from './Icon'
 
@@ -15,6 +16,7 @@ const NAV_GROUPS = [
       { to: '/admin/users', label: 'Users', icon: 'users' },
       { to: '/admin/registrations', label: 'Registrations', icon: 'users' },
       { to: '/admin/fitness-leads', label: 'Fitness Leads', icon: 'leads' },
+      { to: '/admin/studentaq-enquiries', label: 'StudentAQ Enquiries', icon: 'leads' },
     ],
   },
   {
@@ -34,9 +36,16 @@ export function Layout({ children }) {
   const { user, logout } = useAuth()
   const [menuOpen, setMenuOpen] = useState(false)
   const mainRef = useRef(null)
+  const navRef = useRef(null)
+  const { path } = useRouter()
   // After navigating to another page, focus moves to the main content (shared shell behaviour).
   useFocusMainOnNavigation(mainRef)
   const closeMenu = () => setMenuOpen(false)
+
+  // Keep the current page's item visible when the sidebar menu scrolls (short screens).
+  useEffect(() => {
+    navRef.current?.querySelector('[aria-current="page"]')?.scrollIntoView({ block: 'nearest' })
+  }, [path])
 
   return (
     <div className="layout">
@@ -70,7 +79,7 @@ export function Layout({ children }) {
           </span>
         </div>
 
-        <nav className="nav" aria-label="Main">
+        <nav ref={navRef} className="nav" aria-label="Main">
           {NAV_GROUPS.map((group) => (
             <div key={group.label ?? 'main'} className="nav__group">
               {group.label && <p className="nav__heading">{group.label}</p>}

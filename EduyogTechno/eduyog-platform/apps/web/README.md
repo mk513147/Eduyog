@@ -213,16 +213,23 @@ work at the domain root and under any `VITE_BASE_PATH` without edits.
      with two spaces, `Mirza Dissertaion`, `Intelligent System- MD Shoaib .pdf`). In the originals these links
      break on case-sensitive hosts, and the last two names point at files that never existed.
   2. All six Saritex pages: one footer Quick Links item, `Back to Eduyog` (`href="../"`).
-  3. StudentAQ `assets/js/data.js`: one footer link, `Back to Eduyog` (`href: '../'`).
+  3. StudentAQ `assets/js/data.js`: one footer link, `Back to Eduyog` (`href: '../'`), the Eduyog contact email
+     (`eduyogtechnology@gmail.com`), the Eduyog header logo link and the backend `api` settings; `layout.js`
+     (header logo link), `enquiry-form.js` and `pages.js` (backend submission), `contact.html` (loads
+     `site-config.js`). Saritex pages: the Eduyog logo in the navbar (linking to `../`, the Eduyog homepage).
   4. StudentAQ `404.html`: `<base href="/">` replaced by a small script that derives the base from the
      page's own URL (`/studentaq/`, or `/<base>/studentaq/`); the static `/` base would point its assets
      and links at the React shell.
 - **Third-party forms (unchanged, not tested against production):**
-  - *StudentAQ* posts to Google Forms, but `googleForm.formId` and all entry ids in `data.js` are empty, so
-    no request is made: the form shows its existing error panel with a "Send on WhatsApp" fallback and never
-    a success message. To enable it, fill in `formId` and every `entries.*` id in
-    `public/studentaq/assets/js/data.js` (see the original `websites/studentaq/README.md`, section 7).
-    Google Forms answers opaquely (`no-cors`), so success means only "the request reached Google".
+  - *StudentAQ* (changed): the enquiry form no longer uses Google Forms. It posts JSON to the existing
+    backend, `POST <VITE_API_BASE_URL>/studentaq-enquiries`, which validates it and stores it in the new
+    PostgreSQL table `studentaq_enquiries` (`database/schema/014_studentaq_enquiries.sql`). The success
+    message is shown only on HTTP 201; every other outcome (no API configured, network error, timeout,
+    4xx/5xx) shows the error panel. Because StudentAQ is static, `vite.config.js` generates
+    `studentaq/assets/js/site-config.js` from `VITE_API_BASE_URL` (dev server and build); the committed copy
+    is an empty "not configured" default. **Order of rollout:** apply migration 014 manually to the target
+    database, deploy the backend (its `FRONTEND_URL` must include the origin serving StudentAQ), then build
+    and deploy the web app with `VITE_API_BASE_URL` set. Submissions are not readable through the API.
   - *Saritex* (`index.html` modal form and `ContactUs.html`) posts to the SheetDB endpoint already in the
     pages (`https://sheetdb.io/api/v1/io3zycyrrbs36`). **Known issue, deliberately not fixed here:** both
     show their success message (modal / "Data sent to Google Sheet!" toast) whenever SheetDB returns any

@@ -1,5 +1,6 @@
 /**
- * Enquiry form: renders fields from config, validates input and submits to Google Forms.
+ * Enquiry form: renders fields from config, validates input and submits to the Eduyog backend
+ * (POST /api/studentaq-enquiries), which stores it in PostgreSQL.
  */
 (function (SAQ) {
   'use strict';
@@ -15,8 +16,6 @@
   const PHONE_PATTERN = /^\+?[\d\s().-]+$/;
   const TEXTAREA_ROWS = 5;
 
-  /** Field types that are validated but never sent to Google Forms. */
-  const LOCAL_ONLY_TYPES = ['consent'];
   const TEXT_TYPES = ['text', 'email', 'tel', 'textarea'];
   const REQUIRED_MESSAGE_KEY = { select: 'selectOne', radio: 'selectOne', checkbox: 'selectAtLeastOne', consent: 'consent' };
 
@@ -211,47 +210,47 @@
   /** Plain-text summary of the enquiry, used for the WhatsApp fallback. */
   function enquirySummary(greeting, fields, values) {
     const lines = fields
-      .filter((field) => !LOCAL_ONLY_TYPES.includes(field.type) && !isEmpty(values[field.name]))
+      .filter((field) => field.type !== 'consent' && !isEmpty(values[field.name]))
       .map((field) => `${field.label}: ${[].concat(values[field.name]).join(', ')}`);
     return [greeting, '', ...lines].join('\n');
   }
 
   /* ---------------------------------------------------------------------
-   * Google Forms
+   * Backend submission
    * ------------------------------------------------------------------ */
-  function configurationProblems(googleForm, fields) {
-    const missingEntries = fields
-      .filter((field) => !LOCAL_ONLY_TYPES.includes(field.type) && !googleForm.entries?.[field.name])
-      .map((field) => field.name);
+  class SubmissionError extends Error {}
 
-    return [!googleForm.formId && 'formId', ...missingEntries.map((name) => `entries.${name}`)].filter(Boolean);
+  /** API base URL (with /api, no trailing slash) from site-config.js, or '' when not configured. */
+  function apiBase() {
+    const value = window.EDUYOG_CONFIG && window.EDUYOG_CONFIG.apiBaseUrl;
+    return typeof value === 'string' ? value.replace(/\/+$/, '') : '';
   }
 
-  async function submitToGoogleForm(googleForm, fields, values) {
-    const problems = configurationProblems(googleForm, fields);
-    if (problems.length) {
-      throw new Error(`Google Form is not configured in data.js (missing: ${problems.join(', ')}). See README.md.`);
-    }
+  /**
+   * Sends the enquiry to the backend. Resolves only when the backend confirms it stored the
+   * enquiry (HTTP 201); every other outcome (no API configured, network failure, timeout,
+   * validation or server error) rejects, so the caller never reports a success that did not happen.
+   */
+  async function submitToBackend(api, fields, values, honeypot) {
+    const base = apiBase();
+    if (!base) throw new SubmissionError('The API address is not configured (EDUYOG_CONFIG.apiBaseUrl).');
 
-    const body = new URLSearchParams();
-    fields
-      .filter((field) => !LOCAL_ONLY_TYPES.includes(field.type))
-      .forEach((field) => {
-        [].concat(values[field.name]).filter(Boolean).forEach((value) => body.append(googleForm.entries[field.name], value));
-      });
+    const payload = { [HONEYPOT_NAME]: honeypot };
+    fields.forEach((field) => {
+      payload[field.name] = field.type === 'consent' ? Boolean(values[field.name]) : values[field.name];
+    });
 
     const controller = new AbortController();
-    const timeout = window.setTimeout(() => controller.abort(), googleForm.timeoutMs);
+    const timeout = window.setTimeout(() => controller.abort(), api.timeoutMs);
 
     try {
-      // Google Forms does not send CORS headers, so the response is opaque.
-      // A resolved request means it reached Google; network failures and timeouts reject.
-      await fetch(`https://docs.google.com/forms/d/e/${encodeURIComponent(googleForm.formId)}/formResponse`, {
+      const response = await fetch(`${base}/${api.enquiryPath}`, {
         method: 'POST',
-        mode: 'no-cors',
-        body,
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(payload),
         signal: controller.signal,
       });
+      if (response.status !== 201) throw new SubmissionError(`The server answered HTTP ${response.status}.`);
     } finally {
       window.clearTimeout(timeout);
     }
@@ -290,7 +289,7 @@
   /* ---------------------------------------------------------------------
    * Entry point
    * ------------------------------------------------------------------ */
-  function mount(container, { copy, googleForm, optionSources = {}, whatsappGreeting }) {
+  function mount(container, { copy, api, optionSources = {}, whatsappGreeting }) {
     if (!container) return;
 
     const params = new URLSearchParams(window.location.search);
@@ -367,18 +366,13 @@
           return;
         }
 
-        // Bots fill the hidden honeypot field; silently accept without sending.
-        if (form.elements[HONEYPOT_NAME].value) {
-          renderSuccess();
-          return;
-        }
-
         setSubmitting(true);
         try {
-          await submitToGoogleForm(googleForm, fields, values);
+          // The hidden honeypot value is passed on: the backend discards a bot's submission itself.
+          await submitToBackend(api, fields, values, form.elements[HONEYPOT_NAME].value);
           renderSuccess();
         } catch (error) {
-          console.error('[enquiry-form] Enquiry could not be submitted.', error);
+          console.error('[enquiry-form] Enquiry could not be submitted.', error instanceof SubmissionError ? error.message : error.name);
           const whatsappHref = links.whatsappUrl(enquirySummary(whatsappGreeting, fields, values));
           mountContent(alertBox, errorAlertTemplate(copy, whatsappHref));
           alertBox.hidden = false;
@@ -390,5 +384,5 @@
     renderForm();
   }
 
-  SAQ.enquiryForm = { mount };
+  SAQ.enquiryForm = { mount, submitToBackend };
 })((window.SAQ = window.SAQ || {}));

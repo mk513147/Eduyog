@@ -17,7 +17,7 @@ window.SITE_DATA = (function () {
   const contact = {
     whatsappNumber: '917295993480', // Digits only, with country code. Only used inside WhatsApp links, never shown on the page.
     whatsappGreeting: 'Hi StudentAQ, I would like some help with my career.',
-    email: 'saritex2024@gmail.com',
+    email: 'eduyogtechnology@gmail.com',
     emailSubject: 'Career enquiry from the StudentAQ website',
   };
 
@@ -30,7 +30,7 @@ window.SITE_DATA = (function () {
   /* ------------------------------------------------------------------------
    * Services
    * `id` is used in links (services.html#service-<id>, contact.html?services=<id>).
-   * `title` is also the option label sent to Google Forms — keep them identical.
+   * `title` is also the option label sent to the backend with an enquiry.
    * --------------------------------------------------------------------- */
   const services = [
     {
@@ -656,7 +656,7 @@ window.SITE_DATA = (function () {
 
     /* ------------------------------------------------------------------------
      * Enquiry form (contact page)
-     * `name` must match a key in googleForm.entries below.
+     * `name` is the field name sent to the backend (see backend/utils/validators.js).
      * `width: 'full'` spans both columns on larger screens.
      * --------------------------------------------------------------------- */
     enquiryForm: {
@@ -785,26 +785,18 @@ window.SITE_DATA = (function () {
     },
 
     /* ------------------------------------------------------------------------
-     * Google Forms connection — see README.md, "Connect the enquiry form".
-     * Until formId and every entry below are filled in, submissions show the
-     * error message with a "Send on WhatsApp" fallback.
+     * Backend connection for the enquiry form. The API base URL comes from
+     * assets/js/site-config.js (written from VITE_API_BASE_URL at build time); the
+     * form posts to <apiBaseUrl>/<enquiryPath> and shows success only when the
+     * backend confirms the enquiry was stored.
      * --------------------------------------------------------------------- */
-      googleForm: {
-      formId: "", // From the form link: docs.google.com/forms/d/e/<formId>/viewform
-      entries: {
-        fullName: "",
-        email: "",
-        phone: "",
-        currentCountry: "",
-        status: "",
-        targetCountry: "",
-        university: "",
-        course: "",
-        services: "",
-        message: "",
-      },
+    api: {
+      enquiryPath: 'studentaq-enquiries',
       timeoutMs: 15000,
     },
+
+    /* The Eduyog logo in the header links to the Eduyog homepage (the folder above this site). */
+    eduyog: { href: '../', logo: { src: 'assets/img/eduyog-logo.svg', width: 40, height: 40 }, label: 'Eduyog home' },
 
     footer: {
       about: 'Career support for students and graduates building their future in the UK and Dubai.',

@@ -5,6 +5,7 @@ const platformController = require('../controllers/platform.controller');
 const serviceController = require('../controllers/service.controller');
 const userController = require('../controllers/user.controller');
 const fitnessLeadController = require('../controllers/fitnessLead.controller');
+const studentaqEnquiryController = require('../controllers/studentaqEnquiry.controller');
 const adminEduyarpRoutes = require('./adminEduyarp.routes');
 
 const router = express.Router();
@@ -34,6 +35,8 @@ router.patch('/users/:id/role', userController.changeRole);
 
 router.get('/fitness-leads', fitnessLeadController.list);
 router.get('/fitness-leads/:id', fitnessLeadController.get);
+
+router.get('/studentaq-enquiries', studentaqEnquiryController.list);
 
 router.use('/eduyarp', adminEduyarpRoutes);
 

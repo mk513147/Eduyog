@@ -24,6 +24,14 @@
     </a>`;
   }
 
+  function eduyogHomeLink(data) {
+    const { href, logo, label } = data.eduyog;
+
+    return html`<a class="eduyog-home" href="${href}" aria-label="${label}">
+      <img src="${logo.src}" alt="" width="${logo.width}" height="${logo.height}">
+    </a>`;
+  }
+
   function navLinks(items, page, { className, trailingIcon }) {
     return items.map(
       (item) => html`<a class="${className}" href="${item.href}"${attrs({ 'aria-current': item.page === page && 'page' })}>
@@ -36,7 +44,10 @@
     const { labels, header } = data;
 
     return html`<div class="container header__inner">
-        ${brandLink(data)}
+        <div class="header__brands">
+          ${eduyogHomeLink(data)}
+          ${brandLink(data)}
+        </div>
         <nav class="nav" aria-label="${labels.mainNav}">
           ${navLinks(data.nav, page, { className: 'nav__link' })}
         </nav>

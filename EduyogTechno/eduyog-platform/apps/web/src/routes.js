@@ -75,6 +75,7 @@ export const ROUTES = [
   admin('admin-users', '/admin/users', '/users', 'admin'),
   admin('admin-registrations', '/admin/registrations', '/registrations', 'admin'),
   admin('admin-fitness-leads', '/admin/fitness-leads', '/fitness-leads', 'admin'),
+  admin('admin-studentaq-enquiries', '/admin/studentaq-enquiries', '/studentaq-enquiries', 'admin'),
   admin('admin-eduyarp-courses', '/admin/eduyarp/courses', '/eduyarp/courses', 'admin'),
   admin('admin-eduyarp-course', '/admin/eduyarp/courses/:id', '/eduyarp/courses/:id', 'admin', { id: /^\d+$/ }),
   admin('admin-eduyarp-trainers', '/admin/eduyarp/trainers', '/eduyarp/trainers', 'admin'),

@@ -6,7 +6,7 @@ import { Link } from '../router/Link'
 import { useRouter } from '../router/useRouter'
 import { loginPath } from '../router/match'
 import { SiteFooter } from '../../../components/SiteFooter'
-import { BrandLogo } from './BrandLogo'
+import { EduyogHomeLink } from '../../../components/EduyogHomeLink'
 import { Icon } from './Icon'
 
 export function Layout({ children }) {
@@ -57,12 +57,14 @@ export function Layout({ children }) {
 
       <header className={`header${scrolled ? ' header--scrolled' : ''}${menuOpen ? ' header--open' : ''}`}>
         <div className="container header__inner">
-          <Link to="/eduyarp" className="brand" onClick={closeMenu}>
-            <BrandLogo />
-            <span>
-              <span className="brand__name">Eduyarp</span>
-            </span>
-          </Link>
+          <div className="brand-lockup">
+            <EduyogHomeLink logoClassName="brand__logo" onClick={closeMenu} />
+            <Link to="/eduyarp" className="brand" onClick={closeMenu}>
+              <span>
+                <span className="brand__name">Eduyarp</span>
+              </span>
+            </Link>
+          </div>
 
           {status === 'authenticated' && <NotificationBell className="bell--header" watch />}
 

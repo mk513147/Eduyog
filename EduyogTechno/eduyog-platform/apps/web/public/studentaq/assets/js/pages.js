@@ -260,7 +260,7 @@
         init: (main) =>
           SAQ.enquiryForm.mount(main.querySelector('[data-enquiry-form]'), {
             copy: data.enquiryForm,
-            googleForm: data.googleForm,
+            api: data.api,
             optionSources: { services: data.services.map((service) => ({ id: service.id, value: service.title })) },
             whatsappGreeting: data.contact.whatsappGreeting,
           }),

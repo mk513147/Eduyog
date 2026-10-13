@@ -478,6 +478,102 @@ function validateFitnessLead(body) {
 }
 
 // ---------------------------------------------------------------------------
+// StudentAQ enquiries (public form on the StudentAQ contact page)
+//
+// Fields and limits match the form in apps/web/public/studentaq/assets/js/data.js (enquiryForm)
+// and the studentaq_enquiries columns and CHECK constraints. The fixed option lists are enforced
+// here; services are the form's service titles, so they are bounded text rather than a copied list.
+// ---------------------------------------------------------------------------
+
+const SAQ_COUNTRIES = ['United Kingdom', 'United Arab Emirates', 'India', 'Other'];
+const SAQ_STATUSES = ['Current student', 'Final-year student', 'Recent graduate', 'Working professional'];
+const SAQ_TARGETS = ['UK', 'Dubai', 'Both'];
+const SAQ_MAX_SERVICES = 12;
+const SAQ_SERVICE_MAX_LENGTH = 100;
+
+function oneOf(input, field, label, allowed, errors, value) {
+  if (typeof input[field] !== 'string' || input[field].trim() === '') {
+    errors[field] = `${label} is required`;
+  } else if (!allowed.includes(input[field].trim())) {
+    errors[field] = `${label} is invalid`;
+  } else {
+    value[field] = input[field].trim();
+  }
+}
+
+// Returns { value } or { errors }. Unknown fields (including any id, role or status) are ignored.
+// When the hidden bot-trap field (website_url) is filled in, value is { honeypot: true } and the
+// caller discards the submission without storing it.
+function validateStudentaqEnquiry(body) {
+  const input = body && typeof body === 'object' && !Array.isArray(body) ? body : {};
+  const errors = {};
+  const value = {};
+
+  if (typeof input.website_url === 'string' && input.website_url.trim() !== '') {
+    return { value: { honeypot: true } };
+  }
+
+  requiredText(input, 'fullName', 'Full name', 100, errors, value);
+
+  validateEmail(input.email, errors);
+  if (!errors.email) value.email = normalizeEmail(input.email);
+
+  requiredText(input, 'phone', 'Phone', 20, errors, value);
+  if (value.phone) {
+    const digits = value.phone.replace(/\D/g, '').length;
+    if (!PHONE_PATTERN.test(value.phone) || digits < 8 || digits > 15) errors.phone = 'Phone is invalid';
+  }
+
+  oneOf(input, 'currentCountry', 'Current country', SAQ_COUNTRIES, errors, value);
+  oneOf(input, 'status', 'Status', SAQ_STATUSES, errors, value);
+  oneOf(input, 'targetCountry', 'Target country', SAQ_TARGETS, errors, value);
+
+  for (const [field, label] of [['university', 'University'], ['course', 'Course']]) {
+    if (input[field] === undefined) value[field] = null;
+    else optionalText(input, field, label, 150, errors, value);
+  }
+  if (input.message === undefined) value.message = null;
+  else optionalText(input, 'message', 'Message', 1000, errors, value);
+
+  if (!Array.isArray(input.services) || input.services.length === 0) {
+    errors.services = 'Select at least one service';
+  } else if (
+    input.services.length > SAQ_MAX_SERVICES ||
+    input.services.some((s) => typeof s !== 'string' || s.trim() === '' || s.trim().length > SAQ_SERVICE_MAX_LENGTH)
+  ) {
+    errors.services = 'Services are invalid';
+  } else {
+    value.services = [...new Set(input.services.map((s) => s.trim()))];
+  }
+
+  if (input.consent !== true) {
+    errors.consent = 'Consent is required';
+  } else {
+    value.consent = true;
+  }
+
+  return finish(errors, value, false);
+}
+
+// Admin list query for StudentAQ enquiries: limit 1-100 (default 50), offset >= 0.
+function validateStudentaqEnquiryQuery(query) {
+  const errors = {};
+  const value = { limit: 50, offset: 0 };
+  const whole = (raw) => (typeof raw === 'string' && /^\d{1,9}$/.test(raw) ? Number(raw) : null);
+  if (query.limit !== undefined) {
+    const limit = whole(query.limit);
+    if (limit === null || limit < 1 || limit > 100) errors.limit = 'limit must be a whole number from 1 to 100';
+    else value.limit = limit;
+  }
+  if (query.offset !== undefined) {
+    const offset = whole(query.offset);
+    if (offset === null) errors.offset = 'offset must be a whole number of 0 or more';
+    else value.offset = offset;
+  }
+  return finish(errors, value, false);
+}
+
+// ---------------------------------------------------------------------------
 // Eduyarp
 //
 // Limits match the Eduyarp tables in 003_eduyarp.sql. Same { partial: true }
@@ -942,6 +1038,8 @@ module.exports = {
   validateProfile,
   validateRoleChange,
   validateFitnessLead,
+  validateStudentaqEnquiry,
+  validateStudentaqEnquiryQuery,
   validateCourse,
   validateCurriculumItem,
   validateTrainerAssignment,

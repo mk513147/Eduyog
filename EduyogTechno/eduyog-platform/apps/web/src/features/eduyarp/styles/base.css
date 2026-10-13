@@ -1208,3 +1208,18 @@
   height: 40px;
   object-fit: contain;
 }
+
+/* The logo links to the Eduyog homepage; the product name beside it keeps its own link. */
+
+.eduyarp-site .brand-lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.eduyarp-site .eduyog-home-link {
+  display: inline-flex;
+  flex: none;
+  border-radius: 8px;
+}

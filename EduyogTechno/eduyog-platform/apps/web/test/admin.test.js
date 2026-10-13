@@ -47,7 +47,7 @@ test('every one of the original Admin routes (11 protected + course detail + log
   assert.equal(original.courseDetailPage, 'CourseDetailPage')
   assert.equal(original.loginPath, '/login')
   const pages = unifiedPages()
-  assert.equal(adminRoutes.length, 14, '11 + course detail + login + registrations (approval workflow)')
+  assert.equal(adminRoutes.length, 15, '11 + course detail + login + registrations (approval workflow) + StudentAQ enquiries')
   for (const old of original.protectedRoutes) {
     const route = adminRoutes.find((candidate) => candidate.adminLegacy === old.path)
     assert.ok(route, `no unified route for ${old.path}`)
@@ -59,8 +59,8 @@ test('every one of the original Admin routes (11 protected + course detail + log
   assert.deepEqual(adminRoutes.find((route) => route.adminLegacy === '/login'), { ...adminRoutes.find((route) => route.id === 'admin-login') })
   assert.equal(adminRoutes.find((route) => route.id === 'admin-login').access, 'guest')
   assert.equal(pages['admin-not-found'], 'NotFoundPage')
-  assert.equal(new Set(adminRoutes.map((route) => route.id)).size, 14)
-  assert.equal(new Set(adminRoutes.map((route) => route.path)).size, 14)
+  assert.equal(new Set(adminRoutes.map((route) => route.id)).size, 15)
+  assert.equal(new Set(adminRoutes.map((route) => route.path)).size, 15)
 })
 
 test('the unified Admin route map: everything is under /admin', () => {
@@ -72,6 +72,7 @@ test('the unified Admin route map: everything is under /admin', () => {
     '/users': '/admin/users',
     '/registrations': '/admin/registrations',
     '/fitness-leads': '/admin/fitness-leads',
+    '/studentaq-enquiries': '/admin/studentaq-enquiries',
     '/eduyarp/courses': '/admin/eduyarp/courses',
     '/eduyarp/courses/:id': '/admin/eduyarp/courses/:id',
     '/eduyarp/trainers': '/admin/eduyarp/trainers',
@@ -133,7 +134,7 @@ test('every internal Admin link and nav entry resolves to an Admin route', () =>
   assert.deepEqual(unprefixed, [], 'no unprefixed legacy Admin path may remain')
   const layout = read(join(FEATURE, 'components', 'Layout.jsx'))
   const navTargets = [...layout.matchAll(/to: '([^']+)'/g)].map((m) => m[1])
-  assert.equal(navTargets.length, 12, 'the sidebar has 11 original entries plus Registrations')
+  assert.equal(navTargets.length, 13, 'the sidebar has 11 original entries plus Registrations and StudentAQ Enquiries')
   for (const target of navTargets) assert.equal(resolveRoute(target).module, 'admin', target)
 })
 
@@ -176,6 +177,7 @@ test('Admin endpoints: every original call is unchanged; only the documented app
     .replace(/\n {2}\/\/ Student registrations awaiting[\s\S]*?d\.user\),\n(?=\}\n\nexport const leadsApi)/, '\n')
     .replace(/ {4}\/\/ Full-course access: creates[\s\S]*?d\.enrolment\),\n(?= {4}cancel:)/, '')
     .replace(/ {4}requests: \{[\s\S]*?\n {4}\},\n(?= {4}revoke:)/, '')
+    .replace(/export const studentaqEnquiriesApi = \{[\s\S]*?\n\}\n\n(?=export const eduyarpApi)/, '')
   assert.equal(stripped, read(join(ORIGINAL, 'api/endpoints.js')))
   for (const added of ['registrations:', 'decideApproval:', 'grant:', 'requests: {']) assert.ok(current.includes(added), added)
 })

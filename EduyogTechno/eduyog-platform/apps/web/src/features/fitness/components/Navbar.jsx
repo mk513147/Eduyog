@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { BrandLogo } from '../../../components/BrandLogo'
+import { EduyogHomeLink } from '../../../components/EduyogHomeLink'
 import { NAV_ITEMS } from '../content'
 import { Icon } from './Icon'
 
@@ -32,12 +32,14 @@ export function Navbar() {
   return (
     <header className={`navbar${menuOpen ? ' navbar--open' : ''}`}>
       <div className="container navbar__inner">
-        <a className="brand" href="#home" aria-label="Eduyog Fitness home" onClick={closeMenu}>
-          <BrandLogo className="brand__logo" />
-          <span className="brand__name">
-            Eduyog <span>Fitness</span>
-          </span>
-        </a>
+        <div className="brand-lockup">
+          <EduyogHomeLink logoClassName="brand__logo" onClick={closeMenu} />
+          <a className="brand" href="#home" aria-label="Eduyog Fitness home" onClick={closeMenu}>
+            <span className="brand__name">
+              Eduyog <span>Fitness</span>
+            </span>
+          </a>
+        </div>
 
         <nav className="navbar__nav" aria-label="Main">
           {NAV_ITEMS.map((item) => (

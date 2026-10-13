@@ -46,6 +46,10 @@ export const leadsApi = {
   get: (id) => request(`/admin/fitness-leads/${id}`).then((d) => d.lead),
 }
 
+export const studentaqEnquiriesApi = {
+  list: () => request('/admin/studentaq-enquiries?limit=100'),
+}
+
 export const eduyarpApi = {
   courses: {
     list: () => request('/admin/eduyarp/courses').then((d) => d.courses),

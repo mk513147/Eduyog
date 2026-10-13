@@ -1229,6 +1229,27 @@
 .eduyog-admin .sidebar .nav {
   min-height: 0;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  /* Subtle scrollbar in the sidebar's own colours (Firefox, and Chrome/Safari/Edge below). */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(199, 210, 254, 0.28) transparent;
+}
+
+.eduyog-admin .sidebar .nav::-webkit-scrollbar {
+  width: 6px;
+}
+
+.eduyog-admin .sidebar .nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.eduyog-admin .sidebar .nav::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(199, 210, 254, 0.28);
+}
+
+.eduyog-admin .sidebar .nav::-webkit-scrollbar-thumb:hover {
+  background: rgba(199, 210, 254, 0.5);
 }
 
 .eduyog-admin .filters {
