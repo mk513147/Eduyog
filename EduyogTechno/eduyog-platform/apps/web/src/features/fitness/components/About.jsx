@@ -1,11 +1,26 @@
 import { ABOUT_POINTS } from '../content'
+import aboutImage from '../../../../../../assets/fitness/WhatsApp Image 2026-10-13 at 10.50.21 AM.jpeg'
+import { BotanicalDecor } from './BotanicalDecor'
 import { Icon } from './Icon'
 import { SectionHeader } from './SectionHeader'
 
 export function About() {
   return (
-    <section className="section section--tinted" id="about" aria-labelledby="about-title">
+    <section className="section section--tinted about-section" id="about" aria-labelledby="about-title">
+      <BotanicalDecor variant="flow" className="about__flow" />
       <div className="container about">
+        <div className="about__visual">
+          <span className="about__organic" aria-hidden="true" />
+          <img
+            src={aboutImage}
+            alt="Woman practicing a seated yoga stretch outdoors"
+            width="1200"
+            height="1600"
+            loading="lazy"
+            decoding="async"
+          />
+          <BotanicalDecor variant="sprig" className="about__botanical" />
+        </div>
         <div className="about__intro">
           <SectionHeader
             id="about-title"

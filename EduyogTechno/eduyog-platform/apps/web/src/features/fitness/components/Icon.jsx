@@ -7,6 +7,7 @@ import {
   Check,
   Heart,
   Info,
+  Leaf,
   Menu,
   Target,
   Users,
@@ -27,6 +28,7 @@ const ICONS = {
   heart: Heart,
   check: Check,
   info: Info,
+  leaf: Leaf,
 }
 
 export function Icon({ name, size = 20, className }) {

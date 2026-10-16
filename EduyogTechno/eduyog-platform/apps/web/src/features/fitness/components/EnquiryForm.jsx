@@ -94,7 +94,7 @@ export function EnquiryForm() {
           }
 
           return (
-            <div className={`field${field.full ? ' field--full' : ''}`} key={field.name}>
+            <div className={`field field--${field.name}${field.full ? ' field--full' : ''}`} key={field.name}>
               <label className="field__label" htmlFor={id}>
                 {field.label}
                 {!field.required && <span className="field__optional"> (optional)</span>}

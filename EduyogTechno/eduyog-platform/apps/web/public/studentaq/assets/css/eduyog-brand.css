@@ -49,14 +49,7 @@
 
 .eduyog-home img {
   display: block;
-  width: 34px;
-  height: 34px;
+  width: 45px;
+  height: 45px;
   object-fit: contain;
-}
-
-@media (min-width: 960px) {
-  .eduyog-home img {
-    width: 38px;
-    height: 38px;
-  }
 }

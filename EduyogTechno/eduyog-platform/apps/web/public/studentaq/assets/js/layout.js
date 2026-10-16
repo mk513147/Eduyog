@@ -14,12 +14,15 @@
   /* ---------------------------------------------------------------------
    * Templates
    * ------------------------------------------------------------------ */
-  function brandLink(data) {
+  function brandLink(data, showMark = true) {
     const { name, nameParts, logoMark } = data.brand;
     const [primaryPart, accentPart] = nameParts;
+    const mark = showMark
+      ? html`<img class="brand__mark" src="${logoMark.src}" alt="" width="${logoMark.width}" height="${logoMark.height}">`
+      : '';
 
     return html`<a class="brand" href="index.html" aria-label="${data.labels.homeLink}">
-      <img class="brand__mark" src="${logoMark.src}" alt="" width="${logoMark.width}" height="${logoMark.height}">
+      ${mark}
       <span class="brand__name" aria-hidden="true" title="${name}">${primaryPart}<span>${accentPart}</span></span>
     </a>`;
   }
@@ -46,7 +49,7 @@
     return html`<div class="container header__inner">
         <div class="header__brands">
           ${eduyogHomeLink(data)}
-          ${brandLink(data)}
+          ${brandLink(data, false)}
         </div>
         <nav class="nav" aria-label="${labels.mainNav}">
           ${navLinks(data.nav, page, { className: 'nav__link' })}
